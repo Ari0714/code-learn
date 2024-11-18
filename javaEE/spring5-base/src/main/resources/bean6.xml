@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:com.tcl.com.itbys.util="http://www.springframework.org/schema/com.tcl.com.itbys.util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                             http://www.springframework.org/schema/com.tcl.com.itbys.util
+                            http://www.springframework.org/schema/com.tcl.com.itbys.util/spring-com.tcl.com.itbys.util.xsd">
+
+
+    <!--两种bean   单实例singleton、多实例prototype-->
+    <bean id="emp" class="com.itbys._03_test.ioc.bean.User" scope="singleton">
+        <property name="id" value="01"></property>
+    </bean>
+
+</beans>

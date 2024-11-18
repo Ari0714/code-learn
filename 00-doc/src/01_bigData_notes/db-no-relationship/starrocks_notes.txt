@@ -1,0 +1,280 @@
+
+
+-------------------自建pre集群-------------------
+连接信息
+10.74.64.164:9030
+root / aa865728-0524-42e7-8319-a7a51a7b11d1
+
+账户信息
+10.74.64.164:9030/tms_poc, tcl_tms_poc / tms_poc@145314
+
+
+-------------------dml-------------------
+
+加索引
+CREATE INDEX index1 ON employee (Gender) USING BITMAP COMMENT 'index1';
+大表关联小表调整为broadcast join
+
+增加列
+ALTER TABLE detailDemo ADD COLUMN uv string DEFAULT '';
+
+删除列
+ALTER TABLE ods_bd_msq_mtech_srm_purchase_execute_mt_supplier_order_delivery_item DROP COLUMN source_from;
+
+修改字段类型
+ALTER TABLE ods_bd_msq_mtech_srm_purchase_execute_mt_supplier_order_delivery_item MODIFY COLUMN column_xxx varchar(500)
+
+ALTER TABLE ods_cdc_flink_kt_ora_ktmes_mes_pwo_pwo_t_work_order ADD COLUMN prod_type string DEFAULT '';
+
+CREATE INDEX mblnr ON ods_cdc_flink_sap_hana_erpacc_pd1clnt888_mkpf_dip (mblnr) USING BITMAP COMMENT 'mblnr';
+
+
+
+--新建库
+CREATE DATABASE voc;
+
+
+--新建用户
+CREATE USER 'tcl_voc'@'%' IDENTIFIED BY 'tcl_voc@987321';
+
+
+--库授权
+NODE_PRIV：集群节点操作权限，如节点上下线。
+ADMIN_PRIV：除 NODE_PRIV 以外的所有权限。
+GRANT_PRIV：操作权限，如创建用户和角色、删除用户和角色、授权、撤权、和设置账户密码等。
+SELECT_PRIV：数据库和表的读取权限。
+LOAD_PRIV：数据库和表的导入权限。
+ALTER_PRIV：数据库和表的结构变更权限。
+CREATE_PRIV：数据库和表的创建权限。
+DROP_PRIV：数据库和表的删除权限。
+USAGE_PRIV：资源的使用权限。
+
+
+--表授权
+GRANT SELECT_PRIV,LOAD_PRIV,ALTER_PRIV,CREATE_PRIV,DROP_PRIV ON voc.* TO 'tcl_voc'@'%';
+
+GRANT SELECT_PRIV ON rw_cbgdata.dim_uss_t_sys_group_data_reldata TO 'sdbgods'@'%';
+GRANT SELECT_PRIV ON rw_cbgdata.v_ads_data_arrive_info_00 TO 'finebi_monitor'@'%';
+
+
+finebi_monitor / finebi_monitor@123    库finebi_monitor
+tcl_voc / tcl_voc@987321               库voc
+tcl_ads / tcl_ads@55789                库ads
+tcl_dwd / tcl_dwd@543673               库dwd
+
+
+
+
+增加查询超时时间
+SET query_timeout = 600;
+
+
+----- 建表语句
+CREATE TABLE test_mv_manual
+(
+    id string NULL
+)
+DISTRIBUTED BY HASH(id)
+PROPERTIES("replicated_storage" = "true")
+
+
+
+-------------------慢sql优化-------------------
+
+set enable_profile = 'true';
+
+set pipeline_dop = 0;
+
+show variables like "pipeline_dop";
+
+
+enable_collect_full_statistic
+
+
+
+-------------------物化视图-------------------
+
+----- 查询语句
+SHOW MATERIALIZED VIEW LIKE 'order_mv'；
+SHOW MATERIALIZED VIEW WHERE NAME = "mv_ads_cbg_sl_order_shipment_detail";
+mv_ads_cbg_sl_order_shipment_detail
+mv_ads_cbg_sl_sign_order_detail
+mv_ads_cbg_sl_bill_order_detail
+mv_ads_cbg_pr_track_detail
+
+
+--取消刷新物化视图; 变更异步物化视图的状态为 Active 或 Inactive
+CANCEL REFRESH MATERIALIZED VIEW mv_ads_cbg_sl_sign_order_detail
+ALTER MATERIALIZED VIEW mv_ads_cbg_sl_bill_order_detail INACTIVE;
+
+
+--激活物化视图
+ALTER MATERIALIZED VIEW mv_ads_cbg_pr_track_detail ACTIVE;
+
+
+--查询物化视图刷新情况
+select create_time, finish_time, state, expire_time, error_code, error_message, progress from information_schema.task_runs
+where definition like '%ads_isc_kt_batch_order_estimate_online_time_mat_view%'
+order by create_time desc
+
+
+--删除物化视图
+drop MATERIALIZED view order_mv
+
+
+--查看建立语句
+show create MATERIALIZED  view mv_ads_cbg_sl_sign_order_detail
+
+
+--查询查询历史数据
+explain
+select * from mv_ads_cbg_sl_order_shipment_detail order by order_date desc limit 10
+
+
+
+----- 慢优化查询
+SELECT * from starrocks_audit_db__.starrocks_audit_tbl__
+where DATE_FORMAT(`timestamp`,'%Y-%m-%d %H:%i') >= '2024-01-15 00:30'
+and DATE_FORMAT(`timestamp`,'%Y-%m-%d %H:%i') <= '2024-01-15 09:30'
+order by cpuCostNs desc
+limit 300
+
+
+----- 时间
+DAY、HOUR、MINUTE 以及 SECOND
+
+
+----- 异步物化视图自动刷新
+CREATE MATERIALIZED VIEW order_mv
+DISTRIBUTED BY HASH(`order_id`)
+REFRESH ASYNC START('2024-01-28 15:00:00') EVERY (interval 5 MINUTE) AS
+SELECT
+    order_list.order_id,
+    sum(goods.price) as total
+FROM order_list INNER JOIN goods ON goods.item_id1 = order_list.item_id2
+GROUP BY order_id;
+
+
+----- 异步物化视图手动刷新
+CREATE MATERIALIZED VIEW order_mv
+DISTRIBUTED BY HASH(`order_id`)
+REFRESH MANUAL
+AS SELECT
+    order_list.order_id,
+    sum(goods.price) as total
+FROM order_list INNER JOIN goods ON goods.item_id1 = order_list.item_id2
+GROUP BY order_id;
+
+
+-- 异步调用刷新任务
+REFRESH MATERIALIZED VIEW mv_order;
+-- 同步调用刷新任务。
+REFRESH MATERIALIZED VIEW mv_order WITH SYNC MODE;
+
+
+-- 查看重启日志
+show frontends; show backends; laststartime可以看到最后启动时间
+
+
+
+
+-----分区表
+drop table test_tbl4
+CREATE TABLE test_tbl4
+(
+    id string NOT NULL,
+    event_day date NOT NULL,
+    s_st string NOT NULL
+)
+DUPLICATE KEY (id)
+PARTITION BY RANGE(event_day)(
+PARTITION p20211009 VALUES [("2021-01-09"), ("2021-01-10")),
+PARTITION p20211010 VALUES [("2021-01-10"), ("2021-01-11")),
+PARTITION p20211011 VALUES [("2021-01-11"), ("2021-01-12")),
+PARTITION p20211012 VALUES [("2021-01-12"), ("2021-01-13")),
+PARTITION p20211013 VALUES [("2021-01-13"), ("2021-01-14"))
+)
+DISTRIBUTED BY HASH(id)
+PROPERTIES("replicated_storage" = "true")
+
+CREATE TABLE test_tbl4
+(
+    id string NOT NULL,
+    event_day date NOT NULL,
+    s_st string NOT NULL
+)
+DUPLICATE KEY (id)
+PARTITION BY RANGE(event_day)(
+)
+DISTRIBUTED BY HASH(id)
+PROPERTIES("replicated_storage" = "true")
+
+
+--查看分区
+SHOW PARTITIONS FROM site_access;
+
+--删除分区
+ALTER TABLE site_access DROP TEMPORARY PARTITION tp1;
+
+--清空分区
+truncate table site_access partition(p20211009,p2021110,p2021101,p2021112);
+
+
+delete from   rw_cbgdata.ads_cbg_inv_sales_daily_bak where data_date>='${pt1}'
+
+truncate table rw_cbgdata.ads_cbg_inv_sales_daily_bak partition(p${yyyymmdd-1});
+
+truncate table rw_obgdata.ads_obg_sl_cockpit_idx_categ_par partition(p${yyyy-mm-1});
+
+ads_obg_sl_cockpit_idx_categ_par
+
+ALTER TABLE ads_obg_sl_cockpit_idx_categ_par
+ADD PARTITIONS START ("2022-01-01") END ("2026-01-01") EVERY (INTERVAL 1 month);
+
+
+truncate table rw_obgdata.ads_cbg_inv_prototype_stock_dip_bak partition(p${yyyy-mm-1});
+
+delete from ads_cbg_inv_prototype_stock_dip_bak where inventory_date>='${start_date}' and inventory_date<='${end_date}'
+
+
+delete from rw_obgdata.ads_obg_sl_cockpit_idx_categ where p_dt='${pt2}';
+
+delete from ads_cbg_inv_cus_stock_age_detail where data_date='${pt}'
+
+
+--添加分区
+ALTER TABLE site_access
+ADD PARTITIONS START ("2022-01-01") END ("2026-01-01") EVERY (INTERVAL 1 day);
+
+ALTER TABLE site_access
+ADD PARTITION p202201 VALUES [("2022-01-01"), ("2022-02-01"));
+
+ALTER TABLE site_access
+ADD PARTITION p202001 VALUES [("2020-01-01"), ("2020-02-01"));
+
+ALTER TABLE site_access
+ADD PARTITION tp2 VALUES LESS THAN ("2020-03-01");
+
+
+--swap表命
+ALTER TABLE ads_cbg_inv_sales_daily SWAP WITH ads_cbg_inv_sales_daily_bak;
+
+
+
+--load
+show load where LABEL like 'dm_cbg_sl_order_detail_bak'
+
+CANCEL LOAD
+FROM rw_cbgdata
+WHERE LABEL = "dm_cbg_sl_order_detail_bak_20240314093215";
+
+
+
+
+-------------------参数调整-------------------
+
+ADMIN SET FRONTEND CONFIG ("max_upload_task_per_be" = “64”);
+
+
+upload_worker_count  = 16
+download_worker_count = 16

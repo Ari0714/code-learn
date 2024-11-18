@@ -1,0 +1,297 @@
+
+
+--------------------------------------------------------------实战-------------------------------------------------------------
+
+开启hive metastore：hive --service metastore；
+
+
+
+--------------------------------------------------------------基础-------------------------------------------------------------
+
+1.概念：基于hadoop 将结构化的数据文件映射为一张表，提供sql查询功能
+
+2.本质：将sql转化成MapReduce
+
+3.架构
+  1.metastore：存放hive元数据
+  2.client：包括jdbc Driver（sql解析器 编译器 优化器 执行器）
+  3.MapReduce：执行
+  4.hdfs：存储
+
+4.传统数据库比较
+  1.无索引，执行慢；底层mr，慢。但大数据量并行有优势
+
+5.数据类型
+  1.基本
+	  1.int smallint bigint
+	  2.decimal
+	  3.string
+	  4.date timestamp
+  2.复杂
+      1.array
+	  2.map
+	  3.struct
+
+6.数据 导入导出
+  1.导入：load data local inpath '/opt/hive-1.2.2-bin/stu.txt' into table student;
+  2.导出：insert overwrite [local] directory 'xxx' select * from xxx
+
+
+7.常用命令
+  1.数据库
+	desc database xxx;
+	alter database default set dbproperties('createtime'='20200403')
+	drop database db_hive cascade
+
+  2.表
+	exit:先隐性提交数据，再退出
+	quit:不提交数据，退出
+	desc student  表结构
+	desc formatted student  详细结构
+	set  查看设置
+	set mapred.reduce.tasks=100;
+	set mapreduce.job.maps=3;
+	set mapreduce.job.reduces=3;
+
+8.建表语句：
+	create [external] table [if not exists] table_name
+	[(col_name data_type [comment col_comment], ...)]
+	[comment table_comment]
+	[partitioned by (col_name data_type [comment col_comment], ...)]
+	[clustered by (col_name, col_name, ...)
+	[sorted by (col_name [asc|desc], ...)] into num_buckets buckets]
+	[row format row_format]
+	[stored as file_format]
+	[location hdfs_path]
+	[tblproperties (property_name=property_value, ...)]
+	[as select_statement]
+
+
+	常见创建表
+	create table if not exists student2(
+	id int, name string
+	) comment 'xxx'
+	partition by (dt string)
+	row format delimited fields terminated by '\t'
+	stored as textfile
+	location '/user/hive/warehouse/student2';
+
+
+9.管理表（内部表）与外部表
+  alter table student2 set tblproperties('EXTERNAL'='FALSE');  外 =》内
+
+
+10.分区表
+  1.指定分区导入数据：load data local inpath '/opt/datas/dept.txt' into table dept_partition partition(month='202008')
+
+  2.查看分区：show partitions dept_partition
+
+  3.分区操作
+	创建单个分区
+	alter table dept_partition add partition(month='201706') ;
+	同时创建多个分区
+	alter table dept_partition add partition(month='201705') partition(month='201704');
+	删除单个分区
+	alter table dept_partition drop partition (month='201704');
+	同时删除多个分区
+	alter table dept_partition drop partition (month='201705'), partition (month='201706');
+
+  4.二级分区表
+	create table dept_partition2(
+				   deptno int, dname string, loc string
+				   )
+				   partitioned by (month string, day string)
+				   row format delimited fields terminated by '\t';
+	load data local inpath '/opt/datas/dept.txt' into table dept_partition2 partition(month='201709', day='13');
+
+
+  5.分区表数据关联：
+    1.先创建分区，put进数据，msck repair table dept_partition2
+	2.创建分区，put进数据，执行添加分区命令 alter table add partition(dt=202001)
+	3.创建分区，load进数据
+
+  6.动态分区：hive.exec.dynamic.partition=true（默认开启）， hive.exec.dynamic.partition.mode=nonstrict
+
+11.ddl
+  1.改表名：alter table gmall.dept_partition2 rename to gmall.dept_partition3
+  2.添加列：alter table dept_partition add columns(deptdesc string)
+  3.更新列：alter table dept_partition change column old new int
+
+
+12.dml操作
+  1.模糊
+	like和Rlike（Java的正则表达式）
+	% 代表零个或多个字符(任意个字符)
+	_ 代表一个字符
+	（1）查找以2开头薪水的员工信息
+	select * from emp where sal LIKE '2%'
+	（2）查找第二个数值为2的薪水的员工信息
+	select * from emp where sal LIKE '_2%'
+	（3）查找薪水中含有2的员工信息
+	select * from emp where sal RLIKE '[2]'
+
+  2.join
+    1.join
+	2.left join
+	3.right join
+	4.full join (满外连接，左右都是基础，匹配不上用null替代)
+	5.笛卡尔积
+	  笛卡尔集会在下面条件下产生
+	  （1）省略连接条件
+	  （2）连接条件无效
+	  （3）所有表中的所有行互相连接
+	  select empno, dname from emp, dept;
+
+  3.排序：
+	order by: 全局，一个reduce（全局排序效率低，多情况下不需要）
+	sort by：每个mr内部排序设置几个reduce几个排序
+	distribute by：分区，分组，通常和sort by 一起 ,（如按部门分组，按成员编号排序）
+	cluter by：当distribute by和sorts by字段相同时，可以使用cluster by方式（只能升序）
+
+  4.分桶：
+	分区针对的路径，分桶针对的数据文件
+	语法：
+	create table stu_buck(id int, name string)
+	clustered by(id)
+	into 4 buckets
+	row format delimited fields terminated by '\t';
+	注意：1.数据量小默认不分桶  set hive.enforce.bucketing=true;     set mapreduce.job.reduces=-1;（默认）
+		  2.必须走mr，load data local inpath 不行
+	抽样检查：select * from stu_buck tablesample(bucket 1 out of 8 on id);  分了4桶 ，取半桶
+
+13.常用函数（后面展开讲）：
+  1.系统函数
+	show functions;
+	desc function extended upper;
+
+  2.自定义函数：
+	UDF：一进一出
+	UDAF：多进一出
+	UDTA：一进多出
+	自定义UDF过程：hive.exec依赖 =》类继承UDF =》写evalute方法 =》上传到hdfs
+	create function base_analizer as 'com.atguigu.udf.BaseFieldUDF' using jar 'hdfs://hadoop102:9000/user/hive/jars/hivefunction-1.0-SNAPSHOT.jar';
+
+14.jdbc链接
+	nohup hiveserver2 1>/dev/null 2>&1 &
+	beeline
+	!connect jdbc:hive2://hdp:10000
+	root
+
+15.企业级调优
+    1.tez或spark引擎
+	2.大表小表join
+	  1、开启map端预聚合 避免reduce数据倾斜  set hive.auto.convert.join=true
+	3.并行执行
+	 1.set hive.exec.parallel=true;  set hive.exec.parallel.thread.number=16;（默认为8）
+
+16、数据倾斜
+	1、join字段类型不同
+	  1、int和string ， 超过int最大值，数值全部一致
+	2、null值进入到reduce
+	  1、可以过滤则过滤
+	3、group by替代count distinct
+	  1、只一个reducer
+
+
+---------------------------------------------------------------------------------hive特殊函数（系统函数）---------------------------------------------------------------------------------
+1.get_json_object
+  select get_json_object('[{"name":"coco"},{"name":"tony"}]','$[0].name')
+
+2.split返回array
+  split(words,' ')
+
+3.concat('ab','cd')  concat(id, ',' ,name)
+  concat_ws('-','first_name','last_name') concat_ws('|',collect_set(xx))    可以指定分隔符  后面可以是数组   实质：1  , => 任意  2.集合 =》 string
+
+4.collect_set(xxx)  多行 =》 数组  ，分割   去重
+
+5.日期
+  date_formate: date_formate('2020-10-10','yyyy-MM')
+  date_add: date_add('2020-10-11',+1) / date_add('2020-10-11',-1)
+  next_day: next_day('2020-11-11','MO')   当前天下一个周一
+  last_day: next_day('2020-11-11')
+  date_sub('2020-11-11',1) => 2020-11-10
+  datediff('2020-11-11','2019-11-11') => 366
+
+
+6.lateral view explode(split(words,' ')) tmp as items
+
+7.nvl
+  nvl(1,2) 第一个不为空返回第一个 为空返回第二个
+
+8.regexp_replace && replace
+  SELECT regexp_replace ('gfdgdg','g','0')
+
+
+9.开窗函数：
+  1.排序 rank：
+  2.下一行 head：分析用户在页面的起始和结束时间，上下两行的差值
+  3.sum(xxx) over(partition by xxx order by xxx) 不加order直接出总结果，加上是累加结果
+
+10.having 和group by搭配使用
+   1.where过滤之前的内容，having判断之后的内容
+   2.where 在 group by之前 having在group by 之后
+   3.having只用于分组统计
+
+11.列行装换
+  1.行转列 用if() aa
+  2.列转行 用union 添加字段
+
+----------注意----------
+1.group by 后面不能引用前面别名，要自己造和前面相同的或子查询
+2.sum(if(SUBSTRING(order_time,1,7) = '2020-03',1,0)) `3月订单数`  中文别名用飘号
+
+
+3、hive乱码
+（1）修改表字段注解和表注解
+alter table COLUMNS_V2 modify column COMMENT varchar(256) character set utf8；
+alter table TABLE_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8；
+（2）修改分区字段注解
+alter table PARTITION_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8 ;
+alter table PARTITION_KEYS modify column PKEY_COMMENT varchar(4000) character set utf8;
+（3）修改索引注解
+alter table INDEX_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8;
+
+
+
+-------------------------------------------------------------------------------安装---------------------------------------------------------------------------
+3）初始化Hive元数据库
+[atguigu@hadoop102 conf]$ schematool -initSchema -dbType mysql -verbose
+
+4）修改元数据库字符集
+Hive元数据库的字符集默认为Latin1，由于其不支持中文字符，故若建表语句中包含中文注释，会出现乱码现象。如需解决乱码问题，须做以下修改。
+修改Hive元数据库中存储注释的字段的字符集为utf-8
+（1）字段注释
+mysql> alter table COLUMNS_V2 modify column COMMENT varchar(256) character set utf8;
+（2）表注释
+mysql> alter table TABLE_PARAMS modify column PARAM_VALUE mediumtext character set utf8;
+
+
+-------------------------------------------------------------------------------面试---------------------------------------------------------------------------
+1、grouping set用法
+   1、取代分组union合并
+
+select null, null, null, count(*)
+from table
+union
+select sid, null, null, count(*)
+from table
+group by sid
+union
+select null, city, province, count(*)
+from table
+from table
+group by city, province
+
+grouping set简化
+select null, null, null, count(*)
+from table
+group by id, city, province grouping set((),(id),(city, province))
+
+
+
+2、distinct 和 group by count
+  1、distinct在count时去除空值，数据少
+  2、效率
+    1、distinct会将数据全部加载到内存中，是一个hash结构，统计快，有oom风险
+	2、group by count 做排序，慢但不会oom

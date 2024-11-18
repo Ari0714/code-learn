@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+
+        function f1() {
+            alert("省份已改变")
+        }
+
+
+        //动态注册
+        window.onload = function () {
+            var id = document.getElementById("sel01");
+
+            id.onblur = function () {
+                alert("省份已改变！！！")
+            }
+        }
+
+
+    </script>
+
+</head>
+
+<!--
+
+静态注册
+<body onload="alert(123)">
+
+onload 是浏览器解析完页面之后就会自动触发的事件
+onclick 单击 常和button使用
+onblur 失去焦点  输入框提示
+onchange 内容改变  下拉框
+-->
+
+<body>
+
+<select id="sel01">
+    <option>--请输入所在省--</option>
+    <option>湖北</option>
+    <option>广东</option>
+    <option>西安</option>
+</select>
+
+
+</body>
+</html>

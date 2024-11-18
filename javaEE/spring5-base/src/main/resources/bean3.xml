@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!--内部bean-->
+    <!--<bean id="emp" class="com.itbys.test.ioc.bean.Emp">-->
+        <!--<property name="EName" value="xx"></property>-->
+        <!--<property name="gender" value="male"></property>-->
+        <!--<property name="dept">-->
+            <!--<bean id="dept" class="com.itbys.test.ioc.bean.Dept">-->
+                <!--<property name="DName" value="保安"></property>-->
+            <!--</bean>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--外部bean（级联赋值）-->
+    <bean id="emp" class="com.itbys._03_test.ioc.bean.Emp">
+        <property name="EName" value="xx"></property>
+        <property name="gender" value="male"></property>
+        <property name="dept" ref="dept"></property>
+        <property name="dept.DName" value="保安2"></property>
+    </bean>
+
+    <bean id="dept" class="com.itbys._03_test.ioc.bean.Dept">
+        <property name="DName" value="保安"></property>
+    </bean>
+
+</beans>

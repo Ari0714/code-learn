@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>employee update</title>
+    </head>
+    <body>
+
+        <h1>首页</h1>
+
+        <form th:action="@{/employee}" method="post">
+            <input type="hidden" name="_method" value="put">
+
+            <input type="hidden" name="id" th:value="${employee.id}">
+            lastName: <input type="text" name="lastName" th:value="${employee.lastName}"> <br>
+            gender:<input type="radio" name="gender" value="1" th:field="${employee.gender}"> 男
+            <input type="radio" name="gender" value="0" th:field="${employee.gender}"> 女 <br>
+            email: <input type="text" name="email" th:value="${employee.email}"> <br>
+            <input type="submit" value="update">
+
+        </form>
+
+
+    </body>
+</html>

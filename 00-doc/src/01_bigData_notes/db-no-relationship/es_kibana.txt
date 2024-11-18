@@ -1,0 +1,137 @@
+
+
+--------------------------------------------------------------es查询-------------------------------------------------------------
+
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+查询索引
+GET buy_cnt_per_hour/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+建立index
+PUT gmall2019_sale_detail
+{
+  "mappings": {
+    "_doc":{
+      "properties":{
+         "user_id":{
+           "type":"keyword"
+         },
+         "sku_id":{
+           "type":"keyword"
+         },
+         "user_gender":{
+           "type":"keyword"
+         },
+         "user_age":{
+           "type":"short"
+         },
+         "user_level":{
+           "type":"keyword"
+         },
+         "sku_price":{
+           "type":"double"
+         },
+         "sku_name":{
+           "type":"text",
+           "analyzer": "ik_max_word"
+         },
+         "sku_tm_id ":{
+           "type":"keyword"
+         },
+         "sku_category3_id":{
+           "type":"keyword"
+         },
+         "sku_category2_id":{
+           "type":"keyword"
+         },
+         "sku_category1_id":{
+           "type":"keyword"
+         },
+         "sku_category3_name":{
+           "type":"text",
+           "analyzer": "ik_max_word"
+         },
+         "sku_category2_name":{
+           "type":"text",
+           "analyzer": "ik_max_word"
+         },
+         "sku_category1_name":{
+           "type":"text",
+           "analyzer": "ik_max_word"
+         },
+         "spu_id":{
+           "type":"keyword"
+         },
+         "sku_num":{
+           "type":"long"
+         },
+         "order_count":{
+           "type":"long"
+         },
+         "order_amount":{
+           "type":"long"
+         },
+         "dt":{
+           "type":"keyword"
+         }
+      }
+    }
+  }
+ }
+
+
+
+--------------------------------------------------------------es安装-------------------------------------------------------------
+
+-------------es 6.3.0
+
+vim /etc/sysctl.conf
+vm.max_map_count=262144
+sysctl -p
+
+
+vim /etc/security/limits.conf
+* soft nofile 65536
+* hard nofile 131072
+* soft nproc 2048
+* hard nproc 4096
+
+
+chown -R elk:elk elasticsearch-6.3.0
+
+启动：bin/elasticsearch
+
+web访问：hdp:9200
+
+
+设置密码
+参考：https://blog.csdn.net/And_leayf/article/details/114284782
+curl -H "Content-Type: application/json" -X POST  "http://dmp-74:9200/_xpack/license/start_trial?acknowledge=true"
+
+
+
+-------------kibana 6.3.0
+
+server.host: "hdp"
+elasticsearch.url: "http://hdp:9200"
+
+chown -R elk:elk kibana-6.3.0-linux-x86_64
+
+启动：bin/kibana
+
+访问：hdp:5601
+
+
+

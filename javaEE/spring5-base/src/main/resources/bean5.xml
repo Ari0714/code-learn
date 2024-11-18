@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:com.tcl.com.itbys.util="http://www.springframework.org/schema/com.tcl.com.itbys.util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                             http://www.springframework.org/schema/com.tcl.com.itbys.util
+                            http://www.springframework.org/schema/com.tcl.com.itbys.util/spring-com.tcl.com.itbys.util.xsd">
+
+
+    <!--集合util-->
+    <com.tcl.com.itbys.util:list id="books">
+        <value>book01</value>
+        <value>book02</value>
+        <value>book03</value>
+    </com.tcl.com.itbys.util:list>
+
+    <bean id="book" class="com.itbys._03_test.ioc.bean.collection.Book">
+        <property name="books" ref="books"></property>
+    </bean>
+
+
+</beans>

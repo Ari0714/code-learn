@@ -1,0 +1,117 @@
+
+
+--------------------------------------------------------------常见注解-------------------------------------------------------------
+启动：
+@SpringBootApplication
+@SpringApplicaton
+
+
+--------基本注解：
+@Component 最普通的组件，可以被注入到spring容器进行管理 ， handle用到
+@Configuration 配置文件 ，乐观锁 分页 逻辑删除
+
+
+--------Controller：
+@Controller 表现层 springMVC的注解
+@RequestMapping（GetMapping、PostMapping）
+@ResponseBody
+@PathVariable("id") url占位符通过它绑定到方法中
+@RequestParam("id") 需要的参数
+
+--------Service：
+@Service 作用业务逻辑层
+@Repository  持久层
+
+
+--------entity：
+@Date  lombok工具 不用get set方法
+@Id  主键
+@Column  普通列
+@@GeneratedValue(strategy = GenerationType.IDENTITY)   插入自增长
+
+
+--------mapper:
+@Param("aa")  指定参数别名 和xml文件对应
+
+
+--------swagger
+@EnableSwagger2  配置使用功能
+entity
+  @ApiModel(value="EduTeacher对象", description="讲师")   作用类
+  @ApiModelProperty(value = "讲师姓名")   作用属性
+controller
+  @Api(description = "教师管理")  类
+  @@ApiOperation(value = "获取所有讲师")  方法
+  @ApiParam(name = "id",value = "讲师id",required = true)  属性
+  
+
+
+
+--------------------------------------------------------------常见错误-------------------------------------------------------------
+404： 没有（"/"）
+
+
+
+
+--------------------------------------------------------------面试-------------------------------------------------------------
+1、常见注解
+
+
+
+
+--------------------------------------------------------------thymeleaf-------------------------------------------------------------
+1.获取service数据
+<div th:text="${hello}">覆盖</div>
+
+2.替换原生class id等
+<div class="class" id="id" th:class="myclass" th:id="myid" th:text="${hello}">覆盖</div>
+
+3.常用方法： th:each  th:text（转义，显示h1标签）  th:utext（不转义）
+
+4.内部使用text  [[${}]]
+<span th:each="user:${users}"> [[${user}]] </span>
+
+5.获取httpsession的值 session必须加 
+th:text="${session.uname}"  或 [[${session.uname}]]
+
+
+--------------------------------------------------------------ajax-------------------------------------------------------------------
+1.获取id选择器
+var password = $("#idpassword").val();
+
+
+2.获取表单数据的方法
+  1.HttpServletRequest request   request.getParameter("username");
+  2.直接 String username
+  3.bean （属性名 == 提交的名称）
+ 
+3.<input type="text" class="form-control" id="idusername" name="username" placeholder="请输入登录账号" autofocus>
+  1.name是传参的值
+  2.id作为选择器
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

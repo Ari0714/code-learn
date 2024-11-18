@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+
+        function f1() {
+            alert(12345)
+        }
+
+        //动态注册
+        window.onload = function () {
+            var id = document.getElementById("btn");
+
+            id.onclick = function () {
+                alert(54321)
+            }
+        }
+
+    </script>
+
+</head>
+
+<!--
+
+静态注册
+<body onload="alert(123)">
+
+onload 是浏览器解析完页面之后就会自动触发的事件
+onclick 单击 常和button使用
+onblur 失去焦点  输入框提示
+
+-->
+
+<body>
+
+<button onclick="f1()">b1</button>
+<button id="btn">b2</button>
+
+</body>
+</html>

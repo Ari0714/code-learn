@@ -1,0 +1,7 @@
+
+
+--- login
+114.132.159.231(public) / cj111111
+10.1.20.4（interior）
+
+mysql  cj111111

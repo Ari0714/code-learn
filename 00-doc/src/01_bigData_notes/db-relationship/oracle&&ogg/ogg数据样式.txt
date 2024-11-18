@@ -1,0 +1,22 @@
+
+String djxh = (afterJson.getString("DJXH") != null) ? afterJson.getString("DJXH") : "空";
+                    String lrr_dm = (afterJson.getString("LRR_DM") != null) ? afterJson.getString("LRR_DM") : "空";
+                    String xgrq = (afterJson.getString("XGRQ") != null) ? afterJson.getString("XGRQ") : "1990-01-01 00:00:00";
+
+
+{"table":"TEST_OGG.TEST_OGG","op_type":"I","op_ts":"2018-05-23 10:31:28.000078","current_ts":"2018-05-23T10:36:48.525000","pos":"00000000000000001093","after":{"DJXH":123456,"LRR_DM":"dm9999","XGRQ":"2020-03-04 01:01:08"}}
+{"table":"TEST_OGG.TEST_OGG","op_type":"I","op_ts":"2018-05-23 10:31:28.000078","current_ts":"2018-05-23T10:36:48.525000","pos":"00000000000000001093","after":{"DJXH":123456,"LRR_DM":"dm9999","XGRQ":"2020-03-04 01:01:08"}}
+{"table":"TEST_OGG.TEST_OGG","op_type":"I","op_ts":"2018-05-23 10:31:28.000078","current_ts":"2018-05-23T10:36:48.525000","pos":"00000000000000001093","after":{"DJXH":123456,"LRR_DM":"dm9999","XGRQ":"2020-03-04 01:01:08"}}
+{"table":"TEST_OGG.TEST_OGG","op_type":"I","op_ts":"2018-05-23 10:31:28.000078","current_ts":"2018-05-23T10:36:48.525000","pos":"00000000000000001093","after":{"DJXH":123456,"LRR_DM":"dm9999","XGRQ":"2020-03-04 01:01:08"}}
+
+
+{"table":"TEST_OGG.TEST_OGG","op_type":"U","op_ts":"2018-05-23 10:31:36.000073","current_ts":"2018-05-23T10:36:48.874000","pos":"00000000000000001233","before":{},"after":{"ID":1,"NAME":"zhangsan"}}
+
+
+{"table":"TEST_OGG.TEST_OGG","op_type":"D","op_ts":"2018-05-23 10:31:43.000107","current_ts":"2018-05-23T10:36:48.875000","pos":"00000000000000001376","before":{"ID":1}}
+
+
+{"table":"person","op_type":"I","op_ts":"2018-05-23 10:31:28.000078","pos":"00000000000000001093","after":{"ID":"1","NAME":"test","age":"12","birth":"2020-10-10","lrrq":"2020-10-10:12:23:34"}}
+
+
+{"table":"sbb","op_type":"I","op_ts":"2018-05-23 10:31:28.000078","pos":"00000000000000001093","after":{"ID":"1","NAME":"test","age":"12","birth":"2020-10-10","lrrq":"2020-10-10:12:23:34"}}

@@ -1,0 +1,134 @@
+
+--------------------------------------------------------------安装-------------------------------------------------------------
+export ZK_HOME=/opt/apache-zookeeper-3.5.6-bin
+export PATH=$PATH:$ZK_HOME/bin
+
+export KAFKA_HOME=/opt/kafka_2.11-2.3.1
+export PATH=$PATH:$KAFKA_HOME/bin
+
+hdp01:2181,hdp02:2181,hdp03:2181
+
+
+-------kafka
+定义：发布订阅的消息队列，吞吐量大，主要大数据领域
+
+含义：
+replica：副本，分区存在brocker上，防止节点挂，每个topic的分区有几个副本
+leader：每个分区多个副本的主，消费生产都是对象
+follower：从leader同步数据
+
+生产者：
+1.分区，1.方便在集群拓展  2.以组为单位，并发消费
+2.数据可靠性：ack  分区收到消息后 =》给生产者发ack（acknowledgmnent）=》下一轮发送（否则重试）
+			  副本同步策略：0（一直发，不等leader落盘，可能丢数据），1（leader落盘，默认，可能丢数据），-1/all（leader落盘，follower全部同步完成，可能重复数据）  == 》半数。全部
+			  ISR：in-sync replica set，follow长时间未同步数据，被踢出ISR
+3.Exactly Once语义
+exactly once = idemportence(幂等性机制) + at least once   idemportence：记录pid（preducerId+消息id）发现重复，不写磁盘
+
+消费者：
+consumer采用pull（拉）模式从broker中读取数据
+1.分区分配策略 一是round robin 一个一个轮流匹配 ，一是range  以topic为单位 664
+
+offset：
+0.9之前 =》zk中
+0.9之后 =》__consumer_offsets的主题中
+
+zk的作用
+存broker list信息  kakfacontroller监听zk，负责重新选举
+
+- 提交offset：
+关闭自动提交
+CommitSync同步： 失败重试，到成功       可能重复消费
+CommitAsync异步：没重试机制，可能失败   可能重复消费
+
+开启自动提交
+
+拦截器：
+
+- 不用配hostname
+listeners=PLAINTEXT://10.91.2.201:9092(内网)
+advertised.listeners=PLAINTEXT://10.91.2.201:9092(公网)
+
+
+
+--------------------------------------------------------------exactly once-------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------操作-------------------------------------------------------------
+单机：bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
+
+启动：
+JMX_PORT=9999 bin/kafka-server-start.sh -daemon config/server.properties
+后台
+bin/kafka-server-start.sh -daemon config/server.properties
+前台：
+bin/kafka-server-start.sh config/server.properties
+
+停
+bin/kafka-server-stop.sh config/server.properties
+
+列出：
+kafka-topics.sh --list --zookeeper localhost:2181
+
+创建：
+kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 6 --topic cdc_flink_oracle_db_10.106.94.21_KTMES_MES_PWO
+
+删除：
+kafka-topics.sh --delete --zookeeper hdp:2181  --topic item_test
+
+启动生产者
+kafka-console-producer.sh --broker-list hdp:9092 --topic test_01
+
+启动消费者
+kafka-console-consumer.sh --bootstrap-server hdp:9092 --topic test_01 --from-beginning
+
+查看主题
+kafka-topics.sh --zookeeper localhost:2181 --describe --topic cdc_flink_oracle_db_10.106.94.21_KTMES_MES_PWO
+
+重置分区
+kafka-topics.sh --zookeeper  localhost:2181 --alter --partitions 1 --topic  SZT_origin_data
+
+消费者偏移量：
+kafka-consumer-groups.sh --bootstrap-server hdp:9092 --describe --group ods_base_log
+
+maxwel初始化数据到kafka
+bin/maxwell-bootstrap --user maxwell --password 123456 --host hdp101 --database gmall1122 --table order_refund_info --client_id maxwell_5
+
+
+
+
+
+
+--------------------------------------------------------------操作CDH-------------------------------------------------------------
+
+cd /opt/cloudera/parcels/CDH-6.2.0-1.cdh6.2.0.p0.967373/lib/kafka
+
+列出所有主题
+bin/kafka-topics.sh --zookeeper cdh04:2181 --list
+bin/kafka-topics.sh --zookeeper ck01:2181 --list
+
+创建
+bin/kafka-topics.sh --zookeeper cdh04:2181 --create --topic ticdc-pro-newfz-tof_order-goods_distribution_record --replication-factor 3 --partitions 1
+kafka-topics.sh --zookeeper ck01:2181 --create --topic ticdc-pro-newfz-tof_order-goods_distribution_record --replication-factor 3 --partitions 1
+
+删除
+bin/kafka-topics.sh --delete --topic chenjie-test --zookeeper cdh04:2181
+kafka-topics.sh --delete --topic ticdc-pro-newfz-tof_order-goods_distribution_record --zookeeper ck01:2181
+
+消费
+bin/kafka-console-consumer.sh --bootstrap-server cdh04:9092 --topic chenjie-test --from-beginning
+
+生产
+bin/kafka-console-producer.sh --broker-list cdh04:9092 --topic chenjie-test
+
+查看主题情况
+bin/kafka-topics.sh --zookeeper cdh04:2181 --describe --topic chenjie-test
+bin/kafka-topics.sh --zookeeper ck01:2181 --describe --topic cdc_flink_oracle_tb_KTWMS_KTWMSAPP_INV_LOT_LOC_ID
+kafka-topics.sh --zookeeper ck01:2181 --describe --topic ticdc-pro-newfz-tof_order-goods_distribution_record
+
+重置分区
+bin/kafka-topics.sh --zookeeper  cdh04:2181 --alter --partitions 3 --topic  SZT_origin_data
+
+

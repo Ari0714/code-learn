@@ -1,0 +1,23 @@
+
+-----1.2 主机的 NTP 服务未同步至任何远程服务器----
+
+参考https://blog.csdn.net/weixin_35852328/article/details/83376876
+
+vim /etc/ntp.conf
+选择ntp时间服务器 : 10.0.61.4
+server 10.0.61.4 prefer
+server 127.127.1.0
+fudge 127.127.1.0 stratum 10
+
+重启ntpd服务
+service ntpd restart
+
+检查ntpd服务
+ntpdc -np
+
+
+
+
+使用配置路径
+/opt/cloudera/parcels/CDH-6.2.0-1.cdh6.2.0.p0.967373/lib/kafka
+

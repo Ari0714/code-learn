@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--配置 User 对象创建-->
+    <!--<bean id="user" class="com.itbys.test.ioc.bean.User"></bean>-->
+
+    <!--set注入属性-->
+    <!--<bean id="user" class="com.itbys.test.ioc.bean.User">-->
+        <!--<property name="id" value="01"></property>-->
+        <!--<property name="name" value="xx"></property>-->
+        <!--<property name="age" value="22"></property>-->
+    <!--</bean>-->
+
+    <!--构造器-->
+    <!--<bean id="user" class="com.itbys.test.ioc.bean.User">-->
+        <!--<constructor-arg name="id" value="02"></constructor-arg>-->
+        <!--<constructor-arg name="name" value="xx02"></constructor-arg>-->
+        <!--<constructor-arg name="age" value="22"></constructor-arg>-->
+    <!--</bean>-->
+
+    <!--p命名空间-->
+    <!--<bean id="user" class="com.itbys.test.ioc.bean.User" p:id="03" p:name="xx03" p:age="22">-->
+    <!--</bean>-->
+
+    <!--null 和 特殊符号-->
+    <bean id="user" class="com.itbys._03_test.ioc.bean.User">
+        <property name="id"><null/></property>
+        <property name="name"><value><![CDATA[<<xx特殊符号>>]]></value></property>
+        <property name="age" value="22"></property>
+    </bean>
+
+
+</beans>

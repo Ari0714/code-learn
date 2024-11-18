@@ -1,0 +1,8 @@
+truncate table ogg_poc_tgt_db.`t_order`;
+INSERT INTO ogg_poc_tgt_db.`t_order`
+SELECT * FROM remote('10.74.134.149', 'ogg_poc_tgt_db.t_order', 'admin', 'clkadmin');
+
+truncate table ogg_poc_tgt_db.`t_order_mt`;
+INSERT INTO ogg_poc_tgt_db.`t_order_mt`
+SELECT * FROM remote('10.74.134.149', 'ogg_poc_tgt_db.t_order_mt', 'admin', 'clkadmin');
+

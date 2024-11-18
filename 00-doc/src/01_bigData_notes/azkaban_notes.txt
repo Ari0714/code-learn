@@ -1,0 +1,28 @@
+
+a实战 job单例 多例
+job1.job
+type=command
+commend=touch opt/aa.txt
+
+job2.job
+type=commend
+dependency=job1
+command=echo "hello"
+
+hive的
+hive脚本
+job1.sql
+use hive
+select * from user
+
+job描述文件：
+hive.job
+type=commend
+command=/opt/software/hive -f
+/opt/jobs/job1.sql
+
+打包到zip
+
+
+
+

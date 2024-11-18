@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:com.tcl.com.itbys.util="http://www.springframework.org/schema/com.tcl.com.itbys.util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                             http://www.springframework.org/schema/com.tcl.com.itbys.util
+                            http://www.springframework.org/schema/com.tcl.com.itbys.util/spring-com.tcl.com.itbys.util.xsd">
+
+
+    <!--自动装配-->
+    <bean id="emp" class="com.itbys._03_test.ioc.bean.Emp" autowire="byName">
+        <property name="EName" value="coco"></property>
+        <property name="gender" value="fale"></property>
+        <property name="dept" ref="dept"></property>
+    </bean>
+
+    <bean id="dept" class="com.itbys._03_test.ioc.bean.Dept">
+        <property name="DName" value="dept001"></property>
+    </bean>
+
+</beans>

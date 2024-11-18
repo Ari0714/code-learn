@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+
+        function f1() {
+
+            var element = document.getElementById("ip01");
+            var valuep = element.value;
+
+            var re = /\w+@[a-z0-9]+\.[a-z]{2,4}/;
+
+            var spanObj = document.getElementById("sp01");
+            if (re.test(valuep)) {
+                // alert("邮箱合法")
+                spanObj.innerHTML = "邮箱合法"
+                // spanObj.innerHTML = "<img src=\"./pic/right.png\" width=\"20\" height=\"20\">";
+            }
+            else {
+                // alert("邮箱不合法")
+                spanObj.innerHTML = "邮箱不合法";
+                // spanObj.innerHTML = "<img src=\"./pic/wrong.png\" width=\"20\" height=\"20\">";
+            }
+
+            // alert(valuep)
+
+        }
+
+    </script>
+
+</head>
+<body>
+
+邮箱：<input type="text" id="ip01"/>
+<span id="sp01" style="color: red;">
+        <!--<img src="pic/right.png" width="20" height="20">-->
+    </span>
+<button onclick="f1()">校验</button>
+
+</body>
+</html>

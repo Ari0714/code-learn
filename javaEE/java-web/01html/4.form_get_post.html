@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>form</title>
+</head>
+<body>
+
+
+<!--
+
+1、所有的需要name
+2、单选 复选需要value
+
+
+get action + ? + 参数值
+post action
+
+
+post优势
+ 1、只有action 安全
+ 2、返回字符无限制
+
+-->
+
+
+<h1 align="center">用户注册</h1>
+
+<form action="http://www.baidu.com" method="get">
+
+    <table align="center">
+        <tr>
+            <td>用户名称：</td>
+            <td><input type="text" name="username" value="chenj"/></td>
+        </tr>
+        <tr>
+            <td>用户密码：</td>
+            <td><input type="password" name="password" value="111"/></td>
+        </tr>
+        <tr>
+            <td>性别：</td>
+            <td><input type="radio" name="sex" checked="checked" value="boy"/>男<input type="radio" name="sex" value="girl"/>女</td>
+        </tr>
+        <tr>
+            <td>爱好：</td>
+            <td><input type="checkbox" checked="checked" name="hobby" value="java"/>Java
+                <input type="checkbox" name="hobby" value="python"/>python
+                <input type="checkbox" name="hobby" value="scala"/>scala
+            </td>
+        </tr>
+        <tr>
+            <td>国籍：</td>
+            <td> <select name="country">
+                <option>--请选择国籍--</option>
+                <option value="cn">中国</option>
+                <option value="usa">美国</option>
+                <option value="jap">日本</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>自我评价：</td>
+            <td><textarea rows="10" cols="20" name="desc">我才是默认值</textarea><br/></td>
+        </tr>
+
+        <tr>
+            <td><input type="reset" value="rrrreset"/></td>
+            <td align="center"><input type="submit" value="sssubmit"/></td>
+        </tr>
+    </table>
+
+    
+
+    <!--<input type="file"/>-->
+
+    <!--<input type="hidden">-->
+
+
+</form>
+
+
+</body>
+</html>

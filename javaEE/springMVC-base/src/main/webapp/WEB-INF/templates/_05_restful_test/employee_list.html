@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>首页</title>
+    </head>
+    <body>
+
+        <h1>首页</h1>
+
+        <table id="dataTable" border="1" cellpadding="0" cellspacing="0" style="text-align: center">
+            <tr>
+                <th colspan="5">Employee Info</th>
+            </tr>
+
+            <tr>
+                <th>id</th>
+                <th>lastName</th>
+                <th>email</th>
+                <th>gender</th>
+                <th>option(<a th:href="@{/toAdd}">add</a>)</th>
+            </tr>
+
+            <tr th:each="employ:${employeeAll}">
+                <td th:text="${employ.id}"></td>
+                <td th:text="${employ.lastName}"></td>
+                <td th:text="${employ.email}"></td>
+                <td th:text="${employ.gender}"></td>
+                <td>
+                    <!--<a th:href="@{/employee/}+${employ.id}">delete</a>-->       <!--两种方式均可-->
+                    <a @click="deleteEmployee" th:href="@{'/employee/'+${employ.id}}">delete</a>
+                    <a th:href="@{'/employee/'+${employ.id}}">update</a>
+                </td>
+            </tr>
+
+        </table>
+
+        <!--js控制超链接控制form表单-->
+        <form id="deleteForm" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+        </form>
+
+        <script type="text/javascript" th:src="@{/statics/js/vue.js}"></script>
+        <script type="text/javascript">
+            var vue = new Vue({
+                el: "#dataTable",   //属性，必须包含操作的对象
+                methods: {
+                    deleteEmployee: function (event) {
+                        //根据id获取表单元素
+                        var deleteForm = document.getElementById("deleteForm");
+                        //将触发点击事件的超链接的href属性赋值给表单的action
+                        deleteForm.action = event.target.href;
+                        //提交表单
+                        deleteForm.submit();
+                        //取消超链接的默认行为
+                        event.preventDefault()
+
+                    }
+                }
+            });
+
+        </script>
+
+    </body>
+</html>

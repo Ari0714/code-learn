@@ -1,0 +1,259 @@
+
+配置
+https://www.runoob.com/mongodb/mongodb-linux-install.html
+
+启停
+mongod --dbpath /var/lib/mongo --logpath /var/log/mongodb/mongod.log --fork --bind_ip_all
+pkill mongod
+
+
+--------------------------------------------------------------mongo概念---------------------------------------------------------------
+1.数据库：仓库 可以存放集合
+2.集合：数组，可以存放文档
+3.文档：文档数据库的最小单位，存储和操作的内容全是文档
+
+
+--------------------------------------------------------------命令---------------------------------------------------------------
+数据库：
+	查看数据库：show dbs
+	使用数据库：use xxx
+	查看当前使用：db
+	删除：db.dropDatabase()
+
+
+集合：
+查看集合：show collections
+创建集合：db.createCollection("demo01")
+查看集合大小：db.getCollection("demo01").dataSize()
+查看集合状态：db.getCollection("demo01").stats()
+删除集合：db.demo01.drop()
+
+
+表：
+查看变：show tables
+插入文档：db.demo01.insert({"name":"coco","age":18})
+查看所有：db.demo01.find()
+条件查找：db.demo01.find({"name":"coco"})
+删除数据：db.demo01.remove({"name":"coco"})
+修改文档：db.student.update({"name":"lisi"},{$set:{"score.Math":95}},false)
+
+
+cmd命令：
+导出数据：mongoexport -d test -c demo01 --out "C:\mongosql.json"
+		  mongoimport -d test -c data03 "C:\Users\Administrator\Desktop\1006mongo\aa.json"
+
+
+
+db.data01.find({"state": "WA"}).count()
+db.data01.aggregate{{"$group":{"_id":"$state","totalpop":{"$sum":"$pop"}}}}   
+
+
+> db.images.aggregate( [ {$unwind:"$tags"},{$group:{_id:"$tags",num_of_tag:{$sum:1}}},{$project:{_id:0,tags:"$_id",num_of_tag:1}},{$sort:{num_of_tag:-1}} ])
+
+
+db.data01.aggregate([
+		{"$group":{
+				"_id":"$state",
+				"totalPop":{"$sum":"$pop"}
+				}
+		},
+		{"$sort":{totalPop:1}}
+					])
+
+
+db.data01.find({"city": "WEST BROOKLYN"})
+[-89.190917, 41.729156]
+db.data01.find({loc : {$near : [-89.190917,41.729156]}}).sort({feedid:-1}).limit(10)
+
+
+db.data01.find({"loc":{"$near" :{"$geometry":{"type":"Point", 
+    "coordinates": [-89.190917,41.729156]}, "$maxDistance" : 20000.0 }}}).count()
+
+db.data01.createIndex({loc:"2d"});
+
+db.location.find( { loc : [-89.190917,41.729156] } )
+
+
+1、计算华盛顿州的城市总数（代码：“WA”）。
+db.data01.find({"state": "WA"}).count()
+
+
+2、查找每个州的总人口（即，按升序中的人口对州进行排序）
+db.data01.aggregate([
+		{"$group":{
+				"_id":"$state",
+				"totalPop":{"$sum":"$pop"}
+				}
+		},
+		{"$sort":{totalPop:1}}
+					])
+
+
+3、找到离伊利诺伊州西布鲁克林最近的10个城市。您可能需要使用“$near”操作符。
+
+db.data01.ensureIndex({loc:"2d"})
+db.data01.find({loc: {$near:[-72.62,50]}}).limit(10)
+
+
+4、考虑到美国每个州的“地区”，根据这一来源，找出该州的总人口
+四个地区中的每一个（西部、南部、中西部和东北部）。
+
+NorthEast = ["CT","ME","MA","NH","RI","VT","NJ","NY","PA"]
+
+MidWest   = ["IL","IN","MI","OH","WI","IA","KS","MN","MO","NE","ND","SD"]
+
+South     = ["DE","FL","GA","MD","NC","SC","VA","DC","WV","AL","KY","MS","TN","AR","LA","OK","TX"]
+
+West      = ["AZ","CO","ID","MT","NV","NM","UT","WY","AK","CA","HI","OR","WA"]
+
+
+db.data01.aggregate(
+   [ 
+{ "$group" : { "_id" : null , 
+"NorthEast" : { "$sum" : { "$cond" : [ { 
+      $or:[ 
+       {$eq:["$state","CT"]}, 
+       {$eq:["$state","ME"]},
+	   {$eq:["$state","MA"]},
+	   {$eq:["$state","NH"]},
+	   {$eq:["$state","RI"]},
+	   {$eq:["$state","VT"]},
+	   {$eq:["$state","NJ"]},
+	   {$eq:["$state","NY"]},
+	   {$eq:["$state","PA"]}
+      ]},"$pop",0 
+     ]  
+	 }},
+"MidWest" : { "$sum" : { "$cond" : [ { 
+      $or:[ 
+       {$eq:["$state","IL"]}, 
+       {$eq:["$state","IN"]},
+	   {$eq:["$state","MI"]},
+	   {$eq:["$state","OH"]},
+	   {$eq:["$state","WI"]},
+	   {$eq:["$state","IA"]},
+	   {$eq:["$state","KS"]},
+	   {$eq:["$state","MN"]},
+	   {$eq:["$state","MO"]},
+	   {$eq:["$state","NE"]},
+	   {$eq:["$state","ND"]},
+	   {$eq:["$state","SD"]}
+      ]},"$pop",0 
+     ]  
+	 }},
+"South" : { "$sum" : { "$cond" : [ { 
+      $or:[ 
+       {$eq:["$state","DE"]}, 
+       {$eq:["$state","FL"]},
+	   {$eq:["$state","GA"]},
+	   {$eq:["$state","MD"]},
+	   {$eq:["$state","NC"]},
+	   {$eq:["$state","SC"]},
+	   {$eq:["$state","VA"]},
+	   {$eq:["$state","DC"]},
+	   {$eq:["$state","WV"]},
+	   {$eq:["$state","AL"]},
+	   {$eq:["$state","KY"]},
+	   {$eq:["$state","MS"]},
+	   {$eq:["$state","TN"]},
+	   {$eq:["$state","AR"]},
+	   {$eq:["$state","LA"]},
+	   {$eq:["$state","OK"]},
+	   {$eq:["$state","TX"]}
+      ]},"$pop",0 
+     ]  
+	 }},
+"West" : { "$sum" : { "$cond" : [ { 
+      $or:[ 
+       {$eq:["$state","AZ"]}, 
+       {$eq:["$state","CO"]},
+	   {$eq:["$state","ID"]},
+	   {$eq:["$state","MT"]},
+	   {$eq:["$state","NV"]},
+	   {$eq:["$state","NM"]},
+	   {$eq:["$state","UT"]},
+	   {$eq:["$state","WY"]},
+	   {$eq:["$state","AK"]},
+	   {$eq:["$state","CA"]},
+	   {$eq:["$state","HI"]},
+	   {$eq:["$state","OR"]},
+	   {$eq:["$state","WA"]}
+      ]},"$pop",0 
+     ]  
+	 }}
+}}
+   ]
+)
+
+
+5、查找每个州人口最多的3个城市（在一个查询中）
+db.data01.aggregate([
+		{"$group":{
+				"_id":"$state",
+				"totalPop":{"$sum":"$pop"}
+				}
+		},
+		{"$sort":{totalPop:1}}
+					])
+
+
+db.data01.aggregate([
+		{"$group":{
+				"_id":{"state":"$state","city":"$city"},
+				"totalPop":{"$sum":"$pop"}
+				}
+		},
+		{"$sort":{totalPop:-1}}
+					])
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6、找到所有开过“HALOPERIDOL”处方的医生的特长。
+db.data02.find({"cms_prescription_counts": {$regex:/HALOPERIDOL/}},{specialty: 1})
+
+
+7、分别查找每个地区的医生总数（在一个查询中）。
+db.data02.aggregate([{$group : {_id : "$region", doctor_num : {$sum : 1}}}])
+
+atorvastatin_calcium
+8、找到处方“ATORVASTATIN CALCIUM”的总量
+db.data02.aggregate(
+		{"$group":{
+				"_id":null,
+				"total_atorvastatin_calcium":{"$sum":"$atorvastatin_calcium"}
+				}
+		}
+					)
+
+
+
+9、找到大多数在“非城市”工作的医生开的药(以开处方的医生人数，而不是处方总量）。
+db.data02.find({"settlement_type": "non-urban"},{cms_prescription_counts: 1})
+
+
+10、考虑美国各州的地区（查询4）和每个医生的地区，找出四个地区的平均医生人数
+db.data02.aggregate(
+		{"$group":{
+				"_id":"$region",
+				"sum_doctor":{"$sum":1}
+				}
+		}
+					)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,122 @@
+
+
+--- account 
+1187334030@qq.com / Cj111111.
+
+
+
+--------------------------------------------------------------definition-------------------------------------------------------------
+
+
+tutorial：
+https://blog.csdn.net/RONE321/article/details/90413306
+
+
+
+--- what it is
+1、Apach Spark provide generic、unified analysis platform，support python、scala、R
+like jupyter interactive platform
+easy upload data、analysis、publish
+
+
+--- role
+account => subscription => resources group => resource (databrick, data factory)
+
+
+--- components
+databrick、azure data lake(gen2), azure data factory, synapse, powerBI
+
+
+
+---------------------------------------------------------------learn-------------------------------------------------------------
+
+
+
+--- pyspark interact with pandas
+1、Apache arrow
+
+2、run pandas on spark -》koalas
+integrate to spark 3.2
+
+
+
+--- read external db
+1、parallel read， set partition -》 numPartitions = 6
+
+
+
+
+------ enterprise version 
+
+--- use
+df1 = spark.read.format("csv").option("header", "true").load("dbfs:/FileStore/shared_uploads/数据集.csv")
+
+
+--- 1, read data
+storage_account_name = 'airstorage123'
+storage_account_access_key = 'VP7VL6A06rjLlHIkcfLEL27RP+hGL+7JuF4IcL1bGh6PEJ9w/OfYCUySUnP15Q37v4s9VFAMiM/q+ASt1vNutg=='
+spark.conf.set('fs.azure.account.key.' + storage_account_name + '.blob.core.windows.net', storage_account_access_key)
+
+blob_container = 'my-datafactory'
+filePath = "wasbs://" + blob_container + "@" + storage_account_name + ".blob.core.windows.net/`resDF01`.parquet"
+salesDf = spark.read.format("parquet").load(filePath, inferSchema = True, header = True)
+salesDf.show()
+
+
+
+--- 2, read data
+storage_account_name = "STORAGE_ACCOUNT_NAME"
+storage_account_access_key = "YOUR_ACCESS_KEY"
+
+file_location = "wasbs://example/location"
+file_type = "csv"
+
+spark.conf.set(
+  "fs.azure.account.key."+storage_account_name+".blob.core.windows.net",
+  storage_account_access_key)
+  
+df = spark.read.format(file_type).option("inferSchema", "true").load(file_location)
+
+display(df.select("EXAMPLE_COLUMN"))
+
+df.createOrReplaceTempView("YOUR_TEMP_VIEW_NAME")
+
+%sql
+SELECT EXAMPLE_GROUP, SUM(EXAMPLE_AGG) FROM YOUR_TEMP_VIEW_NAME GROUP BY EXAMPLE_GROUP
+
+df.write.format("parquet").saveAsTable("MY_PERMANENT_TABLE_NAME")
+
+
+--- whole example
+storage_account_name = "airstorage123"
+storage_account_access_key = "VP7VL6A06rjLlHIkcfLEL27RP+hGL+7JuF4IcL1bGh6PEJ9w/OfYCUySUnP15Q37v4s9VFAMiM/q+ASt1vNutg=="
+file_path = "wasbs://my-datafactory@airstorage123.blob.core.windows.net"
+spark.conf.set(
+  "fs.azure.account.key."+storage_account_name+".blob.core.windows.net",
+  storage_account_access_key)
+
+df = spark.read.format('parquet').option("inferSchema", "true").load(file_path+'/test/resDF01/resDF01.parquet')
+df.show()
+
+df2 = spark.read.format('parquet').option("inferSchema", "true").load(file_path+'/test/resDF02/resDF02.parquet')
+df2.show()
+
+df3 = spark.read.format('parquet').option("inferSchema", "true").load(file_path+'/test/resDF03/resDF03.parquet')
+df3.show()
+
+# save
+df.repartition(1).write.mode(saveMode="Overwrite").csv(file_path+"/test_out/01")
+df2.repartition(1).write.mode(saveMode="Overwrite").csv(file_path+"/test_out/02")
+df3.repartition(1).write.mode(saveMode="Overwrite").csv(file_path+"/test_out/03")
+
+
+
+--- project
+
+- azure end2end data suite project 
+https://www.youtube.com/watch?v=FFS04NzZbm0&list=PLrG_BXEk3kXx6KE4nBmhf6QwSHMbznP2W&index=8
+
+
+
+
+

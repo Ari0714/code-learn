@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>首页</title>
+    </head>
+    <body>
+
+        <h1>首页</h1>
+
+        <a th:href="@{/testException}">测试异常</a><br><br>
+
+        <!--<form th:action="@{/testUpload}" method="post" enctype="multipart/form-data">-->
+            <!--图片: <input type="file" name="photo"><br>-->
+            <!--<input type="submit" value="upload">-->
+        <!--</form>-->
+
+        <!--put请求方式：form表单为post；2、隐藏域增加value=PUT-->
+        <!--<form th:action="@{/update_user}" method="post">-->
+        <!--<input type="hidden" name="_method" value="PUT">-->
+        <!--用户名：<input type="text" name="username">-->
+        <!--密码：<input type="password" name="password">-->
+        <!--<input type="submit" value="put">-->
+        <!--</form>-->
+
+
+        <!--<a th:href="@{/target}">跳转到target页面: get请求</a> <br>-->
+        <!--<form th:action="@{/target}" method="post">-->
+        <!--<input type="submit" value="跳转到target页面: post请求">-->
+        <!--</form>-->
+        <!--<br><br>-->
+
+        <!--<a th:href="@{/target(username='admin',passwd=111111)}">跳转到target页面: param参数</a> <br>-->
+
+        <!--<a th:href="@{/target}">跳转到target页面: headers参数</a> <br>-->
+
+        <!--<a th:href="@{/target/a5c}">跳转到target页面: ant风格路径</a> <br>-->
+
+        <!--<a th:href="@{/target/1/username}">跳转到target页面: springMVC占位符</a> <br><br>-->
+
+
+        <!--<a th:href="@{/target/(username='coco',passwd=1)}">servlet获取请求参数</a> <br>-->
+
+
+    </body>
+</html>

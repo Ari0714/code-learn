@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--dom4j解析xml文件   本质和html一样是标记性语言-->
+
+<books>
+    <book>
+        <name>java</name>
+        <auther>dabin</auther>
+        <year>2018</year>
+    </book>
+
+    <book>
+        <name>scala</name>
+        <auther>dabin</auther>
+        <year>2018</year>
+    </book>
+
+</books>

@@ -1,0 +1,87 @@
+
+--------------------------------------------------------------提交脚本-------------------------------------------------------------
+
+##########################spark代码路径不可出现中文##########################
+
+本地： 不加 --master
+bin/spark-submit \
+--class org.apache.spark.examples.SparkPi \
+--executor-memory 1G \
+--total-executor-cores 2 \
+./examples/jars/spark-examples_2.11-2.4.8.jar \
+100
+
+
+
+standalone：
+bin/spark-submit \
+--class org.apache.spark.examples.SparkPi \
+--master spark://hdp101:7077 \
+--executor-memory 1G \
+--total-executor-cores 2 \
+./examples/jars/spark-examples_2.11-2.4.8.jar \
+100
+
+
+yarn:  1.路径是hdfs的
+bin/spark-submit \
+--class org.apache.spark.examples.SparkPi \
+--master yarn \
+--deploy-mode cluster  \
+--executor-memory 2G \
+--num-executors 2 \
+./examples/jars/spark-examples_2.11-2.4.8.jar \
+100s
+
+
+
+--------------------------------------------------------------使用问题-------------------------------------------------------------
+
+1、打包提交找不到入口类问题：排查为包中没有入口类
+    <build>
+        <plugins>
+            <!-- 该插件用于将Scala代码编译成class文件 -->
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.1</version>
+                <executions>
+                    <execution>
+                        <id>compile-scala</id>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile-scala</id>
+                        <!-- 声明绑定到maven的compile阶段 -->
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>

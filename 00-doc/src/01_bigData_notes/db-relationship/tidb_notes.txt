@@ -1,0 +1,24 @@
+
+--------------------------------------------------------------安装-------------------------------------------------------------
+
+1、下载安装包
+wget http://download.pingcap.org/tidb-latest-linux-amd64.tar.gz
+ 
+2、解压文件
+tar -zxvf tidb-latest-linux-amd64.tar.gz
+cd tidb-latest-linux-amd64
+
+3、启动
+启动PD
+./bin/pd-server --data-dir=pd --log-file=pd.log &
+启动tikv
+./bin/tikv-server --pd="127.0.0.1:2379" --data-dir=tikv --log-file=tikv.log &
+启动tidb-server
+./bin/tidb-server --store=tikv --path="127.0.0.1:2379" --log-file=tidb.log &
+ 
+4、登录
+mysql -h 127.0.0.1 -P 4000 -u root
+
+
+5、开启外网访问pd server 2379，tikv 20180
+todo

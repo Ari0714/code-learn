@@ -1,0 +1,128 @@
+
+作用：RDBMS 《=====》 hive，hdfs ，hbase
+原理：将导入或导出翻译成MR
+
+export SQOOP_HOME=/opt/sqoop-1.4.6.bin__hadoop-2.0.4-alpha
+export PATH=$PATH:$SQOOP_HOME/bin
+
+测试：
+sqoop help
+sqoop list-databases --connect jdbc:mysql://hdp01:3306/ --username root --password 111111
+sqoop list-tables --connect jdbc:mysql://hdp:3306/bigdatacase1111_db --username root --password 111111
+
+--------------------------------------------------------------导入---------------------------------------------------------------
+RDBMS = 》 hdfs
+mysql> create database company;
+mysql> create table company.staff(id int(4) primary key not null auto_increment, name varchar(255), sex varchar(255));
+mysql> insert into company.staff(name, sex) values('Thomas', 'Male');
+mysql> insert into company.staff(name, sex) values('Catalina', 'FeMale');
+全部导入：
+sqoop import \
+--connect jdbc:mysql://hdp01:3306/company \
+--username root \
+--password 111111 \
+--table staff \
+--target-dir /user/company \
+--delete-target-dir \
+--num-mappers 1 \
+--fields-terminated-by "\t"
+查询导入：
+sqoop import \
+--connect jdbc:mysql://hdp01:3306/company \
+--username root \
+--password 111111 \
+--target-dir /user/company \
+--delete-target-dir \
+--num-mappers 1 \
+--fields-terminated-by "\t" \
+--query 'select name,sex from staff where id <=1 and $CONDITIONS;'
+and $CONDITIONS;必须加
+导入指定列：
+sqoop import \
+--connect jdbc:mysql://hdp01:3306/company \
+--username root \
+--password 111111 \
+--target-dir /user/company \
+--delete-target-dir \
+--num-mappers 1 \
+--fields-terminated-by "\t" \
+--columns id,sex \
+--table staff
+多一个columns，多列用 ，分割 不加分割
+使用sqoop筛选查询导入：
+sqoop import \
+--connect jdbc:mysql://hdp01:3306/company \
+--username root \
+--password 111111 \
+--target-dir /user/company \
+--delete-target-dir \
+--num-mappers 1 \
+--fields-terminated-by "\t" \
+--table staff \
+--where "id=1"
+分解完整sql
+
+RDBMS  =》 hive
+sqoop import \
+--connect jdbc:mysql://hdp01:3306/company \
+--username root \
+--password 111111 \
+--table staff \
+--num-mappers 1 \
+--hive-import \
+--fields-terminated-by "\t" \
+--hive-overwrite \
+--hive-table staff_hive
+两步：RDBMS => hdfs => hive  staff是mysql名（user/hive/warehouse） staff_hive是hive表名
+
+
+RDBMS = 》 hbase
+sqoop import \
+--connect jdbc:mysql://hdp01:3306/company \
+--username root \
+--password 111111 \
+--table staff \
+--columns "id,name,sex" \
+--column-family "info" \
+--hbase-create-table \
+--hbase-row-key "id" \
+--hbase-table "hbase_company" \
+--num-mappers 1 \
+--split-by id
+sqoop1.4.6只支持HBase1.0.1之前的版本的自动创建HBase表的功能（用的1.3.1）
+报错：NoClassDefFoundError: com/yammer/metrics/Metrics； metrics-core-2.2.0.jar放到sqoop/lib下
+
+--------------------------------------------------------------导出---------------------------------------------------------------
+hive/hdfs => RDBMS
+sqoop export \
+--connect jdbc:mysql://192.168.253.132:3306/company \
+--username root \
+--password 111111 \
+--table staff \
+--num-mappers 1 \
+--export-dir /user/hive/warehouse/staff_hive \
+--input-fields-terminated-by "\t"
+Mysql中如果表不存在，不会自动创建  staff_hive指定hive中stuff表的目录名
+
+
+--------------------------------------------------------------脚本打包---------------------------------------------------------------
+export
+--connect
+jdbc:mysql://hadoop102:3306/company
+--username
+root
+--password
+000000
+--table
+staff
+--num-mappers
+1
+--export-dir
+/user/hive/warehouse/staff_hive
+--input-fields-terminated-by
+"\t"
+
+执行： sqoop --options-file opt/job_HDFS2RDBMS.opt
+
+
+

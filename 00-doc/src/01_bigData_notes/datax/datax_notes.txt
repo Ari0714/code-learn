@@ -1,0 +1,70 @@
+
+安装datax
+rm -rf /opt/datax/plugin/*/._*
+执行自检脚本：python /opt/datax/bin/datax.py /opt/datax/job/job.json
+
+python datax.py /opt/job/job.json
+
+create table test_datax(id string, name string)
+
+create table test_datax(id varchar(32), name varchar(32))
+
+python bin/datax.py hive2hdfs.json
+
+
+
+{
+    "job": {
+        "setting": {
+            "speed": {
+                "channel": 1
+            }
+        },
+        "content": [
+            {
+                "reader": {
+                    "name": "hdfsreader",
+                    "parameter": {
+                        "path": "/user/hive/warehouse/mysql2hive",
+                        "defaultFS": "hdfs://hdp:8020",
+                        "column": [
+                               {
+                                "index": 0,
+                                "type": "string"
+                               },
+                               {
+                                "index": 1,
+                                "type": "string"
+                               }
+                        ],
+                        "fileType": "text",
+                        "encoding": "UTF-8",
+                        "fieldDelimiter": ","
+                
+                    }
+                },
+                "writer": {
+                    "name": "mysqlwriter",
+                    "parameter": {
+                        "writeMode": "insert",
+                        "username": "root",
+                        "password": "111111",
+                        "column": [
+                            "id",
+                            "name"
+                        ],
+                        "connection": [
+                            {
+                                "jdbcUrl": "jdbc:mysql://hdp:3306/test?useUnicode=true&characterEncoding=utf8",
+                                "table": [
+                                    "test_datax"
+                                ]
+                            }
+                        ]
+                    }
+            }
+        }
+        ]
+    }
+}
+

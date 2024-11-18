@@ -1,0 +1,57 @@
+{
+    "job": {
+        "setting": {
+            "speed": {
+                 "channel":1
+            }
+        },
+        "content": [
+            {
+                "reader": {
+                    "name": "mysqlreader",
+                    "parameter": {
+                        "username": "root",
+                        "password": "111111",
+                        "connection": [
+                            {
+                                "querySql": [
+                                    "select city_id, city_name, area from city_info;"
+                                ],
+                                "jdbcUrl": [
+                                    "jdbc:mysql://hdp:3306/commerces"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                  "writer": {
+                    "name": "hdfswriter",
+                    "parameter": {
+                        "defaultFS": "hdfs://hdp:8020",
+                        "fileType": "text",	
+                        "path": "/warehouse/commerces/ods/ods_full/city_info/",
+						"fileName": "0000.txt",
+                        "column": [
+                            {
+                                "name": "city_id",
+                                "type": "int"
+                            },
+                            {
+                                "name": "city_name",
+                                "type": "string"
+                            },
+                            {
+                                "name": "area",
+                                "type": "string"
+                            }
+                        ],
+                        "writeMode": "append",
+                        "fieldDelimiter": ","
+                    }
+                }
+            }
+        ]
+    }
+}
+
+

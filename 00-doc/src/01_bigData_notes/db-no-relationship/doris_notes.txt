@@ -1,0 +1,43 @@
+
+安装
+https://www.cnblogs.com/ywjfx/p/14719217.html
+
+
+vim /etc/security/limits.conf
+
+* soft nofile 65535
+* hard nofile 65535
+* soft nproc 65535
+* hard nproc 65535
+
+
+进入fe
+mkdir -p doris-meta
+bin/start_fe.sh --daemon
+查看进程jps与端口号
+	PaloFe
+	lsof -i:8030
+	lsof -i:9030
+连接doris   mysql -h 127.0.0.1 -P9030 -uroot
+查看状态    SHOW PROC '/frontends'\G 
+
+
+进入be
+mkdir -p storage
+进入数据库  ALTER SYSTEM ADD BACKEND "hdp:9050";
+bin/start_be.sh --daemon
+查看状态  SHOW PROC '/backends'\G  
+
+
+建表：
+create table employee(id int, name varchar(32), age int, dept varchar(32), lrrq datetime)
+DISTRIBUTED BY HASH(id) BUCKETS 10
+PROPERTIES("replication_num" = "1");
+
+
+ALTER SYSTEM ADD BACKEND "hdp103:9050";
+
+
+1、System.setProperty("HADOOP_USER_NAME","root")
+2、uber包
+

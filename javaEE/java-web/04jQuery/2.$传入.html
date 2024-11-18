@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript" src="script/jquery-1.7.2.js"></script>
+
+    <script type="text/javascript">
+
+
+
+
+
+        $(function () {
+
+
+            // alert("123");
+
+
+            $("<button id=\"btn01\">点击02</button>").appendTo("body")
+
+            var $btn01 = $("#btn01");
+
+            $btn01.click(function () {
+                alert("$的作用")
+            });
+
+
+        });
+
+
+
+        
+        
+    </script>
+
+</head>
+<body>
+
+
+<!--
+1、传入函数  页面加载完成执行  window.onload = function () {}
+2、传入参数  加载value  选择器是css中的  # . 标签
+3、html结构  直接加载都页面
+4、传入DOM   转变为obj
+
+jQuery对象
+1、通过api创建的
+2、通过选择器获取的
+3、包装的Dom对象
+
+jQuery对象本质
+dom数组 + JQuery提供的一系列功能函数
+
+JQuery和Dom的方法不能相互使用
+
+相互转换
+1、jQuery -》 dom  下标
+2、dom =》 JQuery $(dom)
+
+-->
+
+
+<button id="btn01">点击</button>
+
+</body>
+</html>

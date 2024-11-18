@@ -1,0 +1,73 @@
+
+--------------------------------------------------------------安装-------------------------------------------------------------
+
+-----安装
+yum install -y libtool *unixODBC*
+rpm -ivh *.rpm
+禁止开机自启：systemctl disable clickhouse-server
+
+
+在这个文件中，有ClickHouse的一些默认路径配置，比较重要的
+
+
+数据文件路径：<path>/var/lib/clickhouse/</path>
+日志文件路径：<log>/var/log/clickhouse-server/clickhouse-server.log</log>
+
+
+-----启停
+systemctl start clickhouse-server   启动后查看状态：systemctl status clickhouse-server
+systemctl stop clickhouse-server
+systemctl restart clickhouse-server
+
+
+-----卸载
+yum list installed | grep clickhouse
+yum remove -y clickhouse-common-static clickhouse-common-static-dbg.x86_64
+
+rm -rf /var/lib/clickhouse
+rm -rf /etc/clickhouse-*
+rm -rf /var/log/clickhouse-server
+
+
+-----修改挂载盘
+chown -R clickhouse:clickhouse /home/clickhouse/
+
+
+
+-----数据目录机构
+0	/home/clickhouse/data
+0	/home/clickhouse/dictionaries_lib
+0	/home/clickhouse/flags
+8.0K	/home/clickhouse/metadata             建表语句
+0	/home/clickhouse/metadata_dropped
+64K	/home/clickhouse/preprocessed_configs
+4.0K	/home/clickhouse/status
+2.2M	/home/clickhouse/store                原数据data
+
+
+
+--------------------------------------------------------------使用-------------------------------------------------------------
+
+-----命令行进入
+clickhouse-client -m -u default --password wshoto666
+
+
+-----建表
+create table t_order(
+    id UInt32,
+    sku_id String,
+    total_amount Decimal(16,2),
+    create_time Datetime
+ ) engine =MergeTree
+   partition by toYYYYMMDD(create_time)
+   primary key (id)
+   order by (id,sku_id);
+
+insert into t_order values
+(101,'sku_001',1000.00,'2020-06-01 12:00:00') ,
+(102,'sku_002',2000.00,'2020-06-01 11:00:00'),
+(102,'sku_004',2500.00,'2020-06-01 12:00:00'),
+(102,'sku_002',2000.00,'2020-06-01 13:00:00'),
+(102,'sku_002',12000.00,'2020-06-01 13:00:00'),
+(102,'sku_002',600.00,'2020-06-02 12:00:00');
+

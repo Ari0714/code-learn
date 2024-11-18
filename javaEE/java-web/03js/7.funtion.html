@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+
+        function f1() {
+            alert("我是f1")
+        }
+
+        // f1();
+
+        function f2(a,b) {
+            alert(a+b)
+        }
+
+        // f2(100,200)
+
+        function f3(a,b) {
+            return a+b
+        }
+
+        // alert(f3(100,110));
+
+
+    //第二种方式
+        var f4 = function (a,b) {
+            alert(a + b)
+        };
+
+        // f4(100,200);
+
+    //    不重载 直接覆盖
+
+
+    //    args隐形参数的使用
+        function f5() {
+            var res = 0;
+            for (var i = 0; i < arguments.length; i++)
+                res += arguments[i]
+
+            return res
+        }
+
+        alert(f5(1,2,3,4,5,6,7,8,9))
+
+
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

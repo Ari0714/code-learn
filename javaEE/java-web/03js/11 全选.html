@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+
+
+        <!--查找使用顺序  getElementById getElementsByName getElementsByTagName-->
+
+        function f1() {
+
+            var doc = document.getElementsByName("ip01");
+
+            for (var i=0;i<doc.length;i++){
+                doc[i].checked = true
+            }
+
+        }
+
+        function f2() {
+
+            var doc = document.getElementsByName("ip01");
+
+            for (var i=0;i<doc.length;i++){
+                doc[i].checked = false
+            }
+
+
+        }
+
+        function f3() {
+
+            var doc = document.getElementsByName("ip01");
+
+            for (var i = 0; i < doc.length; i++) {
+
+                doc[i].checked = !doc[i].checked
+
+                // if (doc[i].checked) {
+                //     doc[i].checked = false;
+                // }
+                // else {
+                //     doc[i].checked = true;
+                // }
+            }
+        }
+
+    </script>
+
+</head>
+<body>
+
+java<input type="checkbox" name="ip01" checked="checked"/>
+scala<input type="checkbox" name="ip01"/>
+python<input type="checkbox" name="ip01"/><br/>
+
+<button onclick="f1()">全选</button>
+<button onclick="f2()">全不选</button>
+<button onclick="f3()">反选</button>
+
+</body>
+</html>

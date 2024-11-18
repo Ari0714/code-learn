@@ -1,0 +1,90 @@
+
+1、页面由内容（html）、表现（css）、行为构成（js）
+123123
+
+
+--------------------------------------------------------------html-------------------------------------------------------------
+1、定义：超文本标记语言
+
+2、标签
+  1、不区分大小写
+  2、拥有自己的属性 （bgcolor onclick等）
+    1、align（left center right）
+  3、双标签、单标签<br /> <hr /> <src />
+
+
+3、常用标签
+<font> 字体
+<h1>  =》 <h6>  标题大到小
+<a>
+
+4、列表  （有序 无序）
+
+
+
+--------------------------------------------------------------servlet-------------------------------------------------------------
+1、是javaee的规范之一  规范就是接口
+2、javaee三大核心：servlet filter listener
+3、servlet是运行在服务器上的java的小程序， 用于接受客户端响应并返回数据
+
+4、生命周期
+  1、构造器
+  2、初始化
+  3、service
+  4、dsetory 销毁
+  
+5、创建servlet的方法
+  1、实现Servlet接口
+  2、继承HttpServlet
+  3、idea快捷
+
+
+6、继承关系
+  1、Servlet接口 《=  GenericServlet实现接口 《= HttpServlet  《=  使用
+
+
+7、ServletConfig作用
+  1、获取Servlet-name
+  2、获取初始参数
+  3、获取ServletContext对象
+  
+  
+8、ServletContext
+  1、接口，表示Servlet上下文
+  2、一个web工程，只有一个ServletContext对象
+  3、域对象
+    1、类似map存取数据的对象（setAttribute、getAttribute、removeAttribute）
+  4、作用
+    1、获取web.xml的context param
+	2、工程绝对路径 相对路径
+	3、存取数据
+	
+9、http协议
+  1、服务器和客户端约定的传输数据的协议，http中的数据叫报文
+  
+  
+10、常见响应码
+  1、200  成功
+  2、302  重定向
+  3、404  数据不存在 （地址错误）
+  4、500  服务器内部错误
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+

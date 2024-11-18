@@ -1,0 +1,413 @@
+
+--------------------------------------------------------------简介-------------------------------------------------------------
+1.是什么：分布式处理引擎框架 用于对有界和无界数据流进行状态计算
+
+2.为什么选择：
+  1.流数据真实反映我们的生活方式
+  2.传统数据架构是基于有限数据集
+  3.低延时  高吞吐  良好的容错性和结果准确
+  
+3.特点：
+  1.事件驱动：和传统的后端项目类似  flink的application的state类似数据库保存状态（容错会增加persist） 后续输出或action
+  2.基于流是世界观：离线数据是有界流 实时数据是无界流
+  3.分层API：底层 -》上层 ProcessFunction -》DataStream -》SQL/table API   越底层越具体功能多灵活  上层使用简单
+  4.支持事件事件和处理时间
+  5.exactly once
+  6.低延迟：每秒处理百万个事件 ms级延时
+  7.存储系统连接友好
+  8.高可用 动态拓展 7x24小时运行
+  
+4.flink VS spark Streaming
+ 1.数据类型
+   1.spark Streaming的Dstranm本质是一组RDD
+   2.flink基本数据类型时数据流 以及事件序列
+ 2.运行时架构
+   1.spark是批计算 将DAG划分成不同stage 一个完成后计算下一个
+   2.flink是标准的流执行模式 一个事件在一个节点执行完成后直接发往下一个节点
+
+5.flink部署
+ 1.standalone 独立集群
+   1.flink-conf.yaml 配置master
+   2.slaves配置slave
+   3.分发启动
+   4.8081
+ 2.yarn
+   1.session-cluster：一次性申请一个资源不变的空间 资源满了任务等待 适合小规模作业，flink集群常驻在yarn空间中 除非关闭 
+   2.per-job-cluster：每次提交创建一个新的flink集群 任务独立互不影响 任务结束后创建的集群消失
+ 3.k8s
+
+
+--------------------------------------------------------------flink运行架构-------------------------------------------------------------
+1.运行组件
+  1.job manager  接受执行的应用程序（应用程序包含作业图）-》jobmanager将作业图转化成物理层面数据流图（即是执行图）包含所有可以并发执行的任务 -》jb想rm申请资源（即slot）-》执行图分发到tm
+                 运行过程中 jm负责中央协调 如checkpoints协调
+  2.task manager 向RM注册插槽 -》交给jm -》jm分配任务  干活的人  
+    1.一个task manager包含多个task slot 一个task slot是一个Thread
+  3.reosurce manager  管理slot
+  4,dispatcher  提供rest接口 webUI
+
+2.任务提交流程
+yarn：1.flink client将jar包上传到HDFS
+      2.flink client提交job到yarn的RM
+	  3.RM启动applicationMaster
+	  4.applicationMaster启动jm
+	  5.jm启动tm
+
+3.任务调度原理
+
+
+--------------------------------------------------------------flink流处理API-------------------------------------------------------------
+1.env
+  1.getExecutionEnvironment  自动判断  独立调用是local  集群remote
+    1.local
+	2.remote
+
+2.source
+  1.文件
+  2.collection
+  3.kafka
+  4.自定义
+  
+4.transform
+  1.map（flatmap） filter keyBy
+  2.sum min max
+  3.reduce
+  4.split select
+  5.connect comap union
+
+5.sink
+  1.kafka
+  2.redis
+  3.es
+  4.jdbc
+  4.txt文件
+
+--------------------------------------------------------------flink数据类型-------------------------------------------------------------
+1.java和scala（元祖）全部数据类型
+
+2.case class样例类
+
+3.容器
+
+--------------------------------------------------------------函数类-------------------------------------------------------------
+1.mapFunction  FilterFunction  processFunction
+
+2.富函数 RichFilterFunction  富在运行时上下文（获取状态）  生命周期（open close 数据库连接）
+
+
+--------------------------------------------------------------window API-------------------------------------------------------------
+1.窗口概念：无界流 =》有界流
+
+2.类型：
+  1.时间窗口
+    滚动时间窗口：按长度切分 无重叠
+    滑动时间窗口：窗口长度固定 滑动 有重叠
+    会话窗口：session到时 旧关闭 生成窗口
+  2.计数窗口
+    滑动计数窗口
+    滚动计数窗口
+
+3.window API
+  1.先keyBy（timeWindowAll除外）
+  
+4.窗口函数计算类型
+  1.增量窗口函数：来一条记录计算一次 保存状态  reduceFunction  aggregateFunction ，使用多
+  2.全窗口函数：到点全部计算  
+       1、先使用 .process processWindowFunction(processAllWindowFunction,不分组窗口timeWindowAll使用)
+	   2、先使用 .apply   WindowFunction(AllWindowFunction) 排序 中位数  
+
+5.可选API
+  1.allowedLateness  允许迟到
+  2.sideOutputLataData  将迟到的数据放入侧输出流
+  3.getSideOutput  获取侧输出流
+  4.trigger 定义window什么时候关闭输出结果
+  5.evictor：移除某些数据
+  
+  
+-------------------------------------------------------------时间语义与waterMark-------------------------------------------------------------
+1.时间语义
+  1.enent time     事件时间：故事时间  
+  2.ingestion time  进入flink时间：当前时间
+  3.processing time  执行操作算子的本地时间：当前时间
+  
+2.watermark
+  1.使用原因：由于网络、分布式的原因导致数据乱序 窗口被关闭但是时间之内的数据没有进来
+  2.解决问题：延时窗口关闭的时间，处理乱序数据
+  3.原理：watermark单递增  当前数据时间减去watermark得到下一条数据的最小时间
+
+
+-------------------------------------------------------------状态管理-------------------------------------------------------------
+1.定义：本地变量 可以被业务逻辑访问，状态管理：一致性 故障处理 高效存储和访问
+
+2.类型
+  1.算子状态：算子状态的作用范围限定为算子任务
+    1.数据结构
+	  1.列表状态
+	  2.联合列表状态
+	  3.广播状态
+  2.键控状态：根据输入流中定义的键（key）来维护和访问
+    1.数据结构
+	  1.值状态
+	  2.列表状态
+	  3.映射状态
+	  4.聚合
+  3.状态后端：状态的存储、访问、维护由一个可插入的组件决定  这个组件是状态后端 。负责本地的状态管理 和 checkpoint写入远程存储
+    1.memoryStateBackend  内存
+	1.FsStateBackend    存到远程的Fs 本地状态和memory一样
+	1.RocksDBStateBackend  本地RocksDB存储
+
+
+3.flatmapFunction：无返回值 ，collect集合结果返回
+
+
+4.processFuction：更加底层，一切自己定义
+  1.ProcessFunction
+  2.KeyedProcessFunction
+  3.CoProcessFunction
+  4.ProcessJoinFunction
+  5.BroadcastProcessFunction
+  6.KeyedBroadcastProcessFunction
+  7.ProcessWindowFunction
+  8.ProcessAllWindowFunction
+
+4.需求：
+  1.window：对窗口数据收集判断， 问题：1-15  15-30  20-25
+  2.processFunction定时器，连续10s温度上升  
+
+
+-------------------------------------------------------------容错机制-------------------------------------------------------------
+1.checkpoint
+  1.所有任务的状态 在某个时间点保存一份快照
+  2.时间点：所有任务恰好完成输出数据
+  3.flink程序运行中 会定期保存checkpoint
+
+2.从checkpoint恢复状态
+  1.重启应用
+  2.从checkpoint恢复状态  把状态重置
+  3.开始消费并处理检查点到故障之间的所有数据 机制检查点的保存和恢复机制提供exactly once的一致性
+ 
+3.checkpoint算法
+  1.基于chandy-lamport算法的分布式快照，将检查点的保存和数据处理分开 不暂定应用
+
+4.保存点（sava point）
+  1.区别
+    1.具有额外元数据的checkpoint
+    1.手动存盘
+	3.功能：代码修改 版本迁移
+
+
+
+-------------------------------------------------------------状态一致性-------------------------------------------------------------
+1.状态一致性
+  1.定义:结果的正确性 一条数据不能丢失也不能重复消费
+  2.分类：
+    1.at most once
+	2.at least once
+	3.exactly once
+
+2.一致性检查点（checkpoint）
+  1.flink提供轻量级的快照（checkpoint） 保证 exactly once
+  2.所有任务在恰好处理完数据的时候 将状态拷贝一份
+  
+3.端到端状态一致性
+  1.内部：checkpoint
+  2.source：重设数据的读取位置
+  3.sink
+    1.幂等写入：多次重复操作只执行一次  map的数据添加  不好：跳变 短暂回到过去
+	2.事务写入：全部成功 或 全部失败
+	  1.预写日志（wal）：把结果数据当成状态保存 收到checkpoint完成通知后 一次性写入sink系统  问题：sink一半挂了 实际还是at least once
+	  2.两阶段提交（2pc）：将数据写入到外部系统 但不提交（只是预提交） 收到checkpoint完成通知后 真正提交  这种真正实现了exactly once
+
+4.端到端的exactly once
+
+5.flink + kafka的一致性
+
+
+-------------------------------------------------------------flink sql && table API-------------------------------------------------------------
+1.更新模式
+  1.append
+  2.retract： false true 
+  3.upsert：覆盖
+
+2.Table 转化成 dataStream或dataSet
+  1.toAppendStream   追加
+  2.toretractStream  有聚合或更新操作
+  
+  
+3.动态表和动态查询
+  1.动态表：随着新的数据进来 表在不断发生变化 ， 随着新数据的的到来 在之前的基础上更新结果
+  
+
+
+-------------------------------------------------------------时间特性-------------------------------------------------------------
+1.分类：
+  1.process time
+    指定位置 .proctime
+	  1.fromDataStream
+	  2.connect schema
+	  3.建表ddl
+  2.event time
+    指定位置 .rowtime
+	  同
+
+-------------------------------------------------------------窗口-------------------------------------------------------------
+1.分类：
+  1.group window  分组窗口
+    1.分组滚动
+	2.分组滑动
+  2.over window 开窗函数  sql当中已经存在的
+
+
+-------------------------------------------------------------函数-------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------项目：电商用户行为分析-------------------------------------------------------------
+数据源：
+ 1.user_behavior：userId, itemId, categoryId, behavior, timestammp
+ 2.web服务器日志：ip, userId, eventTime, method, url
+
+1.实时热门商品：每隔 5 分钟输出最近一小时内点击量最多的前 N 个商品 （aggregateFunction windowFunction KeyedProcessFunction）
+  
+2.实时流量：
+  1.每隔 5 秒，输出最近 10 分钟内访问量最多的前 N 个 URL
+  2.pv：每小时内的网站PV
+  3.uv：timeWindowAll apply
+    1.set 10^9 byte(10亿) = 1G
+	2.bloom：不完整存储用户的id 只要知道在不在 用1bit（1byte = 8bit）表示一个用户的状态
+ 
+ 
+3.市场营销商业指标
+  1.app市场推广：分渠道 部分渠道
+  
+  2.页面广告分析：一个小时窗口 滑动5s
+  
+  3.黑名单过滤：一天内同一用户对同一广告的点击次数 > 100 限制 报警
+    1. 2次：状态 相邻编程
+    2. 3次及以上  CEP	
+
+4.恶意登录监控：2s内连续两次登录失败   防止暴力破解  （类似连续10s温度上升，不能用窗口）
+
+5.订单支付失效：15分钟超时支付
+
+
+
+
+-------------------------------------------------------------代码注意-------------------------------------------------------------
+1. == eq equals
+  1. eq比较地址
+  2. equals比较值
+  3. == null时比较地址 非null比较值
+  4.总结：scala比较都有== 不用考虑null
+
+
+2. iterable 和 iterator
+ 1.iterable：可迭代的  使用for
+ 2.iterator：由上一步得到 next获取
+
+
+3.侧输出流用processFunction
+
+4.iterator  初始获取时执行null
+  1. hasnext  判断是否有下一个
+  2. next  移动指针到下一位并返回元素 
+
+5.patternSelectionFunction 和 patternTimeoutFunction begin和next只能选一个  否则kafka重复消费
+
+6.case class 没有bigDecimal
+
+7. x =>  加 { } 保险
+
+8.Date .getTime得到的是ms
+
+9.ProcessFunction out红  import org.apache.flink.streaming.api.functions._
+
+10.watermark设置有问题数据重复无休消费
+
+11.getJsonObject无数据不报错  卡住  maxwell输出最后一条数据data为null
+
+
+
+-------------------------------------------------------------提交命令-------------------------------------------------------------
+
+1、本地提交
+bin/flink run -c com.atguigu.wc.StreamWordCount FlinkTutorial-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+
+2、yarn
+  1、session
+  开辟空间：bin/yarn-session.sh -n 2 -s 2 -jm 1024 -tm 1024 -nm test -d
+  提交：bin/flink run -c com.atguigu.wc.StreamWordCount FlinkTutorial-1.0-SNAPSHOT-jar-with-dependencies.jar
+  
+  2、per-job
+  bin/flink run –m yarn-cluster -c com.atguigu.wc.StreamWordCount FlinkTutorial-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+
+3、保存检查点
+  1、提交任务拿到jobId：jobIdgdg4354tgdsdf53
+  2、保存点：bin/flink savapoint jobIdgdg4354tgdsdf53 hdfs://hdp101:9000/ck/gmall/save
+  3、从保存点恢复：bin/flink run -s hdfs://hdp101:9000/ck/gmall/save -c com.atguigu.wc.StreamWordCount FlinkTutorial-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+4、提交方式
+   4.1、独立集群：bin/start-cluster.sh， sql命令行：bin/sql-client.sh embedded
+   4.2、on yarn
+
+
+
+
+
+-------------------
+
+CREATE TABLE orders (
+order_id INT,
+order_date TIMESTAMP(3),
+customer_name varchar(20),
+price DECIMAL(10, 5),
+product_id INT,
+order_status BOOLEAN,
+PRIMARY KEY(order_id)
+);
+
+
+
+SET 'execution.checkpointing.interval' = '3s';
+
+CREATE TABLE orders (
+order_id INT,
+order_date TIMESTAMP(3),
+customer_name STRING,
+price DECIMAL(10, 5),
+product_id INT,
+order_status BOOLEAN,
+PRIMARY KEY(order_id) NOT ENFORCED
+) WITH (
+'connector' = 'tidb-cdc',
+'tikv.grpc.timeout_in_ms' = '20000',
+'pd-addresses' = 'localhost:2379',
+'database-name' = 'test',
+'table-name' = 'orders'
+);
+
+
+
+CREATE TABLE tidb_kafka (
+order_id INT,
+order_date TIMESTAMP(3),
+customer_name varchar(20),
+price DECIMAL(10, 5),
+product_id INT,
+order_status BOOLEAN,
+PRIMARY KEY (order_id) NOT ENFORCED
+) WITH (
+  'connector' = 'upsert-kafka',
+  'topic' = 'tidb_kafka',
+  'properties.bootstrap.servers' = 'hdp:9092',
+  'key.format' = 'json',
+  'value.format' = 'json'
+);
+
+
+
+INSERT INTO tidb_kafka
+SELECT order_id, order_date, customer_name, price, product_id, order_status from orders;

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+
+<h1>首页</h1>
+
+<a th:href="@{/target}">跳转到target页面: /target</a> <br>
+<a th:href="@{/target/hello}">跳转到target页面: /target/hello</a> <br> <br>
+
+<a th:href="@{/target}">跳转到target页面: get请求</a> <br>
+<form th:action="@{/target}" method="post">
+    <input type="submit" value="跳转到target页面: post请求">
+</form>
+<br><br>
+
+<a th:href="@{/target(username='admin',passwd=111111)}">跳转到target页面: param参数</a> <br>
+
+<a th:href="@{/target}">跳转到target页面: headers参数</a> <br>
+
+<a th:href="@{/target/a5c}">跳转到target页面: ant风格路径</a> <br>
+
+<a th:href="@{/target/1/username}">跳转到target页面: springMVC占位符</a> <br><br>
+
+
+<a th:href="@{/target/(username='coco',passwd=1)}">servlet获取请求参数</a> <br>
+
+
+
+</body>
+</html>

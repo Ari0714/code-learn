@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+
+        function f1() {
+            alert("姓名不能为空")
+        }
+
+        //动态注册
+        window.onload = function () {
+            var id = document.getElementById("ip1");
+
+            id.onblur = function () {
+                alert("邮箱格式错误")
+            }
+        }
+
+    </script>
+
+</head>
+
+<!--
+
+静态注册
+<body onload="alert(123)">
+
+onload 是浏览器解析完页面之后就会自动触发的事件
+onclick 单击 常和button使用
+onblur 失去焦点  输入框提示
+
+-->
+
+<body>
+
+请输入姓名：<input type="text" onblur="f1()"/>
+请输入邮箱：<input type="text" id="ip1"/>
+
+
+</body>
+</html>

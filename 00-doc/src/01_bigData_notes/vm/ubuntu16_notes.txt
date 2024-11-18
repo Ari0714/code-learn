@@ -1,0 +1,60 @@
+
+下载地址
+http://mirrors.163.com/ubuntu-releases/
+
+修改root密码
+sudo passwd root
+
+xshell连接ubuntu
+安装开启SSH服务
+apt-get install ssh
+/etc/init.d/ssh start
+vim /etc/ssh/sshd_config  =》 PermitRootLogin without-password 修改为PermitRootLogin yes
+systemctl restart sshd
+
+防火请
+1、关闭ubuntu的防火墙
+ufw disable
+开启防火墙
+ufw enable
+
+2、卸载了iptables
+apt-get remove iptables
+3、关闭ubuntu中的防火墙的其余命令
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -F
+
+
+配置静态ip地址
+ifconfig
+vim /etc/network/interfaces
+auto eno1
+iface eno1 inet static
+address 192.168.153.130
+netmask 255.255.255.0
+gateway 192.168.153.2
+重启：/etc/init.d/networking restart
+
+
+修改hostname
+vim /etc/hostname 
+
+
+修改地址映射
+vim /etc/hosts 
+192.168.153.130 luohaiming-virtual-machine
+192.168.153.131 luohaiming-virtual-machine2
+
+
+配置免密登录
+ssh-keygen -t rsa 
+ssh-copy-id root@luohaiming-virtual-machine2
+
+
+安装卸载
+apt-get xxx
+
+
+update-alternatives --install /usr/bin/java java /usr/jdk1.8.0_211/bin/java 300

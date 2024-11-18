@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!--集合-->
+    <bean id="stu" class="com.itbys._03_test.ioc.bean.collection.Stu">
+        <property name="course">
+            <array>
+                <value>course01</value>
+                <value>course02</value>
+                <value>course03</value>
+            </array>
+        </property>
+
+        <property name="list">
+            <list>
+                <value>list01</value>
+                <value>list02</value>
+                <value>list03</value>
+            </list>
+        </property>
+
+        <property name="map">
+            <map>
+                <entry key="key01" value="value01"></entry>
+                <entry key="key02" value="value02"></entry>
+                <entry key="key03" value="value03"></entry>
+            </map>
+        </property>
+
+        <property name="set">
+            <set>
+                <value>set01</value>
+                <value>set02</value>
+                <value>set03</value>
+            </set>
+        </property>
+
+        <property name="courses">
+            <list>
+                <ref bean="course"></ref>
+                <ref bean="course02"></ref>
+            </list>
+        </property>
+
+    </bean>
+
+
+    <bean id="course" class="com.itbys._03_test.ioc.bean.collection.Course"><property name="CName" value="course01"></property></bean>
+    <bean id="course02" class="com.itbys._03_test.ioc.bean.collection.Course"><property name="CName" value="course02"></property></bean>
+
+</beans>

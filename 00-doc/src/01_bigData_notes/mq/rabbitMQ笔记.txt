@@ -1,0 +1,46 @@
+
+--centos7安装
+yum install -y socat
+rpm -ivh erlang-22.2-1.el7.x86_64.rpm
+rpm -ivh rabbitmq-server-3.8.1-1.el7.noarch.rpm
+
+
+启动
+systemctl start rabbitmq-server
+设置RabbitMQ开机自启动：
+systemctl enable rabbitmq-server
+查看启动后的情况
+rabbitmqctl status
+关闭服务
+rabbitmqctl stop
+重启rabbitmq
+systemctl restart rabbitmq-server
+
+
+--配置RabbitMQ
+1.启用网页版后台管理插件：
+rabbitmq-plugins enable rabbitmq_management
+
+2.新建一个用户名为admin,密码为admin的管理员，并授予管理员（administrator）权限。
+rabbitmqctl add_user admin admin
+rabbitmqctl set_user_tags admin administrator
+
+3.设置admin可以使用的虚机权限。
+rabbitmqctl add_vhost admin
+rabbitmqctl set_permissions -p admin admin ".*" ".*" ".*"
+rabbitmqctl set_permissions -p / admin '.*' '.*' '.*'
+
+
+--插件管理
+插件列表：
+rabbitmq-plugins list
+启动插件：
+rabbitmq-plugins enable XXX   （XXX为插件名）
+停用插件：
+rabbitmq-plugins disable XXX
+
+
+删除队列
+rabbitmqctl delete_queue test01
+
+http://localhost:15672/

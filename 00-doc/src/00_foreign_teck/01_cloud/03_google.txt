@@ -1,0 +1,20 @@
+
+
+
+--------------------------------------------------------------definition-------------------------------------------------------------
+
+--- tutorial
+https://www.youtube.com/watch?v=lMaZnZldxcE&t=2826s
+
+
+
+
+--- components
+cloud storage -> fusion -> big query -> looker studio 
+
+
+
+dataflow(need workflows api enabled)
+
+
+cost: 21,375 25134

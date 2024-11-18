@@ -1,0 +1,167 @@
+
+--------------------------------------------------------------基础-------------------------------------------------------------
+1.简介：nosql
+
+2.特点：
+  1.不依赖业务逻辑方式存储，kv，大大增加数据库的拓展能力
+  2.不支持ACID
+  3.远超于sql的性能
+
+3.适用场景
+  1.数据高并发读写
+  2.海量数据读写
+  3.数据高可拓展性
+
+  不适用
+  1.事务
+
+4.默认16个数据库
+  1.从0开始 ，select 0
+
+5.redis是单线程+多路IO复用技术
+  1.多路IO复用技术：多路IO复用模型能够阻塞多个io操作。一个线程检查多个socket的就绪状态，有一个socket就绪，后面线程执行真正的操作
+
+
+6.memorycache对比
+  1.数据类型多
+  2.可持久化
+  3.多路io复用计数（对比多线程+锁）
+
+7.
+
+
+数据类型
+key ：（string，list，set ，hash，zset）
+
+
+----操作
+赋值set 1 bob
+获取get 1
+mset
+mget
+删除 del
+获取所有键 keys *
+判断键存在 exists
+类型 type
+设置过期 expire 1 10  =》键 s
+查看过期 ttl 1  =》 -1永不 -2已经过期
+数据库容量dbsize
+清空库flushdb
+
+
+
+----string
+二进制安全，可以存图片和序列化对象 最大512M
+追加append 1 bbbbbbbb
+获取长度strlen 1
+key不存在设置key值 setnx 1 bob
+msetnx
+incr decr 1
+incrby decrby 1 10 =》 key 步长
+
+
+Redis单命令的原子性主要得益于Redis的单线程
+
+getrange 1 1 4  => java的substring
+setrange 1 3 ggggg  =》 键 从开始 覆盖的值
+
+setex 1 10 ggg =》键，过期时间，值
+getset 1 2 =》以新换旧
+
+
+----list
+双向链表  性能两边高，中间差
+
+lpush/rpush  从左/右插入
+lpop/rpop  从左/右弹出一个元素
+rpoplpush k1 k2  弹出k1的最后一个给k2第一个
+lrange k1 0 10 下标开始
+lindex k1 0
+llen k1
+linsert k1 before value newvalue  k1的value前面插入newvalue
+lrem k1 5 value 删除k1的5个值为value 从左往右
+
+
+----set
+无序，自动去重，判断成员是否在，底层是一个value为null的hash表
+
+sadd k1 v1 v2
+smembers k1
+sismember k1 v1
+scard k1
+srem k1 v1 删除
+spop 随机弹出一个
+srandmember k1 6 随机弹6个
+sinter交集   sunion并   sdiff差集合（前-后）
+
+
+----hash
+存储对象，hash类似java的Map<String,Object>
+例如 学号 =》学生信息（姓名，学号，班级等） 1。序列化 2.学号+属性为key 3.学生信息用hash
+
+hset k1 f1 v1
+hget k1 f1
+hmset k1 f1 v1 f2 v2
+hexists k1 f1  判断field存在  返回1，0
+hkeys
+hvals
+hincrby k1 v1 increrment  field增increment
+hsntex k1 f1 v1  field不存在
+
+----zset(sort set)
+有序的set
+zadd k8 100 v1 99 v2 23 v3
+zrange k8 30 100  withscores带score返回
+zrangebyscore k1 40 60  升序
+zrevrangebyscore k1 60 40   降序
+zincrby k8 200 v1 为元素v1的score加200
+zrem k8 vi 删除
+zcount k8 40 80
+zrank k1 v1 从0开始
+
+
+----事务
+单独的隔离操作，序列化，按顺序执行
+事务的主要作用是串联多个命令防止别的命令插队
+
+multi discard exec
+组队错误：所有队列都取消，执行错误，该命令不被执行，其他正常，不会回滚
+
+乐观锁：拿到锁后才能读数据，RDBMS使用多（行锁，表锁，读锁，写锁）
+悲观锁：可以读，更新前判断，提高吞吐量，redis利用check and set机制实现
+
+watch：执行multi之前，先watch，再multi，在执行命令 ，最后exec 。如果exec之前这些key被其他命令改动，事务被打断
+unwatch
+
+三特性
+1.单独的隔离操作
+2.没有隔离级别概念
+3.不保证原子性。同一个人事务中一个失败，其他执行，不回滚
+
+
+----持久化
+RDB（默认）：指定时间间隔内将内存数据写入磁盘，快照
+AOF：
+
+如何备份：fork子进程将数据写入临时文件，待持久化结束，用这个文件替换上次持久化好的文件，
+过程不进行IO操作，大规模数据恢复快，数据完整不高，最后一次持久化可能会丢
+
+
+
+--------------------------------------------------------------安装-------------------------------------------------------------
+
+yum -y install gcc gcc-c++
+
+make && make install
+
+cp redis.conf redis01.conf
+修改daemonize no 改成 yes；注释掉bind 127.0.0.1（61行）；然后 protect-mode（80行）设置为 no
+
+启动redis-server redis01.conf
+停止redis-cli shutdown
+
+进入客户端redis-cli
+
+永久设置密码：
+打开Redis的配置文件 /etc/redis/6379.conf 找到配置参数 ** # requirepass foobared ** 此参数是备注释掉的，去掉注释修改为 ** requirepass pwtest10 **。
+进入后认证： auth "tcl_2023"

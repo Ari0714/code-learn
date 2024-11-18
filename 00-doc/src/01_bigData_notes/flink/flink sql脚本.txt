@@ -1,0 +1,60 @@
+
+
+--------------------------------------------------------------使用sql-client.sh-------------------------------------------------------------
+修改配置文件flink-conf.yaml，启动chk的hdfs
+
+启动集群：bin/start-cluster.sh
+
+启动客户端：bin/sql-client.sh embedded
+
+头行设置：SET sql-client.execution.result-mode=tableau;
+
+
+
+----------------------------ik
+create table page_view (  
+		common MAP<STRING, STRING>, 
+		page MAP<STRING, STRING>, 
+		ts BIGINT,  
+		rowtime AS TO_TIMESTAMP(FROM_UNIXTIME(ts/1000, 'yyyy-MM-dd HH:mm:ss')),  
+		WATERMARK FOR rowtime AS rowtime - INTERVAL '3' SECOND  
+	) with (  
+		'connector' = 'kafka',  
+		'topic' = 'topic',  
+		'properties.bootstrap.servers' = ' PConfig.KAFKA_SERVER ',  
+		'properties.group.id' = 'groupId',  
+		'scan.startup.mode' = 'earliest-offset',  
+		'format' = 'json'  
+	);
+
+
+select page['item'] full_words, rowtime from page_view where page['last_page_id'] = 'good_list' and page['item'] is not null
+
+SELECT rowtime, keyword FROM full_words_table, LATERAL TABLE(ik_analyze(fullword)) AS t(keyword)
+
+select 
+	DATE_FORMAT(TUMBLE_START(rowtime,INTERVAL '10' SECOND), 'yyyy-MM-dd HH:mm:ss') as stt,  
+	DATE_FORMAT(TUMBLE_END(rowtime,INTERVAL '10' SECOND),'yyyy-MM-dd HH:mm:ss') as edt,
+	keyword,
+	count(*) ct,
+	source,
+	UNIX_TIMESTAMP() * 1000 as ts
+	from wordsSplittable 
+	group by 
+	TUMBLE(rowtime,INTERVAL '10' SECOND),
+	keyword
+
+
+----------------------------province
+
+select
+	DATE_FORMAT(TUMBLE_START(rowtime,INTERVAL '10' SECOND), 'yyyy-MM-dd HH:mm:ss') as stt,  
+	DATE_FORMAT(TUMBLE_END(rowtime,INTERVAL '10' SECOND),'yyyy-MM-dd HH:mm:ss') as edt,  
+	province_id, province_name, province_area_code area_code, province_iso_code iso_code, province_3166_2_code iso_3166_2,  
+	sum(split_total_amount) order_amount,
+	count(distinct order_id) order_count,
+	UNIX_TIMESTAMP() * 1000 as ts
+	from order_wide
+	group by
+	TUMBLE(rowtime,INTERVAL '10' SECOND),
+	province_id, province_name, province_area_code, province_iso_code, province_3166_2_code);

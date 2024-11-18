@@ -1,0 +1,16 @@
+
+--------------------------------------------------------------转换-------------------------------------------------------------
+
+
+--------------------------------------------------------------作业-------------------------------------------------------------
+
+
+
+--------------------------------------------------------------linux使用-------------------------------------------------------------
+
+/opt/kettle/data-integration/pan.sh -file=/opt/kettle/kettleTask/test.ktr -logfile=/opt/kettle/kettleLogs/test.log
+
+
+/dmp/software_chenjie/kettle/data-integration/pan.sh -file=/dmp/software_chenjie/kettle/ktr/to_hologres.ktr -logfile=/dmp/software_chenjie/kettle/klog/test.log
+
+

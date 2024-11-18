@@ -1,0 +1,188 @@
+
+--------------------------------------------------------------usage-------------------------------------------------------------
+
+-- 库容量
+select
+table_schema as '数据库',
+sum(table_rows) as '记录数',
+sum(truncate(data_length/1024/1024/1024, 2)) as '数据容量(GB)',
+sum(truncate(index_length/1024/1024/1024, 2)) as '索引容量(GB)'
+from information_schema.tables
+-- where table_schema='mysql';
+group by table_schema
+order by sum(data_length) desc, sum(index_length) desc;
+
+
+-- 表容量
+select
+table_schema as '数据库',
+table_name as '表名',
+table_rows as '记录数',
+truncate(data_length/1024/1024/1024, 2) as '数据容量(GB)',
+truncate(index_length/1024/1024/1024, 2) as '索引容量(GB)'
+from information_schema.tables
+-- where table_schema='mysql';
+order by data_length desc, index_length desc;
+
+
+-- limit 使用
+从第3条开始，取1条
+SELECT * from id_test
+order by id
+limit 2, 1
+
+--- remote login
+mysql -h10.91.2.232  -u'tmc_cdh_rw' -p'D8lcvP7C&9Cm0vS'
+
+
+--- remote dump
+mysql -h10.91.2.235  -u'tmc_cdh_rw' -p'D8lcvP7C&9Cm0vS' drug < dump.sql
+
+--------------------------------------------------------------安装（centos7）5.5-------------------------------------------------------------
+
+RPM：通过rpm -qa |grep -i mysql或者是rpm -qa |grep -i mariadb  或者是rpm -qa | grep postfix
+rpm -e 包名刚才找到的包名即可
+rpm -e postfix-2.10.1-9.el7.x86_64
+rpm -e mariadb-libs-5.5.65-1.el7.x86_64
+
+yum install -y perl
+
+
+安装：
+rpm -ivh MySQL-client-5.5.54-1.linux2.6.x86_64.rpm
+rpm -ivh MySQL-server-5.5.54-1.linux2.6.x86_64.rpm
+
+启动：
+service mysql start
+
+设置密码：
+mysqladmin -u root password 'cj8888999.'
+
+进入：
+mysql -uroot -p111111
+
+权限
+use mysql;
+select user,host from user;
+update user set host = '%' where host = '127.0.0.1';
+delete from user where host <> '%';
+FLUSH PRIVILEGES;
+
+远程链接： * => 所有库， root@'%' root用户/任意ip ， 密码
+grant all privileges on *.* to root@'%' identified by '111111';
+
+
+
+--------------------------------------------------------------安装（centos7）5.7-------------------------------------------------------------
+RPM：通过rpm -qa |grep -i mysql或者是rpm -qa |grep -i mariadb  或者是rpm -qa | grep postfix
+rpm -qa | grep -i -E mysql\|mariadb | xargs -n1 sudo rpm -e --nodeps
+rpm -e 包名刚才找到的包名即可
+rpm -e postfix-2.10.1-9.el7.x86_64
+rpm -e mariadb-libs-5.5.65-1.el7.x86_64
+
+yum install -y perl net-tools
+
+安装
+rpm -ivh 01_mysql-community-common-5.7.28-1.el7.x86_64.rpm
+rpm -ivh 02_mysql-community-libs-5.7.28-1.el7.x86_64.rpm
+rpm -ivh 03_mysql-community-libs-compat-5.7.28-1.el7.x86_64.rpm
+
+rpm -ivh 04_mysql-community-client-5.7.28-1.el7.x86_64.rpm
+rpm -ivh 05_mysql-community-server-5.7.28-1.el7.x86_64.rpm
+
+初始化、启动
+mysqld --initialize --user=mysql
+systemctl start mysqld
+
+查看密码
+cat /var/log/mysqld.log | grep password
+
+登录、设置密码
+mysql -uroot -p'password'
+set password=password('cj111111');
+
+权限
+use mysql;
+update user set host="%" where user="root";
+select user,host from user;
+FLUSH PRIVILEGES;
+
+乱码\中文长度问题
+vim /etc/my.cnf
+[client]
+default-character-set = utf8mb4
+[mysql]
+default-character-set = utf8mb4
+[mysqld]
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+init_connect='SET NAMES utf8mb4'
+
+service mysqld restart
+show variables like 'character%';
+
+
+远程链接： * => 所有库， root@'%' root用户/任意ip ， 密码
+grant all privileges on *.* to root@'%' identified by 'tcl@bigdata';
+
+
+严格模式：
+set sql_mode='ONLY_FULL_GROUP_BY';
+
+-----mysql的dump操作
+mysqldump -uroot -p111111 3001_spark_music > /opt/dump.sql
+mysql -uroot -p111111 drug < dump.sql   （注意看dump文件的库）  或者使用source命令
+
+-----忘记root密码
+vim /etc/my.cnf：加入skip-grant-tables
+systemctl start mysqld
+update user set authentication_string=password('httpszinyancom&1024') where user='root';
+FLUSH PRIVILEGES;
+vim /etc/my.cnf：删除skip-grant-tables
+systemctl start mysqld
+
+
+----架构：
+fileSystem =》存储引擎（innoDB）=》执行层（sql interface，解析器，优化器，cache&&buffers）=》conn pool =》 jdbc，odbc等
+sql执行顺序:jdbc =》pool =》cache&&buffers（有直接取）=》（无）sql interface =》解析 =》优化 =》存储引擎 =》fileSystem
+
+执行顺序：form join ，where ，group by ，having ，order by ，limit
+
+----存储引擎：
+默认innoDB ：处理大量短期事务
+MyISAM：大量特性，全文索引，压缩，空间函数（GIS）等，不支持事务和行级锁
+对比:
+InnoDB:支持行级锁高并发，事务，缓存索引和数据
+
+----优化：
+1.分库分表分区    2.多表join    3.索引   4.my.cnf参数调优
+
+索引：
+本质：高效获取数据的数据结构
+理解：排好序的快速查找数据结构
+快的原因：链表 =》二叉树
+B树&&B+树：B+树非叶子节点不存放实际数据，容纳元素个数比B树多，B+树更矮，IO少。稳定，所有数据获取时间相同，而B树可以节点访问到内容。
+
+聚簇索引与非聚簇索引：前者拼音，相关。后这偏旁部首，不相关。
+
+分类：单，联合，唯一（主键）
+建立条件：where后面的判断，关联外键，排序的字段，统计或分组字段
+不建立：男女，时间，增删改多的，表数据少
+
+--- 加索引
+- situation
+1、where skill = 'aa'  （distribute key）
+2、join
+3、group by 或 order by 或 distinct
+4、statics：max（skill），count（skill）
+5、updtae、delete
+
+- grammar
+ALTER TABLE tbl_name ADD INDEX index_name (col_list);
+
+- warning
+1、《= 6个
+
+
+

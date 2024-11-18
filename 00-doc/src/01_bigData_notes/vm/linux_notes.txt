@@ -1,0 +1,235 @@
+
+----服务器信息
+查看核数
+查看每个物理CPU中core的个数(即核数)：cat /proc/cpuinfo| grep "cpu cores"| uniq
+查看逻辑CPU的个数：cat /proc/cpuinfo| grep "processor"| wc -l
+
+
+----查看文件
+cat -n   -n显示行数，适用小的文件，一屏
+more 分屏  空格：一屏 enter：一行 q：退出 /：查找  n下一个
+head 文件 =》头10行  head -n 200 文件 头200行
+tail 文件=》后10行  tail -n 200 文件 后200行  tail -f 文件 实时追踪
+
+----delete large small file
+find ./ -type f -delete
+
+
+> 覆盖  >> 追加
+ll >> aa.txt
+ll > aa.txt
+cat 文件1 > 文件2
+echo "china" > 文件
+echo "china" >> 文件
+
+history：查看执行过的命令
+
+----时间
+date：当前时间
+date +%Y%m%d =》20200927
+date +%Y-%m-%d_%d:%H:%M
+date +'%Y-%m-%d %H:%M:%S'
+date -d "+1 day ago"  昨天此时
+
+----用户
+useradd chenj
+passwd chenj
+
+useradd -g hdfs flume
+userdel -r chenj
+su - chenj
+who am i
+
+---端口
+hostnamectl set-hostname hdp
+
+
+----用户组
+groupadd itbys
+groupdel itbys
+groupmod -g flume chnej
+groupmod -n itbys itby
+cat /etc/group 查看
+
+
+----文件
+drwxr-xr-x. 6 root root 134 Sep 28 11:12 apache-zookeeper-3.5.6-bin
+-,d,l：文件，目录，链接
+rwx：属主，属主所在组，其他
+6：链接数
+root，root：属主，属主所在组名称
+134：文件大小
+Sep 28 11:12：最近修改时间
+apache-zookeeper-3.5.6-bin 文件名
+
+
+----文件权限
+u,g,o
+chmod u+x aa.txt
+chmod u+x,g+r aa.txt
+
+所有文件读写权限
+chmod 777 aa.txt
+
+所有文件夹读写权限
+chmod -R 777 test/
+
+修改文件归属用户
+chown chenj aa.txt
+chown -R chenj aa.txt
+
+修改文件归属组
+chgrp itbys aa.txt
+
+
+----搜索查找
+find /opt -name "*.txt"
+
+find opt/ -user root
+
+find opt/ -size +204800  大于204800的文件
+
+grep过滤查找 和 | 管道符号
+ls | grep -n aa.txt  -n查看行号
+
+which查找命令在那个目录下
+which cp
+
+----压缩/打包
+gzip   .gz文件
+gunzip
+
+zip my.zip 1.txt 2.txt
+zip -r my.zip /opt/
+unzip my.zip
+unzip my.zip -d /opt/
+
+tar -zcvf my.tar.gz 1.txt 2.txt
+tar -zcvf my.tar.gz /opt/
+tar -zxvf my.tar.gz
+tar -zxvf my.tar.gz -C /opt/
+
+
+----磁盘分区
+df -h
+fdisk -l
+查看挂载目录结构
+lsblk
+
+----ln 软连接
+给文件创建软链接，为log2013.log文件创建软链接link2013，如果log2013.log丢失，link2013将失效：
+ln -s log2013.log link2013
+[root@localhost test]# ll
+lrwxrwxrwx 1 root root     11 12-07 16:01 link2013 -> log2013.log
+-rw-r--r-- 1 root bin      61 11-13 06:03 log2013.log
+
+-----挂载
+设备/dev/sdb1 挂载到/dmp目录
+mount /dev/sdb1 /dmp
+卸载
+unmount /mnt/cdrom/
+设置开机自动挂载
+vim /etc/fstab
+
+----进程，线程
+ps -aux  cpu和内存占用
+ps -ef   进程的父进程
+|grep xxx  过滤某个进程
+kill -9 xxx 强制杀死进程
+
+----top查看系统健康状况
+top
+top批量kill某进程：ps -ef|grep telnet|grep -v grep|cut -c 9-15|xargs kill -9
+
+----netstat端口占用情况
+netstat -anp|grep 进程号   查看进程网络信息
+netstat -nlp|grep 6379     查看端口占用
+netstat -tunlp|grep 端口号
+lsof -i:2181   端口进程
+
+netstat -anp|grep redis
+netstat -nlp|grep 6379
+
+----crond定时任务 crontab
+crontab 【-l,e,r】
+*/1 * * * * /bin/echo "123" >> /opt/test/aa.txt  （没分钟执行一次）
+0 20 * * * /bin/echo "123" >> /opt/test/aa.txt  （每天20点执行一次）
+查看crontab的日志：vim /var/log/cron-xxx
+
+每月运行
+0 19 1 * * 每月1号19：00运行
+
+
+----rpm包
+查找
+rpm -qa|grep netstat
+安装
+rpm -ivh kpartx-0.4.9-131.el7.x86_64
+删除
+rpm -e netstat
+
+-----yum
+yum -y install firefox.x86_64
+
+
+-----vim
+输入替换命令，使用以下格式： :%s/要替换的内容/替换后的内容/g
+
+
+-----ssh scp
+ssh hdp02
+scp hadoop-2.7.2.tar.gz root@hdp02:/opt/
+
+配制免密登录的命令  3*次数
+ssh-keygen -t rsa
+ssh-copy-id root@hdp101
+
+
+-----防火墙 && iptables
+查看防火墙状态
+firewall-cmd --state
+停止firewall
+systemctl stop firewalld.service
+禁止firewall开机启动
+systemctl disable firewalld.service
+关闭selinux
+vim /etc/selinux/config
+将SELINUX=enforcing改为SELINUX=disabled
+
+参考：https://blog.csdn.net/JustinQin/article/details/120936620
+
+vim /etc/sysconfig/iptables
+service iptables save
+service iptables restart
+iptables -L -n --line-number
+
+# 开放常用端口
+iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 19888 -j ACCEPT   -- spark job history
+iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9866 -j ACCEPT
+iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 7000:20000 -j ACCEPT  (开放区间)
+iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 19321 -j ACCEPT  (sr)
+
+# 允许10.126.124.65访问2181
+iptables -I INPUT -s 10.126.124.65 -p tcp -m tcp --dport 2181 -j ACCEPT
+
+# 允许10.126.124.65访问所有端口
+iptables -I INPUT -p tcp -s 10.126.124.73 -j ACCEPT
+
+iptables -I INPUT -p tcp -s 10.74.162.0/24 -j ACCEPT
+
+# 删除
+iptables -D INPUT 4
+
+
+
+----curl
+post：
+curl -H "Content-Type: application/json" -X POST -d '{"user_id": "123", "coin":100, "success":1, "msg":"OK!" }' "http://localhost:8083/ptes/alter"
+
+
+curl -H "Content-Type: application/json" -X POST -d '{"status": "SUCCEEDED"}' "http://cdh05:11001/oozie/callback?id=1300199-240725145154339-oozie-oozi-W@Accessdata_3653459"
+
+
+
+&status=SUCCEEDED

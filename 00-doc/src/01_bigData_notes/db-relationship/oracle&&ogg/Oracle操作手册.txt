@@ -1,0 +1,148 @@
+
+sqlplus /nolog
+startup    //启动数据库
+sqlplus / as sysdba //连接数据库
+
+配置监听：
+su - oracle 
+netca -silent -responseFile /home/app/database/response/netca.rsp
+
+建立新库，同时建立对应的实例:
+ 切换到root用户，编辑 /home/app/database/response/dbca.rsp
+ dbca -silent -responseFile /home/database/response/dbca.rsp
+
+lsnrctl start    //启动监听
+lsnrctl status    //查看监听状态
+
+
+数据库名 ORCL11G
+sid实例名 orcl
+pid ora11g
+
+用户名 sys
+查看ORACLE 数据库中所有用户下的所有表
+select user,table_name from all_tables;
+
+查看当前用户所有表
+SELECT * FROM user_tables;
+
+查看表结构：
+ 命令窗口：desc 表名
+ sql窗口：select * from user_tab_columns where table_name='classinfo'
+
+创建表
+create table class(classid number(2) primary key)
+
+插入数据：
+insert into class(classid) values(01);
+
+
+新建用户:
+create user HX_SB identified by 111111
+授权：
+grant dba,connect,resource,unlimited tablespace to test;
+ 
+select * from all_tables where owner='TEST'；
+
+全部字段:
+alter table hx_sb.sb_sbxx add supplemental log data(all) columns
+
+
+删除：
+drop user test cascade 
+drop user test_ogg cascade 
+查看能管理的用户：
+select * from all_users;
+
+归档：
+
+select * from v$flash_recovery_area_usage;   看已占用的空间
+show parameter db_recovery_file_dest;  看归档空间
+alter system set db_recovery_file_dest_size=21474836480;     
+
+删除归档：
+rman target /
+
+delete archivelog until time 'sysdate'; --删除所有日志
+delete expired archivelog all;--删除过期日志
+
+定时任务：
+TRUNC(sysdate,'mi') + 1/ (24*60)
+
+sysdate + 1/(24 * 60 * 60)
+
+tbase锁表无法truncate，deleted：
+select
+    pg_terminate_backend(pid)
+from
+    pg_stat_activity
+where
+    query ~* 'hx_sb.sb_sbxx'
+    and pid <> pg_backend_pid();
+
+
+insert into test.class select 'TMP'||LPAD(rownum,7,0),1,sysdate from dual connect by level <= 10000;
+
+create tablespace oggtbs datafile '/home/app/oracle/oggdata/orcl/oggtbs01.dbf' size 1000M autoextend on;
+
+
+dblogin userid ogg password ogg
+
+
+mkdir -p /home/app/oracle/oggdata/orcl
+
+create tablespace oggtbs datafile '/home/app/oracle/oggdata/orcl/oggtbs01.dbf' size 1000M autoextend on;
+
+
+defsfile /opt/ogg/dirdef/test_ogg.test_ogg
+userid ogg,password ogg
+table test_ogg.test_ogg;
+
+
+add replicat rekafka exttrail /opt/ogg/dirdat/to,checkpointtable test_ogg.checkpoint
+
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.142.145
+
+scp -p ~/.ssh/id_rsa.pub root@192.168.142.144:/root/.ssh/authorized_keys
+
+scp ~/.ssh/id_rsa.pub chenjie@192.168.142.143:/root/.ssh/id_rsa.pub.worker1
+
+scp ~/.ssh/id_rsa.pub root@192.168.142.143:/root/.ssh/id_rsa.pub.worker2
+
+scp ~/.ssh/authorized_keys root@192.168.142.145:/root/.ssh/authorized_keys
+
+
+add trandata HX_sB.SB_SBXX
+info trandata HX_sB.SB_SBXX
+table hx_sb.*;
+
+192.168.0.142   oracledb
+192.168.0.143   hadoop03
+192.168.0.144   hadoop04
+192.168.0.145   hadoop05
+
+
+server.1=172.26.61.71:2888:3888
+server.2=172.26.61.72:2888:3888
+server.3=172.26.240.232:2888:3888
+
+alter user hx_sb identified by 111111
+
+192.168.0.143:2181,192.168.0.144:2181,192.168.0.145:2181
+
+
+-----------------------ogg---------------------
+
+alter replicat phx_test begin now
+
+alter extract ehx_test,tranlog,begin now
+alter extract phx_test,tranlog,begin now
+
+add extract phx_test,tranlog,begin now
+add exttrail /opt/ogg/dirdat/to,extract phx_test
+
+add extract phx_test,exttrailsource /opt/ogg/dirdat/to
+add rmttrail /opt/ogg/dirdat/to,extract phx_test
+
+

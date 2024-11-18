@@ -1,0 +1,60 @@
+
+参考
+https://www.cnblogs.com/qmfsun/p/3817344.html
+
+
+--------------------------------------------------------------表空间-------------------------------------------------------------
+
+创建表空间：
+create tablespace data_test datafile 'e:\oracle\oradata\test\data_1.dbf' size 2000M;
+
+指定用户表空间：
+create user study identified by 111111 default tablespace data_test;
+
+查看表空间：
+SELECT a.tablespace_name "表空间名",
+        total / (1024 * 1024 * 1024) "表空间大小(G)", free / (1024 * 1024 * 1024) "表空间剩余大小(G)",
+        (total - free) / (1024 * 1024 * 1024) "表空间使用大小(G)", round((total - free) / total, 4) * 100 "使用率 %"
+FROM (SELECT tablespace_name, SUM(bytes) free FROM dba_free_space GROUP BY tablespace_name) a,
+        (SELECT tablespace_name, SUM(bytes) total FROM dba_data_files GROUP BY tablespace_name) b
+WHERE a.tablespace_name = b.tablespace_name
+
+查看表空间数据文件，表空间，大小
+SELECT file_name, tablespace_name, bytes/(1024*1024) M  FROM dba_data_files;
+
+修改表空间数据文件的大小
+ALTER database datafile '/u01/app/oracle/product/10.1/dbs/users01.dbf' RESIZE 32M;
+
+在表空间新增加数据文件
+ALTER TABLESPACE users ADD DATAFILE '/oralcda/u03/app/oracle/oradata/prod/users02.dbf' SIZE 10M;
+
+
+创建用户指定表空间，授权：
+create user test identified by 111111 default tablespace data_test
+grant connect,resource to test
+
+
+
+--------------------------------------------------------------dmp文件-------------------------------------------------------------
+
+1.建立dmp文件目录
+create directory dmp_dir as '/usr/local/tomcat';
+（drop directory dmp_dir）
+2.授权
+grant read,write on directory dmp_dir to public;
+3.切换root建立文件夹，chown到oracle：oinstall
+
+4.导出导入：
+4.1导出 ===== table_exists_action选项：{skip 是如果已存在表，则跳过并处理下一个对象；append是为表增加数据；truncate是截断表，然后为其增加新数据；replace是删除已存在表，重新建表并追加数据}
+1)导出用户及其对象
+expdp gmall1105/111111@orcl schemas=gmall1105 dumpfile=expdp.dmp directory=dmp_dir logfile=expdp.log;
+2)导出指定表
+expdp gmall1105/111111@orcl tables=emp,dept dumpfile=expdp.dmp directory=dmp_dir logfile=expdp.log;
+3)按查询条件导
+expdp gmall1105/111111@orcl directory=dmp_dir dumpfile=expdp.dmp tables=emp query='where deptno=20' logfile=expdp.log;
+
+4.2导入
+同用户
+impdp gmall1105/111111@orcl directory=dmp_dir dumpfile=gmall.dmp schemas=gmall1105 logfile=impdp.log table_exists_action=truncate;
+不同用户：jcpt:lyxt
+impdp gmall1105/111111123@orcl directory=dmp_dir dumpfile=expdp.dmp  remap_schema=jcpt:lyxt  logfile=ims20171122.log table_exists_action=replace

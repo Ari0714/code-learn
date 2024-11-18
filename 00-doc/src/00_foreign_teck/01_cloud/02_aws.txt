@@ -1,0 +1,16 @@
+
+
+--- account 
+1187334030@qq.com / cj8888999.
+
+
+--------------------------------------------------------------definition-------------------------------------------------------------
+
+--- tutorial
+https://www.youtube.com/watch?v=bzbqqFazNS8&list=PLRRQG4QYcyEUXmIZQr_bty7sFtp3SLOiP&index=8
+
+
+
+
+--- components
+s3 -> Glue -> athena -> quickBI

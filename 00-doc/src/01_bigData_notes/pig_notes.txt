@@ -1,0 +1,75 @@
+
+
+--------------------------------------------------------------安装-------------------------------------------------------------
+
+export PIG_HOME=/opt/pig-0.16.0
+export PATH=$PIG_HOME/bin:$PATH
+
+
+运行模式
+pig -x local
+pig -x mapreduce
+
+--------------------------------------------------------------使用-------------------------------------------------------------
+
+命令
+ll /input
+
+
+--------------------------------------------------------------案例-------------------------------------------------------------
+
+------1
+装载数据
+abalone_data = LOAD '/opt/data/abalone.data' using PigStorage(',') AS (id:chararray, sex:chararray, length:double, diameter:double, height:double, whole:double, shucked:double, viscera:double, shell:double, rings:int);
+
+
+查看数据
+DUMP abalone_data;
+
+抽取数据
+B1 = FOREACH abalone_data GENERATE id, sex;
+
+分组
+C1 = GROUP B1 BY sex;
+
+
+汇总
+D1 = FOREACH C1 GENERATE group,COUNT(B1.id);
+DUMP D1;
+	(F,1307)
+	(I,1342)
+	(M,1528)
+	
+
+------2
+location_data = LOAD '/opt/data/location.data' using PigStorage(',') AS (id:chararray, loc:chararray);
+
+join:
+abalone_with_location = join abalone_data by id, location_data by id;
+
+
+Calculate the average shucked weight for each state:
+B2 = FOREACH abalone_with_location GENERATE loc, shucked;
+C2 = GROUP B2 BY loc;
+D2 = FOREACH C2 GENERATE group,AVG(B2.shucked);
+	(T,0.35817965867158663)
+	(V,0.36064932802389277)
+
+
+
+------3
+large = FILTER abalone_data by whole > 1.25;
+small = FILTER abalone_data by whole < 0.45;
+
+B3_lagre = FOREACH large GENERATE 'large',whole;
+C3_lagre = GROUP B3_lagre BY 'large';
+D3_lagre = FOREACH C3_lagre GENERATE group,AVG(B3_lagre.whole);
+DUMP D3_lagre;
+
+B3_small = FOREACH small GENERATE 'small',whole;
+C3_small = GROUP B3_small BY 'small';
+D3_small = FOREACH C3_small GENERATE group,AVG(B3_small.whole);
+DUMP D3_small;
+
+
+
