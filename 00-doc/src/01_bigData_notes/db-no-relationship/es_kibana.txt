@@ -10,8 +10,19 @@ GET _search
 }
 
 
-查询索引
+- search detail
 GET buy_cnt_per_hour/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+- count
+GET /index_name/_count
+
+- delete
+POST /index_name/_delete_by_query
 {
   "query": {
     "match_all": {}
