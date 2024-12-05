@@ -79,8 +79,8 @@ public class TidbTest {
                 "SELECT order_id, order_date, customer_name, price, product_id, order_status from orders");
 
 
-//
-//
+
+
 //        String topic = "dwm_order_wide";
 //        String groupId = "province_stats_app_group";
 //

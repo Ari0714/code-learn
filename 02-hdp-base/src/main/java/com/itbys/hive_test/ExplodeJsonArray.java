@@ -1,5 +1,7 @@
 package com.itbys.hive_test;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDTF;
@@ -9,7 +11,6 @@ import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorUtils;
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +52,9 @@ public class ExplodeJsonArray extends GenericUDTF {
     public void process(Object[] objects) throws HiveException {
 
         String string = PrimitiveObjectInspectorUtils.getString(objects[0], inputOI);
-        JSONArray jsonArray = new JSONArray(string);
-        for (int i = 0; i < jsonArray.length(); i++) {
+        JSONArray jsonArray = JSON.parseArray(string);
+//        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < jsonArray.size(); i++) {
             String jsonArrayStr = jsonArray.getString(i);
             String[] result = {jsonArrayStr};
             forward(result);

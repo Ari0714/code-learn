@@ -26,28 +26,6 @@ import java.util.stream.Collectors;
  */
 public class MyHttpUtil {
 
-
-    /**
-     * <dependency>
-     * <groupId>org.apache.httpcomponents</groupId>
-     * <artifactId>httpclient</artifactId>
-     * <version>4.5.6</version>
-     * </dependency>
-     *
-     * <dependency>
-     * <groupId>com.alibaba</groupId>
-     * <artifactId>fastjson</artifactId>
-     * <version>1.2.68</version>
-     * </dependency>
-     *
-     * <dependency>
-     * <groupId>junit</groupId>
-     * <artifactId>junit</artifactId>
-     * <version>4.12</version>
-     * </dependency>
-     */
-
-
     public static void main(String[] args) {
 
         // header

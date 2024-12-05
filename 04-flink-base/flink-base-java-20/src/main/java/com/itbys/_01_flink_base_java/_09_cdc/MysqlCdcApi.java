@@ -7,14 +7,11 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
  * Date 2024/6/9
  * Desc
  */
-public class CdcTestApi {
+public class MysqlCdcApi {
 
     public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-
-
 
         env.execute();
 

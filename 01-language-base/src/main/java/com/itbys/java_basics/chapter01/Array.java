@@ -20,7 +20,6 @@ public class Array {
         }
         System.out.println(b[0]);
 
-
         String[][] d = new String[][]{{"aa", "bb"}, {"cc", "dd"}};
         for (String[] strings : d) {
             for (String string : strings) {
