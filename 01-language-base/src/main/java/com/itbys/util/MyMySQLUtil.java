@@ -1,9 +1,6 @@
 package com.itbys.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Author xx
@@ -14,15 +11,15 @@ public class MyMySQLUtil {
 
     public static void main(String[] args) throws SQLException {
 
-        System.out.println(getConn().getMetaData());
+//        System.out.println(getConn().getMetaData());
 
     }
 
 
     /**
-     * 建立连接
+     * create connection
      */
-    public static Connection getConn() {
+    public static Connection getConn(String ip, String username, String db, String passwd, int port) {
 
         //加载驱动
         try {
@@ -34,8 +31,7 @@ public class MyMySQLUtil {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://10.74.65.10:40001/bdp-admin-pre?useUnicode=true&characterEncoding=utf8",
-                    "daas_admin", "FX2FD0MgdJfm");
+                    "jdbc:mysql://" + ip + ":" + port + "/" + db + "?useUnicode=true&characterEncoding=utf8", username, passwd);
         } catch (SQLException e) {
             System.out.println("connect fail !!!");
             e.printStackTrace();
@@ -47,51 +43,54 @@ public class MyMySQLUtil {
 
 
     /**
-     * @desc 单条插入
+     * @desc insert single line
      */
-    public static Connection test01() {
-
-        //加载驱动
+    public static void test01(Connection conn) {
+        Statement stmt = null;
+        PreparedStatement ps = null;
         try {
+            // 注册 JDBC 驱动
             Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
+            // 打开链接
+            //实例化Statement对象
+            stmt = conn.createStatement();
+            String sql;
+            sql = "INSERT INTO login VALUES(?,?)";
+
+            ps = conn.prepareStatement(sql);//添加数据预处理
+            ps.setString(1, "5433");
+            ps.setString(2, "214544");
+            ps.executeUpdate();
+            // 完成后关闭
+            ps.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+            } catch (SQLException ignored) {
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
         }
-        //连接数据库
-        Connection conn = null;
-        try {
-//            conn = DriverManager.getConnection(
-//                    "jdbc:mysql://10.74.65.10:4000/bdp-admin-pre?useUnicode=true&characterEncoding=utf8",
-//                    "daas_admin", "FX2FD0MgdJfm");
-
-            //url=jdbc:mysql://10.74.140.248:4000/bdp-admin?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
-            //userName=daas_admin
-            //passwd=mu8voPOcynfJ
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://10.74.140.248:4000/bdp-admin?useUnicode=true&characterEncoding=utf8",
-                    "daas_admin", "mu8voPOcynfJ");
-
-        } catch (SQLException e) {
-            System.out.println("connection fail !!!");
-            e.printStackTrace();
-        }
-
-        return  conn;
 
     }
 
 
     /**
-     * @desc 批量插入
+     * @desc batch insert
      */
-    public static void test02() throws ClassNotFoundException, SQLException {
+    public static void test02(Connection conn) throws ClassNotFoundException, SQLException {
 
         //加载驱动
         Class.forName("com.mysql.jdbc.Driver");
 
 //        long start = System.currentTimeMillis();
-        Connection conn = DriverManager.getConnection("jdbc:mysql://hdp:4000/test?useUnicode=true&characterEncoding=utf8",
-                "root", "");
         String sql = "insert into orders values(?,now(),\"gong\",13.99,123,1);";
         PreparedStatement ps = null;
 

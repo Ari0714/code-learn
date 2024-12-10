@@ -15,7 +15,7 @@ import org.apache.flink.types.Row;
  * Date 2024/6/9
  * Desc
  */
-public class CdcTestSql {
+public class MysqlCdcSql {
 
     public static void main(String[] args) throws Exception {
 

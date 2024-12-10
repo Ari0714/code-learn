@@ -17,11 +17,11 @@ public class KafkaTest {
 
     public static void main(String[] args) throws InterruptedException {
 
-        for (int i = 0; i < 100; i++) {
-            testProducer("test",i+"");
-        }
+//        for (int i = 0; i < 100; i++) {
+//            testProducer("test",i+"");
+//        }
 
-//        testComsumer();
+        testComsumer();
 
     }
 
@@ -48,7 +48,7 @@ public class KafkaTest {
      */
     public static void testComsumer() {
         Properties properties = new Properties();
-        properties.put("bootstrap.servers", "hdp:9092");
+        properties.put("bootstrap.servers", "10.147.243.23:9092,10.147.243.24:9092,10.147.243.25:9092");
         properties.put("group.id", "group-07");
         properties.put("enable.auto.commit", "true");
         properties.put("auto.commit.interval.ms", "1000");
@@ -58,7 +58,7 @@ public class KafkaTest {
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(properties);
-        kafkaConsumer.subscribe(Arrays.asList("test_topic"));
+        kafkaConsumer.subscribe(Arrays.asList("ruban_access_report"));
 
         while (true) {
             ConsumerRecords<String, String> records = kafkaConsumer.poll(100);

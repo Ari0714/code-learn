@@ -153,7 +153,7 @@ HA高可用：
 
 
 -----操作
-查看日志：yarn logs -applicationId application_1723175437205_8249 > a.txt
+查看日志：yarn logs -applicationId application_1732591122326_608089 > a.txt
 
 批量kill掉任务
 yarn application -list | grep application_ | grep RUNNING | grep Check | awk -F" " '{print $1}' | xargs yarn application -kill
@@ -165,13 +165,9 @@ yarn application -list | grep application_ | grep ACCEPTED | awk -F" " '{print $
 
 
 yarn application -list | grep RUNNING | grep A=Check_ | wc -l
-
 yarn application -list | grep RUNNING | grep A=Output_ | wc -l
-
 yarn application -list | grep RUNNING | grep A=Accessdata_ | wc -l
-
 yarn application -list | grep RUNNING | grep 'Hive on Spark'  | wc -l
-
 yarn application -list | grep RUNNING | grep 'Sqlcompute'  | wc -l
 
 

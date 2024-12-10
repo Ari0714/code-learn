@@ -97,10 +97,6 @@ maxwel初始化数据到kafka
 bin/maxwell-bootstrap --user maxwell --password 123456 --host hdp101 --database gmall1122 --table order_refund_info --client_id maxwell_5
 
 
-
-
-
-
 --------------------------------------------------------------操作CDH-------------------------------------------------------------
 
 cd /opt/cloudera/parcels/CDH-6.2.0-1.cdh6.2.0.p0.967373/lib/kafka
@@ -130,5 +126,4 @@ kafka-topics.sh --zookeeper ck01:2181 --describe --topic ticdc-pro-newfz-tof_ord
 
 重置分区
 bin/kafka-topics.sh --zookeeper  cdh04:2181 --alter --partitions 3 --topic  SZT_origin_data
-
 

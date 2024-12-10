@@ -168,7 +168,6 @@ public class HanaTest {
                 ")");
 
 
-
         tableEnv.executeSql("CREATE TABLE pg_sink_table (\n" +
                 "  `order_finish_id` string ,\n" +
                 "  `order_no` string ,\n" +
