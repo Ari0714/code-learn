@@ -1,5 +1,4 @@
 
-
 --------------------------------------------------------------实战-------------------------------------------------------------
 
 开启hive metastore：hive --service metastore；
@@ -170,6 +169,8 @@
 	UDTA：一进多出
 	自定义UDF过程：hive.exec依赖 =》类继承UDF =》写evalute方法 =》上传到hdfs
 	create function base_analizer as 'com.atguigu.udf.BaseFieldUDF' using jar 'hdfs://hadoop102:9000/user/hive/jars/hivefunction-1.0-SNAPSHOT.jar';
+    create function default.voc_http_new as 'com.tcl.HttpUDF' using jar 'hdfs:///bdp/udf/1770172/3a7fe9a9-c728-4016-a7cd-e08778fe4fa5.jar';
+    (如果多个hs2)，需要连接到没有元数据的hs执行： reload functions
 
 14.jdbc链接
 	nohup hiveserver2 1>/dev/null 2>&1 &
