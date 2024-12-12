@@ -63,7 +63,6 @@
 	[tblproperties (property_name=property_value, ...)]
 	[as select_statement]
 
-
 	常见创建表
 	create table if not exists student2(
 	id int, name string
