@@ -14,7 +14,14 @@ public class MyMySQLUtil {
 
     public static void main(String[] args) throws SQLException {
 
-        System.out.println(getConn().getMetaData());
+        //pre sr
+         String urlPre = "10.126.124.75";
+         int portPre = 3306;
+         String dbPre = "test";
+         String usernamePre = "root";
+         String passwdPre = "tcl@bigdata";
+
+        System.out.println(getConn(urlPre, usernamePre, dbPre, passwdPre, portPre));
 
     }
 
@@ -22,7 +29,10 @@ public class MyMySQLUtil {
     /**
      * 建立连接
      */
-    public static Connection getConn() {
+    /**
+     * create connection
+     */
+    public static Connection getConn(String ip, String username, String db, String passwd, int port) {
 
         //加载驱动
         try {
@@ -34,8 +44,7 @@ public class MyMySQLUtil {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://10.74.65.10:40001/bdp-admin-pre?useUnicode=true&characterEncoding=utf8",
-                    "daas_admin", "FX2FD0MgdJfm");
+                    "jdbc:mysql://" + ip + ":" + port + "/" + db + "?useUnicode=true&characterEncoding=utf8&useSSL=false", username, passwd);
         } catch (SQLException e) {
             System.out.println("connect fail !!!");
             e.printStackTrace();
@@ -83,5 +92,9 @@ public class MyMySQLUtil {
 //        System.out.println("百万条数据插入用时：" + (System.currentTimeMillis() - start)+"【单位：毫秒】");
 
     }
+
+
+
+
 
 }
