@@ -12,7 +12,7 @@ import java.util.Map;
  * Date 2023/9/2
  * Desc
  */
-public class TclIpParseUtil {
+public class IpParseUtil {
 
     public static void main(String[] args) {
 
