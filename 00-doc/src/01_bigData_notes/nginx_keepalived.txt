@@ -12,7 +12,6 @@ cp ifcfg-bond0 ifcfg-bond0-vip
 
 启动
 ifup ifcfg-bond0-vip
-
 ifdown ifcfg-bond0-vip
 
 
