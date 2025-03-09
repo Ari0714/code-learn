@@ -24,8 +24,8 @@ pyecharts、molpolibli
 django、flask
 unit test
 Fast API
-DB: MongoDB, DynamoDB, DynamoDB, Cassandra
-Presto
+DB: MongoDB, DynamoDB, Cassandra，
+Presto，trino
 
 2、cloud platform
 Azure：databrick、azure data lake, data factory, synapse, quickBi

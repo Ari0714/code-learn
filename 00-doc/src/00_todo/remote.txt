@@ -1,5 +1,5 @@
 
---------------------------------------------------------------方法-------------------------------------------------------------
+--------------------------------------------------------------method-------------------------------------------------------------
 
 -----大圣 seek remote job journal
 
@@ -11,22 +11,39 @@
 2023-08-03 第一笔工资， 1.2w usdt
 
 
-
------where to seek a remore job
-花果山大圣
-
-remote分享交流群
-https://t.me/shengxj11
-
-brix
-https://engineer.joinbrix.com/home
-1187334030@qq.com / cj8888999.
+-----小鹿 seek remote job journey
+brief introduction：失业4个月找到远程
+official find journey: 11.6 -》 11.29 get offer
 
 
----web3 远程工作
-https://dejob.top/jobDetail?id=2314
-187334030@qq.com / cj8888999.
 
 
-app
-SmartDeer
+-------------------------------------------------------job address-----------------------------------------------
+
+
+https://web3internships.com
+https://web3.career/
+https://remote3.co/
+
+
+React+TS实战+组件库: https://shengxinjing.cn/react/
+Vue+TS实战+组件库: https://shengxinjing.cn/vue/
+手写前端热门框架源码： https://shengxinjing.cn/source/
+
+纳瓦尔宝典作者的公司 https://www.angellist.com/
+电鸭远程工作者社区 : https://eleduck.com/
+[阮一峰谁在招人 https://github.com/ruanyf/weekly/issues/2960
+[Vercel 工作讨论区 https://github.com/vercel/next.js/discussions/44541
+Vuejobs 相关远程: vuejobs.com
+JavascriptJob : https://javascriptjob.xyz/
+远程工作 Jobs: remoteok.com
+欧洲远程工作 : justjoin.it
+web3招聘相关 : https://abetterweb3.notion.site/
+创业公司招人: angel.co/jobs
+接个人项目: upwork.com
+高端remote工作(号称只接受全球top 3% freelancer)：toptal.com
+创业公司： https://startup.jobs/
+Bold (大胆) Jobs: www.bolejobs.co
+https://engineer.joinbrix.com/home ，   1187334030@qq.com / cj8888999.
+https://dejob.top/jobDetail?id=2314， 187334030@qq.com / cj8888999.
+app：SmartDeer
