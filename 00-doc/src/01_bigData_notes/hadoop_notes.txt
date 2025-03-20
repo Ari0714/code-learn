@@ -75,7 +75,6 @@ hdfs namenode -format
 安全模式
 hadoop dfsadmin -safemode leave
 
-
 hdfs客户端操作（环境，API） =》 见文档
 
 
