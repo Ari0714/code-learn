@@ -1,19 +1,72 @@
 
---------------------------------------------------------------method-------------------------------------------------------------
+--------------------------------------------------------------journey-------------------------------------------------------------
 
------大圣 seek remote job journal
+-----大圣 seek remote job journey
 2022-10 pregnant，make up mind memorize IETES words
 2022-12，2023-1 年底学英语，懒散学习， no progress    --add take care of pregnant and baby，
 2023-03 月初正式学面试英语
 2023-05 用gpt写简历，海投简历，边面试边练英语，大量拒信
 2023-06，2023-7 get offer
 2023-08-03 第一笔工资， 1.2w usdt（9w rmb）
+35 years old  -- 4.4
 
 
 -----数字游民小鹿 seek remote job journey
 brief introduction：失业4个月找到远程
 official find journey: 11.6 -》 11.29 get offer
 哔哩哔哩 update: 远程工作者 环球旅居中…  --3.14
+
+
+-----chuang （on X）
+2020.7.7：first day in MS
+
+2023.3.28：propose resign after working 3 years
+3.30：begin to see remote opportunities
+4.4：30 years old
+4.26：receive a fully remote offer（foreign company）
+5.11：amazon L1 code：2 hard：DP，sliding window
+5.12：MS last day
+5.25：amazon L2 phone screening
+5.26：Tiktok in Singapore fail
+6.20：success get Japan Visa
+7.1：travel to Beijing
+7.10：最近的面试都不太顺利，可能是掼蛋打多了
+7.21：一个小经验分享。这段时间投的全是海外的岗位，日本的公司回复率高一些，面试机会也大一些。
+7.21：裸辞到现在两个月，间歇面试了6家公司左右，1个offer不太满意没有接。
+	  经济上没什么压力但是精神一直处于比较焦虑的状态，没有办法真正享受gap的生活，好像永远有一件没完成的事，但又不知道是什么。
+8.4：travel in Shanghai
+     海外远程，公司就几个人分散在4个国家，聊的挺来的但是薪资不太满意
+8.9：两次 negotiate 后要到了比较满意的薪资，接offer 了，正式做个远程工作者。让我试试是不是看上去那么自由
+8.13：travel to Japan，8.18 back
+8.24：远程就得找欧洲的，和同事只有下班前两个小时的overlap，基本上一整天不会被打扰
+10.18：人生的意义到底在哪  晚饭到底吃啥
+11.2：back home
+11.14：从大厂到 startup，半年工作量压缩到一周。
+12.9：wife get Canda university offer
+12.24：Tokyo travel
+
+2024
+1.15：苏州 -》 back贵阳老家
+3.22：离职前劝朋友去英伟达，读书后拿到offer
+8.24：travel in Thailand
+9.24：Paypal 3面挂，两个月流程 （second job）
+10.21：偶尔对现状不满的时候我会安慰自己，你也没有为了改变现状做过多大的努力，因为事事都没有尽力，就不用执着于事事都达到完美。接受现在的自己，7分饱也挺好。
+12.2：see wife off to Canada
+12.8：travel to Japan
+
+2025
+1.27：travel to Tokyo
+2.25：Amazon recruiter call at 6am
+32 years old  -- 4.4
+
+
+好多人问去哪里找。
+我大概3个月前订阅了几个主流平台的推送，LinkedIn，Indeed，Glassdoor。地区选欧洲，CA，AU/NZ，JP。
+我每天会花一点点时间看邮件，投简历。如果当天合适的岗位不多，我会去看看 remoteok，yc jobs，电鸭，
+以及一些地方性的网站，例如澳洲本土的 Hatch，CA本土的 jobbank，(1/3)
+
+没有稳定的现金流就会有这种焦虑，我32岁那年也gap了4个月，但当时因为有一些固定收益的投资，每个月差不多也有一万多进账，心理上也就还好。
+
 
 
 -------------------------------------------------------job address-----------------------------------------------
