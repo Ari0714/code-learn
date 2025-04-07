@@ -1,0 +1,207 @@
+
+
+-----summary:
+1. 昨天4.4清明节，转眼时间一个月过去了，这个月主要是密集投简历总结原因 + 零零星星面试 + 看名人事迹和方向 + 躺平状态
+2.
+3.
+
+
+-----target:
+
+
+
+-----3.24-3.30-----
+
+---plan：
+1. finish 谷粒后台react(141 episode，30h)
+2. master in aws，gcp components，go through entire preject
+3. algorithms 5/day，大圣 core200
+4. self portfolio
+5. nextjs，nestjs，nuxtjs（vue framework）
+6. data：dbt，airflow use
+
+
+---3.30---
+1. saw Paul-Lee on Yt，obsess with her gf
+99. 11：30 get up， jerk
+
+
+---3.29---
+1. calculate FIRE: 10w monthly x 10 year x 18% yearly = 3000w，imagine 200w/year
+2. saw Paul-Lee digital nomad life in Thildland with his wife, enviable
+99. scroll Paul-Lee on YT
+
+
+---3.28---
+99. scroll X all day
+
+
+---3.27---
+1. saw Yuan（independent dev on X） story：freedom developer life，多ship，快速上线，快速失败。
+2. nightmare: 做梦在学校，书包的资产被清空
+99：get up lazy at 6，2 jerk in morning，noon
+
+
+---3.26---
+1. saw 尚硅谷 live，腾讯人干大模型70wRMB -》 跳美国年薪100w刀。感慨人与人差距，只有不敢想，没有做不到
+99：get up lazy at 7：30，jerk in morning
+
+
+---3.25---
+1. sort remote work apply approachs
+98：saw Chuang story：resign from MS，then find remote job
+99：get up lazy at 8：00，guilty and miserable，jerk in evening
+
+
+---3.24---
+1. post CV，summarize no response reason
+98，interview：1. failure in Malaysia since salary。2. new recruiter about Zalando
+99. saw Chris straggle in AU，feel a lot
+
+
+
+-----3.17-3.23-----
+
+---plan：
+1. finish 谷粒后台react(141 episode，30h)
+2. master in aws，gcp components，go through entire preject
+3. algorithms 5/day，大圣 core200
+4. self portfolio
+5. nextjs，nestjs，nuxtjs（vue framework）
+6. data：dbt，airflow use
+
+
+---3.23---
+99. scroll Tiktok for all day
+
+
+---3.22---
+99. jerk in morning。scroll Tiktok all rest day
+
+
+---3.21---
+1. post job no response，find wellfound platform
+99. waste all day，jerk in morning
+
+
+---3.20---
+1. -》50 episode of 谷粒后台react  --0
+2. 5 algorithm
+3. post resume（data/fullstack 30p，use wizard）， 公众号 post
+4. 10 js basic exam
+99. waste in morning，jerk after lunch，depressed a lot after that
+
+
+---3.19---
+1. makeup interview questions
+	2. 5 algorithm
+	3. L1 interview for Standard Chartered（80% pass rate）
+4. post resume（figure out easy-post no effect，too many and hr dont view，go to homepage post）
+	99. waster morning，delay
+
+
+---3.18---
+1. -》50 episode of 谷粒后台react  --11eps
+2. 5 algorithms
+3. post cv（data/fullstack 50）on LinkedIn，50 on other platform（seek...）。process interview email
+	98：interrupt by Standard Chartered
+	99. jerk in morning
+
+
+---3.17---
+	1. organize screening questions & practise oral english
+	2. use Chatgpt write frontend cv，post 30 companies。 data post 30 companies。
+3. 5 algorithms
+4. makeup data cv content
+5. at least 10 episodes of 谷粒后台
+	98. foreign contractor reject，skillset mismatch  => dont post extensive randomly，update for each role
+	99. jerk in morning
+
+
+
+-----3.10-3.16-----
+
+---summary：
+1. made plan but dont follow，lazy & cant focus on
+2. saw 郭宇，jessie，户晨风，poems（save time，终不似少年游） overemotion，reflect myself
+3. intermittent post cv（data，fullstack），no interview yet。Standard-Chartered in process，trace others
+4. crypto contract-follow lost 1700usd， quit it completely
+5. collect and save TCL resign materials，follow resignation process
+6. 2 jerk
+
+
+---3.16---
+	1. do nothing，saw 户晨风
+	2. okx all usdt sell out，accumulative lost 59w CNY（people cant earn money outer their knowledge）
+
+
+---3.15---
+	1. saw 郭宇 video，over emotion，lots of smart people in the world
+	99. jerk in morning
+
+
+---3.14---
+	1. find recruiter（Hays）
+	3. data：two kind of CV（warehouse development，platform development），post data resume
+	4. update fullstack resume and post
+
+
+---3.13---
+	1. nothing but waste，see Jessie video，tremendous emotion
+
+
+---3.12---
+	1. standard-chartered process
+	2. TCL last day, push code to github
+	3. submit cv （1.data as usual 20）
+
+
+---3.11---
+	1. submit cv （data 20）
+	99. 6：30 get up, 23：00 go to bed
+
+
+---3.10---
+	1. 6：30 get up
+	2. Zd bank screen call，refine cv
+	3. submit cv （data 20）
+	99. waste all days，jerk，saw 郭宇 erupt emotion. 23：00 go to bed
+
+
+
+-----3.3-3.9-----
+
+---3.9---
+	1. 7：00 get up
+	1. relax allday
+
+
+---3.8---
+	1. 9：00 get up
+	99. refer to 小鹿，find recruiter on Tg
+
+
+---3.7---
+	99. 9：00 get up,relax allday
+
+
+---3.6---
+	1. 9：00 get up
+	99. jerk in morning
+
+
+---3.5---
+	1. 8：00 get up
+	2. upload 盘古 code，screenshot show my work experience
+	99. jerk in morning
+
+
+---3.4---
+	1. 6：00 get up, go to bed 10：00, depressed
+	99: 2 jerk in morning，afternoon
+
+
+---3.3---
+	1. HSBC L1 interview
+	2. resign-work procedure
+	99: jerk in evening, go to bed 9：40
