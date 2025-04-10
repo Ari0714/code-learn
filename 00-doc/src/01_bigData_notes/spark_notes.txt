@@ -1,12 +1,66 @@
 
-
-
 --------------------------------------------------------------笔记-------------------------------------------------------------
+---启动模式
+local
+standalone
+yarn
+k8s
+容器化部署，基于docker/k8s， 更加方便对集群进行管理
+
+
+---RDD
 只读
 分区
 血缘
 持久化
 checkpoint
+
+
+---算子
+map，mapvalue，mappartition，flatmap
+filter。distinct，
+repartion，coalesce
+sortby，sortwith
+count，reduce
+intersection，union，subtract
+join，leftjoin
+groupby，parttionby
+reducebykey
+
+--action
+first，take，collect，foreach，foreachpartition，sava
+
+
+---运行架构
+master-slave
+
+
+---stage任务划分
+application（sparkcontext） -》 job（一个action一个job） -》stage（stage=宽依赖的个数+1）-》task（一个stage中，最后一个分区个数是task个数）
+宽依赖，上游RDD分区被下游多个RDD继承
+窄依赖，上游RDD分区被下游1个RDD继承，1对1
+
+
+
+--------------------------------------------------------------优化-------------------------------------------------------------
+---提交资源
+提交资源合理评估：
+1. 给常用小资源，如2c4g，看跑数时间能否满足
+2. 逐步往上加
+
+---RDD
+1. broadcast（mapjoin） and 累加器
+2. mappartition，foreachpartition
+3. persist 中间结果
+
+
+---数据倾斜（skewed data）
+1. 增加reducer parallel
+2. 加盐：随机prefix
+
+
+---kafka实时场景
+1. spark并行度和kafka分区一致
 
 
 --------------------------------------------------------------提交脚本-------------------------------------------------------------

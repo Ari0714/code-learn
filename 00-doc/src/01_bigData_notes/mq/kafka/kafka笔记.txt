@@ -16,11 +16,17 @@ hdp01:2181,hdp02:2181,hdp03:2181
 replica：副本，分区存在brocker上，防止节点挂，每个topic的分区有几个副本
 leader：每个分区多个副本的主，消费生产都是对象
 follower：从leader同步数据
+topic：消费主题
+groupid：消费组id
+partition：消费分区
+
 
 生产者：
 1.分区，1.方便在集群拓展  2.以组为单位，并发消费
 2.数据可靠性：ack  分区收到消息后 =》给生产者发ack（acknowledgmnent）=》下一轮发送（否则重试）
-			  副本同步策略：0（一直发，不等leader落盘，可能丢数据），1（leader落盘，默认，可能丢数据），-1/all（leader落盘，follower全部同步完成，可能重复数据）  == 》半数。全部
+			  副本同步策略：0（一直发，不等leader落盘，可能丢数据）
+			                1（leader落盘，默认，可能丢数据）
+			                -1/all（leader落盘，follower全部同步完成，可能重复数据）  == 》半数。全部
 			  ISR：in-sync replica set，follow长时间未同步数据，被踢出ISR
 3.Exactly Once语义
 exactly once = idemportence(幂等性机制) + at least once   idemportence：记录pid（preducerId+消息id）发现重复，不写磁盘
