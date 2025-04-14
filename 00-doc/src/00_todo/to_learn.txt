@@ -19,7 +19,7 @@ Flink实时数仓3.0→腾讯云数仓(实时)→腾讯云数仓(离线)→湖�
 
 -- learn code tech
 1、python
-leetcode、pyspark、pandas、
+leetcode、pyspark、pandas
 pyecharts、molpolibli
 django、flask
 unit test
