@@ -28,7 +28,7 @@
 5.flink部署
  1.standalone 独立集群
    1.flink-conf.yaml 配置master
-   2.slaves配置slave
+   2.slaves.conf配置slave
    3.分发启动
    4.8081
  2.yarn
