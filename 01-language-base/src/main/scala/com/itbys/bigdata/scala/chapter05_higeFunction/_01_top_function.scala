@@ -3,7 +3,7 @@ package com.itbys.bigdata.scala.chapter05_higeFunction
 import scala.collection.mutable.ArrayBuffer
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/14
   * Desc
   */

@@ -1,7 +1,7 @@
 package com.itbys.bigdata.scala.chapter02_function
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/14
   * Desc
   */
@@ -17,18 +17,14 @@ object s11_trait {
 
 
 trait test11 {
-
   println("aaa")
   val a: String = "aaaa"
-
 }
 
 
 trait tese11_1 {
   println("bbb")
-
   def test()
-
 }
 
 

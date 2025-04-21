@@ -1,4 +1,4 @@
-package com.itbys.bigdata.scala.chapter04_Collaction
+package com.itbys.bigdata.scala.chapter04_collection
 
 import scala.collection.mutable
 
