@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter03_implicit
   * Date 2023/3/14
   * Desc
   */
-object s1_test {
+object _01_test {
 
   def main(args: Array[String]): Unit = {
 

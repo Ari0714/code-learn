@@ -1,11 +1,11 @@
 package com.itbys.bigdata.scala.chapter03_implicit
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/14
   * Desc
   */
-object s3_implicit_value {
+object _03_implicitValue {
 
   def main(args: Array[String]): Unit = {
 

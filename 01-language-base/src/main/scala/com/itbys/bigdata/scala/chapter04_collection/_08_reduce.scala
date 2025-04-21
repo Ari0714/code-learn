@@ -3,11 +3,11 @@ package com.itbys.bigdata.scala.chapter04_collection
 import scala.collection.mutable
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/14
   * Desc
   */
-object s8_reduce {
+object _08_reduce {
 
   def main(args: Array[String]): Unit = {
 

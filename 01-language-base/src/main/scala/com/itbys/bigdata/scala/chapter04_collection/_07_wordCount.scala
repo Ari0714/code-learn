@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter04_collection
   * Date 2023/3/14
   * Desc
   */
-object s7_worldCount {
+object _07_wordCount {
 
   def main(args: Array[String]): Unit = {
 

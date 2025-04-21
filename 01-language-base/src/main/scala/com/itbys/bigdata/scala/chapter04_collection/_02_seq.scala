@@ -10,7 +10,7 @@ import scala.collection.mutable.ListBuffer
   * Date 2023/3/14
   * Desc
   */
-object s2_seq {
+object _02_seq {
 
   def main(args: Array[String]): Unit = {
 

@@ -7,7 +7,7 @@ import scala.collection.mutable.ArrayBuffer
   * Date 2023/3/14
   * Desc
   */
-object s1 {
+object _02_func {
 
   def main(args: Array[String]): Unit = {
 

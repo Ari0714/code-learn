@@ -1,11 +1,11 @@
 package com.itbys.bigdata.scala.chapter04_collection
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/14
   * Desc
   */
-object s6_used_method {
+object _06_usedMethod {
 
   def main(args: Array[String]): Unit = {
 

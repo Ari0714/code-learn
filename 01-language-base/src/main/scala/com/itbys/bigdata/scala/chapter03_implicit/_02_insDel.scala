@@ -1,11 +1,11 @@
 package com.itbys.bigdata.scala.chapter03_implicit
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/14
   * Desc
   */
-object s02_InsDel {
+object _02_insDel {
 
   def main(args: Array[String]): Unit = {
 
