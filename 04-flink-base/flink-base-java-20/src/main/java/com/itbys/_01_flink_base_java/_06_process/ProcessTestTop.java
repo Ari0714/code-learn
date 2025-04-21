@@ -22,7 +22,7 @@ import java.util.List;
 
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/2/19
  * Desc 应用：需要统计最近10秒钟内最高的的两个temp sersor，并且每5秒钟更新一次
  */

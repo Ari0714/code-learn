@@ -22,7 +22,7 @@ import java.time.Duration;
 
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/2/19
  * Desc 温度值连续10S上升，报警
  */

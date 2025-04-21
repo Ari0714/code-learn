@@ -7,7 +7,7 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/2/18
  * Desc dataset api从2.12开始被整合，弃用
  * 1、可以使用流编码：提交任务时指定runtime-mode = BATCH

@@ -8,7 +8,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/2/18
  * Desc
  */

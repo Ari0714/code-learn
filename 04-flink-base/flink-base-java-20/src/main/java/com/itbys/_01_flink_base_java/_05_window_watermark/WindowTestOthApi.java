@@ -19,7 +19,7 @@ import org.apache.flink.util.OutputTag;
 import java.time.Duration;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/2/18
  * Desc 演示window的其他可选api
  */

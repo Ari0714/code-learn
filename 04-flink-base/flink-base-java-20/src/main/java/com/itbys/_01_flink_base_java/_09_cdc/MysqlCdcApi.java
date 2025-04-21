@@ -3,7 +3,7 @@ package com.itbys._01_flink_base_java._09_cdc;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/6/9
  * Desc
  */

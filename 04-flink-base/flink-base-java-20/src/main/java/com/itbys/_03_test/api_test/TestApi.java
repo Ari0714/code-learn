@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import java.util.UUID;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/11/6
  * Desc
  */

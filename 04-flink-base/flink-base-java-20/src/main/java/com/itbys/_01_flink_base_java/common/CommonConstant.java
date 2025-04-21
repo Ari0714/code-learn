@@ -1,7 +1,7 @@
 package com.itbys._01_flink_base_java.common;
 
 /**
- * Author: Felix
+ * Author: Ari
  * Date: 2021/8/13
  * Desc: 电商业务常量
  */

@@ -11,7 +11,7 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.apache.flink.types.Row;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/6/9
  * Desc
  */

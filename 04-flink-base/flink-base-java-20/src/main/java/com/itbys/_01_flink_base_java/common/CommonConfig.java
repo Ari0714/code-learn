@@ -1,7 +1,7 @@
 package com.itbys._01_flink_base_java.common;
 
 /**
- * Author chenj
+ * Author Ari
  * Date 2021/9/2
  * Desc 配置类
  */

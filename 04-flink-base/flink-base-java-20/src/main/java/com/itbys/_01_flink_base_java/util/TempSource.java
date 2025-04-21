@@ -6,7 +6,7 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import java.util.Random;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/2/19
  * Desc
  */

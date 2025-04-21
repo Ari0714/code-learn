@@ -8,7 +8,7 @@ import org.apache.flink.table.functions.TableFunction;
 import org.apache.flink.types.Row;
 
 /**
- * Author jie173.chen
+ * Author Ari
  * Date 2024/11/26
  * Desc
  */
