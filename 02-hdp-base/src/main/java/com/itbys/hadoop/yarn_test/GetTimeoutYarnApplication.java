@@ -7,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2023/9/18
  * Desc 获取超时任务
  * 1、TEZ任务
@@ -39,7 +39,7 @@ public class GetTimeoutYarnApplication {
      * @param: command
      * @return: java.lang.String
      */
-    private static String execCmd(String[] command) {
+    public static String execCmd(String[] command) {
         StringBuilder output = new StringBuilder();
         Process p;
         try {

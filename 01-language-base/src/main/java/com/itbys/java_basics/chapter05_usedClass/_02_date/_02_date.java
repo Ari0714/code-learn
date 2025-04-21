@@ -1,4 +1,4 @@
-package com.itbys.java_basics.chapter05_used_classes._02_date;
+package com.itbys.java_basics.chapter05_usedClass._02_date;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;

@@ -9,7 +9,7 @@ import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2023/11/11
  * Desc hive自定义函数：获取长度
  */

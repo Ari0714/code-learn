@@ -1,4 +1,4 @@
-package com.itbys.java_basics.chapter05_used_classes;
+package com.itbys.java_basics.chapter05_usedClass;
 
 import java.math.BigInteger;
 import java.util.Arrays;

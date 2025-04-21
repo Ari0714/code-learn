@@ -3,7 +3,7 @@ package com.itbys.hive_test;
 import java.sql.*;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/4/21
  * Desc
  */

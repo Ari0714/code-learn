@@ -1,4 +1,4 @@
-package com.itbys.java_basics.chapter05_used_classes._01_string;
+package com.itbys.java_basics.chapter05_usedClass._01_string;
 
 import org.junit.Test;
 

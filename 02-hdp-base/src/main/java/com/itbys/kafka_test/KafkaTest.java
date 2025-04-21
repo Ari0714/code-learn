@@ -13,6 +13,11 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.UUID;
 
+/**
+ * Author Ari
+ * Date 2023/11/11
+ * Desc hive自定义函数：获取长度
+ */
 public class KafkaTest {
 
     public static void main(String[] args) throws InterruptedException {

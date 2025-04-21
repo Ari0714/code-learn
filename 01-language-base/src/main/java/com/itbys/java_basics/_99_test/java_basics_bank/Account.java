@@ -1,6 +1,6 @@
-package com.itbys.java_basics_bank._01_banking;
+package com.itbys.java_basics._99_test.java_basics_bank;
 
-import com.itbys.java_basics_bank._01_banking.domain.WithdrawException;
+import com.itbys.java_basics._99_test.java_basics_bank.domain.WithdrawException;
 
 /**
  * Author chenjie

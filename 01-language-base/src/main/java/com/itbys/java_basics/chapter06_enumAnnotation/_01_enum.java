@@ -1,4 +1,4 @@
-package com.itbys.java_basics.chapter06_enum_annotation;
+package com.itbys.java_basics.chapter06_enumAnnotation;
 
 /**
  * Author chenjie

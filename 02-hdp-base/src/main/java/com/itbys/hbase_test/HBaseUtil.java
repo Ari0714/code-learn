@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Author Ari
+ * Date 2023/11/11
+ * Desc hive自定义函数：获取长度
+ */
 public class HBaseUtil {
 
     public static void main(String[] args) throws IOException {

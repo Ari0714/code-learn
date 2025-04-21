@@ -1,4 +1,4 @@
-package com.itbys.java_basics_bank._01_banking;
+package com.itbys.java_basics._99_test.java_basics_bank;
 
 import java.util.ArrayList;
 
