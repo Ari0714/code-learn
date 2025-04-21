@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter02_function
   * Date 2023/3/14
   * Desc
   */
-object s4_TryCatch {
+object _04_tryCatch {
 
   def main(args: Array[String]): Unit = {
 

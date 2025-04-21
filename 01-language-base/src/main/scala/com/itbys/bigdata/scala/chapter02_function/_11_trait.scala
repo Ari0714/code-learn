@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter02_function
   * Date 2023/3/14
   * Desc
   */
-object s11_trait {
+object _11_trait {
 
   def main(args: Array[String]): Unit = {
     val person1 = new Person11

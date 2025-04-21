@@ -1,11 +1,11 @@
 package com.itbys.bigdata.scala.chapter02_function
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/14
   * Desc
   */
-object s16_ClassCompare {
+object _16_classCompare {
 
   def main(args: Array[String]): Unit = {
 

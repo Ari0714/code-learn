@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter02_function
   * Date 2023/3/14
   * Desc
   */
-object s2_function_extned {
+object _02_function_extend {
 
   def main(args: Array[String]): Unit = {
 

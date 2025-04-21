@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter02_function
   * Date 2023/3/14
   * Desc
   */
-object s3_lazy {
+object _03_lazy {
 
   def main(args: Array[String]): Unit = {
     lazy val res = sum(10, 20)

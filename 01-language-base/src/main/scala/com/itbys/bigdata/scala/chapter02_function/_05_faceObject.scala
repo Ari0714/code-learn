@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter02_function
   * Date 2023/3/14
   * Desc
   */
-object s5_FaceObject {
+object _05_faceObject {
 
   def main(args: Array[String]): Unit = {
 

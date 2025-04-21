@@ -5,7 +5,7 @@ package com.itbys.bigdata.scala.chapter02_function
   * Date 2023/3/14
   * Desc
   */
-object s12_trait {
+object _12_trait_rank {
 
   def main(args: Array[String]): Unit = {
 
