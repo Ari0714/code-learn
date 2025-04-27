@@ -10,7 +10,7 @@
 
 ---plan：
 1. finish 谷粒后台react(141 episode，30h)
-2. master in aws，gcp components，go through entire preject
+2. master in aws，gcp components，go through entire project
 3. algorithms 5/day，大圣 core200
 4. self portfolio
 5. nextjs，nestjs，nuxtjs（vue framework）
