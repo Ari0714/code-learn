@@ -103,6 +103,12 @@
             <version>2.9.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.crealytics</groupId>
+            <artifactId>spark-excel_${scala.version}</artifactId>
+            <version>0.12.2</version>
+        </dependency>
+
         <!--java.lang.NoSuchMethodError: org.apache.hadoop.conf.Configuration.getPassword(Ljava/lang/String;)[C-->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -143,7 +149,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.18</version>
         </dependency>
-
     </dependencies>
 
 
