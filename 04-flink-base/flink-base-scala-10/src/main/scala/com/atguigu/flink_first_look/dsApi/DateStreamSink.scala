@@ -9,7 +9,7 @@ import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.elasticsearch6.ElasticsearchSink
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/21
   * Desc 
   */

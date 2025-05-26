@@ -5,6 +5,11 @@ import org.apache.flink.table.api.{DataTypes, Table}
 import org.apache.flink.table.api.scala._
 import org.apache.flink.table.descriptors.{Csv, FileSystem, Schema}
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object TableSink03 {
 
   def main(args: Array[String]): Unit = {

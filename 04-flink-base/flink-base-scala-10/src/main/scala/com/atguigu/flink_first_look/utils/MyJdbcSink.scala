@@ -6,7 +6,11 @@ import com.atguigu.flink_first_look.bean.Person
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunction}
 
-
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 class MyJdbcSink extends RichSinkFunction[Person] {
 
   var conn: Connection = _

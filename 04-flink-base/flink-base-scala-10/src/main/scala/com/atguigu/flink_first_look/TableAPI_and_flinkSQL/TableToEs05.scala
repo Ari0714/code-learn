@@ -5,6 +5,11 @@ import org.apache.flink.table.api._
 import org.apache.flink.table.api.scala._
 import org.apache.flink.table.descriptors._
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object TableToEs05 {
 
   def main(args: Array[String]): Unit = {

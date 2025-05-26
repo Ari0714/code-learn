@@ -5,8 +5,12 @@ import org.apache.flink.table.api._
 import org.apache.flink.table.api.scala._
 import org.apache.flink.table.descriptors._
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object TableToMysql06 {
-
 
   def main(args: Array[String]): Unit = {
 

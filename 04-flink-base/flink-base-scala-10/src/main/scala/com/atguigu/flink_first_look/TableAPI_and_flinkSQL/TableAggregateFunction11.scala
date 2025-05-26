@@ -11,6 +11,11 @@ import org.apache.flink.table.functions._
 import org.apache.flink.types.Row
 import org.apache.flink.util.Collector
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object TableAggregateFunction11 {
 
   def main(args: Array[String]): Unit = {

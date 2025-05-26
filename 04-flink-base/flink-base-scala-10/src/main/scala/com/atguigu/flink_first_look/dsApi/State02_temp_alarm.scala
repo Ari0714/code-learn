@@ -8,11 +8,11 @@ import org.apache.flink.util.Collector
 import org.apache.flink.streaming.api.scala._
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/21
   * Desc 
   */
-object State02_tmp_alarm {
+object State02_temp_alarm {
 
   def main(args: Array[String]): Unit = {
 

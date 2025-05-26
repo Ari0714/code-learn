@@ -9,6 +9,11 @@ import org.apache.flink.streaming.connectors.elasticsearch6.ElasticsearchSink
 import org.apache.http.HttpHost
 import org.elasticsearch.client.Requests
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object MyESUtil {
 
   private val hosts: util.ArrayList[HttpHost] = new util.ArrayList[HttpHost]

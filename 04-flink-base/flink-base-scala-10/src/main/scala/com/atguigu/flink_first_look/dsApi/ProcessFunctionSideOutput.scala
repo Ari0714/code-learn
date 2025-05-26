@@ -8,7 +8,7 @@ import org.apache.flink.util.Collector
 import org.apache.flink.streaming.api.scala._
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/3/21
   * Desc 
   */

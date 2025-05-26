@@ -5,6 +5,11 @@ import java.util.Properties
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object MyKafkaUtil {
 
   private val pro = new Properties()

@@ -11,6 +11,11 @@ import org.apache.flink.table.api.scala._
 import org.apache.flink.table.descriptors._
 import org.apache.flink.types.Row
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object TimeFeature07_2 {
 
   def main(args: Array[String]): Unit = {

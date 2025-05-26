@@ -5,6 +5,11 @@ import org.apache.flink.streaming.api.scala._
 import org.apache.flink.table.api.Table
 import org.apache.flink.table.api.scala._
 
+/**
+  * Author xx
+  * Date 2023/3/21
+  * Desc
+  */
 object Test01 {
 
   def main(args: Array[String]): Unit = {
