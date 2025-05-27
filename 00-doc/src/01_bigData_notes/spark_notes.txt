@@ -63,6 +63,18 @@ application（sparkcontext） -》 job（一个action一个job） -》stage（st
 1. spark并行度和kafka分区一致
 
 
+
+--------------------------------------------------------------structured streaming-------------------------------------------------------------
+需要注意的是，Spark Streaming本身设计就是一批批的以批处理间隔划分RDD；
+而Structured Streaming中并没有提出批的概念，Structured Streaming按照每个Trigger Interval接收数据到Input Table，将数据处理后再追加到无边界的Result Table中，想要何种方式输出结果取决于指定的模式。
+所以，虽说Structured Streaming也有类似于Spark Streaming的Interval，其本质概念是不一样的。
+Structured Streaming更像流模式。
+
+总体来说，structured streaming有更简洁的API、更完善的流功能、更适用于流处理。而spark streaming，更适用于与偏批处理的场景。
+
+
+
+
 --------------------------------------------------------------提交脚本-------------------------------------------------------------
 
 ##########################spark代码路径不可出现中文##########################
