@@ -1,0 +1,287 @@
+
+
+-----monthly plan-----
+1. get a remote offer，salary >= 50kRMB （no，SC give 38k）
+2. clear all monthly todos （finish 12/38 31%）
+
+---summary：
+1. this month main thing is SC interview
+2. rest of time waste in scroll social-media soberly and jerk in 窝趣
+3. errand：passport，Hongkong pass, boc card etc
+
+
+
+-----todo-----
+--data
+1. snowflake + dbt
+13. 使用 Apache Beam 等框架进行流数据处理，以处理实时数据提取和转换
+	16. Do you have 2+ years of experience with high-traffic / load distributed systems and data pipelines? 
+17. Google：DataFlow (Apache Beam)。DataForm, Pub/Sub, BigQuery, Cloud Storage and other GCP services。 data modeling (Kimball, data vault or similar)
+	18: visualization tool: Looker
+
+--develop
+2. react native（Expo、Gluestack UI）
+2. cicd/deploy: Vercel
+2. WebSockets
+3. Google Material UI, Bootstrap，react motion（framer-motion 可以支持 99% 的设计的动画需求），Three.js（3D）
+4. unittest
+6. React、React Native和electronic从头开始创建多平台加密货币钱包(iOS、Android、Windows、macOS、Linux )
+8. Experience using Figma to translate designs into functional web components、Framer Motion（用于动画）和微交互。
+9. 利用 Fabric.js 进行画布操作，利用 Chakra UI 进行样式设置，确保设计的一致性
+10. develop portfolio
+11. 具有身份验证解决方案（OAuth、JWT 等）经验。实施安全最佳实践，包括 OAuth、API 速率限制和加密。
+15. project manage tools：jira teams sprint slack Scrum
+18. Azure：使用 Terraform 实现基础设施自动化
+21. nuxtjs（vue framework） ecosystem
+22. 使用 GitHub Actions 设置和维护 CI/CD 管道, jenkins + gitlab + maven
+24. polish Github refer to excellent guys
+27. sort system design & behavior question, practise
+28. certification AWS etc
+29. vite
+4. Tailwind UI
+
+--errand
+2. 泰数字游民签（DTV）
+	3. Thailand travel visa. (arrival visa, rednote)
+4. Japan travel visa
+	3. Malaysia travel visa. (arrival visa, rednote)
+	20. Yuan：book《百万富豪的快车道》
+21. whatsapp register
+	23. Seek double account
+24. Boss double account
+	25. try 公众号 post （not efficient）
+	26. find Thailand grey industry job. (law risk, discard)
+	27. apply passport
+	28. apply Hongkong pass
+	8. career physical examination
+	2. apply boc card
+
+
+--regular
+1. English listen practise at morning (day)
+2. algorithm in Python 5/perd (day)
+26. js basic exercise 3/perd (day)
+29. publish technical article 3/perd (day)
+30. tidy room (weekly)
+
+
+
+-----4.28-4.30-----
+plan：
+1. finish 谷粒后台react(141 episode，30h)
+2. master in aws，gcp components，go through entire preject
+3. algorithms 5/day，大圣 core200
+4. self portfolio
+5. nextjs，nestjs，nuxtjs（vue framework）
+6. data：dbt，airflow use
+
+
+---4.30---
+	99. print SC onboarding material，waste allday
+
+
+---4.29---
+	6. physical examination
+	99. waste allday
+
+
+---4.28---
+	6. apply boc card
+	99. sit and waste allday
+
+
+
+
+-----4.21-4.27-----
+plan：
+1. finish 谷粒后台react(141 episode，30h)
+2. master in aws，gcp components，go through entire preject
+3. algorithms 5/day，大圣 core200
+4. self portfolio
+5. nextjs，nestjs，nuxtjs（vue framework）
+6. data：dbt，airflow use
+
+
+---4.27---
+	99. do nothing, waste allday, saw Bear <man vs wild>
+
+
+---4.26---
+	99. get up at 7, sit and scroll randomly, waste allday. jerk in noon
+
+
+---4.25---
+	1. 1 extra homework
+	2. fill in SC offer and background check
+	99. sit and waste allday
+
+
+---4.24---
+	1. see many web3 job and seek learn course
+	99. get up at 7, waste allday, 2 jerk noon/afternoon
+
+
+---4.23---
+	99. get up at 6, sit and do nothing, waste allday，scroll social media
+
+
+---4.22---
+	98. receive SC salary call, dissatisfied, maybe lost and prepare double hands
+	99. get up at 6, 2 jerk morning/afternoon, waste allday
+
+
+---4.21---
+	1. sort scala interview question
+	2. 2 extra homework
+	3. apply Hongkong entry
+	99. get up at 7, jerk in noon, waste half of day
+
+
+
+-----4.14-4.20-----
+plan：
+1. finish 谷粒后台react(141 episode，30h)
+2. master in aws，gcp components，go through entire preject
+3. algorithms 5/day，大圣 core200
+4. self portfolio
+5. nextjs，nestjs，nuxtjs（vue framework）
+6. data：dbt，airflow use
+7. tidy my room
+
+
+---4.20---
+	2. 2 extra homework
+	99. laowang download and jerk, waste allday
+
+
+---4.19---
+	99. sleep late, waste all day
+
+
+---4.18---
+	99. get up at 4 and jerk, waste allday
+
+
+---4.17---
+	1. reply SC salary expectation
+	2. get up at 5 then back sleep, sleep 3h afternoon, jerk
+
+
+---4.16---
+	1. get up at 5, prepare SC L3 interview
+	99. sleep 3h afternoon, jerk
+
+
+---4.15---
+	99. get up at 5, back to sleep, 3h noon sleep, 2 jerk
+
+
+---4.14---
+	99. get up at 5, back to sleep, 3h noon sleep, waste allday
+
+
+
+
+-----4.7-4.13-----
+plan：
+1. finish 谷粒后台react(141 episode，30h)
+2. master in aws，gcp components，go through entire preject
+3. algorithms 5/day，大圣 core200
+4. self portfolio
+5. nextjs，nestjs，nuxtjs（vue framework）
+6. data：dbt，airflow use
+7. tidy my room
+
+
+---4.13---
+	99. get up at 5，back sleep，sleep for 3 hours afternoon， waste allday
+
+
+---4.12---
+	99. get up at 5，back sleep，sleep 3 hour afternoon，waste all day
+ 
+
+---4.11---
+	1. scroll socia-media randomly, wait k80 delivery
+	99. get up at 5，3 jerk，work at 9, sleep 3 hour afternoon
+
+
+---4.10---
+	1. scroll socia media randomly
+	99. get up at 5，2 jerk，work at 9, sleep 3 hour afternoon
+
+
+---4.9---
+	1. SC L2（80%）
+	99. get up at 5. jerk in morning. focus before interview 1.5h
+
+
+---4.8---
+	99. get up at 7, jerk in afternoon, waste allday in scroll social media
+
+
+---4.7---
+	99. get up at 7. waste allday in scroll social media
+
+
+
+
+
+-----3.31-4.6-----
+plan：
+1. finish 谷粒后台react(141 episode，30h)
+2. master in aws，gcp components，go through entire preject
+3. algorithms 5/day，大圣 core200
+4. self portfolio
+5. nextjs，nestjs，nuxtjs（vue framework）
+6. data：dbt，airflow use
+
+
+---4.6---
+	2. 1 extra work
+	99. get up at 5:00, waste allday scroll social media
+
+
+---4.5---
+	1. scroll social media randomly，waste allday
+	99. 5：00 get up，jerk
+
+
+---4.4---
+	1. saw Mike story
+	99. 10：00 get up，jerk
+
+
+---4.3---
+	1. saw Mike story
+	99. 10：00 get up，2 jerk
+
+
+---4.2---
+	1. saw Mike story
+	99. 10：00 get up
+
+
+---4.1---
+	1. randomly obsess in social media
+	99. 9：00 get up，2 jerk
+
+
+---3.31---
+	1. randomly obsess in social media
+	99. 11：00 get up，jerk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -131,8 +131,9 @@ grant all privileges on *.* to root@'%' identified by 'tcl@bigdata';
 set sql_mode='ONLY_FULL_GROUP_BY';
 
 -----mysql的dump操作
-mysqldump -uroot -p111111 3001_spark_music > /opt/dump.sql
-mysql -uroot -p111111 drug < dump.sql   （注意看dump文件的库）  或者使用source命令
+inport: mysql -uroot -p111111 drug < dump.sql   （注意看dump文件的库）  或者使用source命令
+export: mysqldump -uroot -p111111 3001_spark_music > /opt/dump.sql
+
 
 -----忘记root密码
 vim /etc/my.cnf：加入skip-grant-tables
