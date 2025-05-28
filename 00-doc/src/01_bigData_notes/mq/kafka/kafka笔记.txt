@@ -79,6 +79,7 @@ bin/kafka-server-stop.sh config/server.properties
 kafka-topics.sh --list --zookeeper localhost:2181
 
 创建：
+kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
 kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 6 --topic cdc_flink_oracle_db_10.106.94.21_KTMES_MES_PWO
 
 删除：
