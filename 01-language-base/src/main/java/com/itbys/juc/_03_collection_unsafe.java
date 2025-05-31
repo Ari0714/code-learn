@@ -3,6 +3,11 @@ package com.itbys.juc;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Author Ari
+ * Date 2024/7/15
+ * Desc
+ */
 public class _03_collection_unsafe {
 
     public static void main(String[] args) {

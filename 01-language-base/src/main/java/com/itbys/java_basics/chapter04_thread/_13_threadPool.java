@@ -71,13 +71,33 @@ public class _13_threadPool {
 
         /**
          * ThreadPoolExecutor
+         * corePoolSize 线程池核心线程大小
+         * maximumPoolSize 线程池最大线程数量
+         * keepAliveTime 空闲线程存活时间
+         * unit 空闲线程存活时间单位
+         * LinkedBlockingQueue：基于链表的无界阻塞队列（其实最大容量为Interger.MAX），按照FIFO排序
+         * handler 拒绝策略（超过最大任务）：AbortPolicy，该策略下，直接丢弃任务，并抛出RejectedExecutionException异常。
          */
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2,
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+                2,
                 5,
                 5,
                 TimeUnit.MINUTES,
                 new LinkedBlockingQueue<Runnable>(10),
                 new ThreadPoolExecutor.AbortPolicy());
+
+        //线程池中6个线程抢占runnable接口任务
+        try {
+            for (int i = 0; i < 10; i++) {
+                threadPoolExecutor.execute(() -> {
+                    System.out.println(Thread.currentThread().getName());
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            threadPoolExecutor.shutdown();
+        }
 
 
     }

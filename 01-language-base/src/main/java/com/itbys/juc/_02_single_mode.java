@@ -1,6 +1,10 @@
 package com.itbys.juc;
 
-
+/**
+ * Author Ari
+ * Date 2024/7/15
+ * Desc
+ */
 public class _02_single_mode {
 
     public static void main(String[] args) {
