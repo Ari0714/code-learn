@@ -1,0 +1,6 @@
+{"sensorId":"sensor_1","timestamp":1629532800000,"temperature":45.0,"humidity":70.0}
+{"sensorId":"sensor_2","timestamp":1629532805000,"temperature":30.0,"humidity":50.0}
+{"sensorId":"sensor_1","timestamp":1629532810000,"temperature":44.0,"humidity":69.0}
+{"sensorId":"sensor_1","timestamp":1629532822000,"temperature":13.0,"humidity":100.0}
+{"sensorId":"sensor_2","timestamp":1629532830000,"temperature":56.0,"humidity":123.0}
+{"sensorId":"sensor_1","timestamp":1629532841000,"temperature":33.0,"humidity":14.0}
