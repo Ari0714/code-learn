@@ -32,20 +32,20 @@ object _02_window {
     val slideDuration = "5 minutes"
 
     val windowedCounts = lines
-      .withWatermark("timestamp", "5 minutes")  // 水位线延迟5分钟
+      .withWatermark("timestamp", "5 minutes") // 水位线延迟5分钟
       .groupBy(
       window($"timestamp", windowDuration, slideDuration),
       $"word"
     )
       .count()
-      .orderBy("window")  // 按窗口排序
+      .orderBy("window") // 按窗口排序
 
     // 控制台输出
     val query = windowedCounts.writeStream
-      .outputMode("update")  // 使用update模式只输出有变化的行
+      .outputMode("update") // 使用update模式只输出有变化的行
       .format("console")
-      .option("truncate", "false")  // 不截断输出
-      .trigger(Trigger.ProcessingTime("1 minute"))  // 每分钟触发一次
+      .option("truncate", "false") // 不截断输出
+      .trigger(Trigger.ProcessingTime("1 minute")) // 每分钟触发一次
       .start()
 
     println("Streaming started. Input data format: 'yyyy-MM-dd HH:mm:ss|word'")
