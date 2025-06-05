@@ -1,0 +1,369 @@
+
+
+
+------------------------------------------------概念--------------------------------------------
+
+中心集群
+
+master node
+    kubectl
+	api server
+	schedule
+	controller manager
+	etcd
+
+
+worker node
+	kubelet（管理node，和master交互）
+	kube-proxy（网络等负载）
+	pod（docker）最小部署单元
+
+
+wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
+
+------------------------------------------------从0搭建--------------------------------------------
+
+---类型
+单master，多master
+
+
+---kubeadm
+1. 先保证docker能正常使用
+
+yum install -y kubelet-1.17.0 kubeadm-1.17.0 kubectl-1.17.0
+yum remove -y kubelet-1.28.2 kubeadm-1.28.2 kubectl-1.28.2
+
+
+kubeadm init \
+--apiserver-advertise-address=192.168.153.121 \
+--image-repository registry.aliyuncs.com/google_containers \
+--kubernetes-version v1.17.0 \
+--service-cidr=10.1.0.0/16 \
+--pod-network-cidr=10.244.0.0/16
+
+kubectl get nodes
+
+join（execute in nodes）
+kubeadm join 192.168.153.121:6443 --token j7u59w.w2xxk38luzq3541h     --discovery-token-ca-cert-hash sha256:b1f77ae6a31f9419c75ef0f162e41d744608b4fe0eaa39afc6d73300c8c33d90
+
+
+kubeadm reset
+rm -rf /etc/cni/net.d 
+rm -rf $HOME/.kube/config 
+rm -rf /etc/kubernetes/
+
+
+
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+等待ready
+
+
+kubectl get pods -n kube-system
+kubectl get pods --all-namespaces -o wide
+
+# 下载flannel插件的yml
+wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# 修改kube-flannel.yml中的镜像仓库地址为国内源
+sed -i 's/quay.io/quay-mirror.qiniu.com/g' kube-flannel.yml
+# 安装网络插件
+kubectl apply -f kube-flannel.yml
+
+
+
+-安装nginx
+kubectl create deployment nginx --image=nginx
+kubectl get pod
+
+kubectl expose deployment nginx --port=80 --type=NodePort
+kubectl get pod,svc
+
+
+删除pod
+kubectl get pod -n jenkins
+kubectl delete pod jenkins2-8698b5449c-grbdm -n jenkins
+
+kubectl get deployment -n jenkins
+kubectl delete deployment jenkins2 -n jenkins
+
+
+kubectl describe pod nginx-86c57db685-v2g5w
+
+
+
+---binary package
+todo
+
+
+---kubectl 命令
+
+-基础
+kubectl create pod
+expose
+run
+set 
+get （pod，deploy，svc）
+edit
+delete
+explain
+
+
+-部署个集群管理
+部署
+rollout
+rollout-update
+scale
+autoscale
+
+
+集群管理
+certificate
+cluster-info
+top
+cordon：标记节点不可调度
+uncordon：标记节点可调度
+drain：驱逐节点应用，准备下线维护
+trint：修改节点trint标记
+
+
+-故障调试
+describe
+logs
+exec
+attach
+
+
+-导出yaml文件
+kubectl get deploy nginx -o=yaml --export > 1.txt
+
+
+------------------------------------------------核心概念--------------------------------------------
+
+
+---pod（虚拟概念）
+-概述
+最小部署单元
+包含多个container（docker）
+	亲密应用：container之间的数据、网络交互（数据库，server服务，接口等）
+一个pod中的容器共享网络命名空间
+pod是短暂的
+
+
+-实现机制
+1.共享网络
+2.共享存储（数据卷概念volume，持久化存储）
+
+
+-镜像拉取
+ifnotpresent：不存在才拉取
+always：存在也重新拉取
+never：永远不会主动拉取
+
+资源配置：require（调度），limit（最大）
+
+restartpolicy
+	always
+	onFailure：异常退出（代码0）
+	never
+
+健康检查
+
+-调度流程
+
+
+---controller
+pod通过controller实现应用运维，伸缩、滚动升级等
+pod和controller通过label建立联系（selector，label）
+
+
+deployment应用常见
+	无状态应用：web，微服务
+
+有状态（statefulSet）
+ pod独立，保证启动顺序个独立性
+ 唯一网络标识，持久存储
+ 有序：mysql主从
+
+守护进程（damonSet）
+
+一次任务和定时任务（job，cronjob）
+
+
+
+---services
+-存在意义
+1. service服务发现防止pod失联，pod滚动升级，ip变动通知用户
+2. 定义pod访问策略，负载均衡
+
+-类型
+1. clusterip：集群内部
+2. NodePort：对外访问
+3. loadbalance：对外访问，公有云
+
+
+---secret
+加密数据存在etcd中，让pod容器以挂载volume的形式运行
+场景：凭证（credential）
+
+
+---configMap
+存储不加密数据，让pod容器以挂载volume的形式运行
+场景：配置文件
+
+
+---RABC
+统一经过apiserver，经过三部，进入pod
+	认证（authenticate）：进大门
+	鉴权（授权，authorize）：只能授权进入哪些部门
+	准入控制：招人，没有找不到
+
+
+传输安全：对外不暴露8080，只内部使用，外部是6443
+
+authenticate：oa证书，http token，用户名+密码
+
+authorize：RBAC，角色访问
+
+
+role：特定命名空间
+clusterRole：所有命名空间
+
+roleBinding：
+clusterRoleBinding:
+
+user：
+group：
+serviceAcount：服务账号，pod访问
+
+
+-实战
+kubeclt create ns demorole
+
+kubectl run nginx --image=nginx -n demorole
+
+创建解释
+kubectl apply -f role.yaml
+kubeclt get role(-n xxxns)
+
+创捷角色绑定
+kubectl apply -f role-binding.yaml
+kubectl get role,rolebinding(-n xxxns)
+
+使用证书识别身份
+sh rbac-role.sh
+
+
+---ingress
+提供对外访问
+
+nodeport缺陷：
+	任意节点都能访问，端口只能用一次
+	现在是域名访问
+	
+pod 和 ingress 通过 service关联
+ingress作为统一入口，由service关联一组pod
+
+
+---helm
+k8s的包管理工具，方便将之前的yaml文件部署到k8s
+
+作用：
+	1. yaml作为整体管理
+	2. yaml高校复用
+	3. 使用helm应用级别的版本管理
+
+
+helm：命令行工具
+chart：yaml打包，yaml文件集合
+release：基于chart部署实体，应用级别的版本管理，chart发布的版本
+
+
+
+安装&添加仓库
+helm repo add stable http://mirror.azure.cn/kubernetes/charts/
+helm repo add aliyun https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+helm repo remove staable
+helm repo update
+
+
+快速安装应用
+helm list
+helm status xxx
+helm search repo weave
+helm install ui stable/weave-scope
+对外暴露端口
+kubectl edit svc ui-weave-scope
+
+
+-自定义chart部署
+helm create mychart
+template创建两文件：deployment.yaml, service.yaml
+安装：helm install web1 mychart/
+安装：helm upgrade web1 mychart/
+
+
+-模板（yaml高效复用，变量传递动态获取，渲染）
+value.yaml文件定义参数
+几个不同地方：
+image
+tag
+label
+port
+replica
+
+
+
+---持久化存储
+本地存储，pod重启，数据不存在，需要持久化数据
+nfs网络存储，pod重启数据还在
+volume下配置ip port地址
+
+-pv pvc
+nfs暴露地址不安全
+pv：持久化存储，对存储资源抽象，提供对外可以调用的地方（producer）
+pvc：用于调用，不需要关注内部细节（consumer）
+
+
+
+
+
+------------------------------------------------集群监控平台系统--------------------------------------------
+promethus + grafana
+
+
+
+------------------------------------------------搭建高可用k8s集群--------------------------------------------
+双master + keepalive+nginx
+
+
+------------------------------------------------集群环境部署项目--------------------------------------------
+过程：
+java代码 -》 dockerfile -》 制作镜像 -》 push到repository -》 拉取到docker -》 pod启动
+
+
+制作镜像：docker build -t javademo01:latest .
+查看制作成功：docker images
+docker测试运行：docker run -d -p 8111:8111 javademo01:latest -t
+
+docker login --username=chenj_yyds registry.cn-hangzhou.aliyuncs.com
+docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com/sc_namespace0704/java_demo_sc:[镜像版本号]
+docker push registry.cn-hangzhou.aliyuncs.com/sc_namespace0704/java_demo_sc:[镜像版本号]
+
+推送
+docker tag 00c0e5c77807 registry.cn-hangzhou.aliyuncs.com/sc_namespace0704/java_demo_sc:1.0.0
+docker push registry.cn-hangzhou.aliyuncs.com/sc_namespace0704/java_demo_sc:1.0.0
+
+拉取
+docker pull registry.cn-hangzhou.aliyuncs.com/sc_namespace0704/java_demo_sc:1.0.0
+
+k8s操作
+kubectl create deployment javademo --image=registry.cn-hangzhou.aliyuncs.com/sc_namespace0704/java_demo_sc:1.0.0 --dry-run -o yaml > javademo.yaml
+kubectl apply -f javademo.yaml
+kubectl get pod（显示应用）
+kubectl scale deployment javademo --replicas=3
+kubectl scale deployment javademo --replicas=3
+kubectl expose deployment javademo --port=8111 --target-port=8111 --type=NodePort
+
+
+
+
+

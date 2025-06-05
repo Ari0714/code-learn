@@ -26,6 +26,9 @@ object XmlPropertiesToYaml {
     val map = extractNameValuePairs(xml)
 
     val options = new DumperOptions()
+    //设置缩进
+    options.setIndent(4)
+    options.setIndicatorIndent(2)
     options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
     options.setPrettyFlow(true)
     val yaml = new Yaml(options)
