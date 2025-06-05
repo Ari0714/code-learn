@@ -1,0 +1,6 @@
+person:
+  name: 张三
+  age: '30'
+  contact:
+    phone: '1234567890'
+    email: zhangsan@example.com

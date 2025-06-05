@@ -1,8 +1,6 @@
 import org.junit.Test;
-import com.tcl.util.MyFileUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Author chenjie
