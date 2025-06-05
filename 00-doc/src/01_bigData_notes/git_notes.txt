@@ -12,7 +12,7 @@ token：dd863b075a4d81805f60326a67356362
 
 配置user和邮箱
 git config --global user.name "ari.chen"
-git config --global user.email "ari.chen.cn@gmail.com"
+git config --global user.email "ari.chen.cn@gmail.com"  （contribution base on email）
 
 
 初始化：
