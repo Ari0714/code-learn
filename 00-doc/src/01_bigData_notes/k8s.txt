@@ -1,6 +1,5 @@
 
 
-
 ------------------------------------------------概念--------------------------------------------
 
 中心集群
@@ -100,7 +99,7 @@ todo
 kubectl create pod
 expose
 run
-set 
+set
 get （pod，deploy，svc）
 edit
 delete
