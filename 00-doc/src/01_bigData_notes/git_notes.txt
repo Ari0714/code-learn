@@ -11,8 +11,8 @@ token：dd863b075a4d81805f60326a67356362
 
 
 配置user和邮箱
-git config --global user.name "chenjie"
-git config --global user.email "1187334030@qq.com"
+git config --global user.name "ari.chen"
+git config --global user.email "ari.chen.cn@gmail.com"
 
 
 初始化：
