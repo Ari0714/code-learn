@@ -15,9 +15,9 @@ import org.apache.spark.mllib.clustering.KMeans
 import org.apache.spark.mllib.tree.DecisionTree
 
 /**
-  * Author xx
+  * Author Ari
   * Date 2023/7/15
-  * Desc 各种算法
+  * Desc various algorithm
   */
 object SparkMllib {
 
@@ -212,7 +212,7 @@ object SparkMllib {
 
 
   /**
-    * @desc SVM
+    * @desc SVM (0,1)
     */
   def testSVM(rdd: RDD[Array[String]]) = {
 
