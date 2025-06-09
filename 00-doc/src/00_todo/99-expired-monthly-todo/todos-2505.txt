@@ -5,7 +5,7 @@
 
 
 -----monthly plan-----
-1. adapt SC English working env（indian English is hard to understang， project architecture us complex）
+1. adapt SC English working env（indian English is hard to understang， project architecture is complex）
 2. clear all todos，include last month（11/55 20%）
 3. accustomed 3 jobs at same time rhythm（lazy，delay，completely dont finish）
 
