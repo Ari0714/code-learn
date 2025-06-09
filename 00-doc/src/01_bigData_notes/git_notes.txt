@@ -14,6 +14,15 @@ token：dd863b075a4d81805f60326a67356362
 git config --global user.name "ari.chen"
 git config --global user.email "ari.chen.cn@gmail.com"  （contribution base on email）
 
+- set proxy
+git config --global http.proxy http://192.168.1.1:8888
+git config --global https.proxy https://192.168.1.1:8888
+
+git config --global http.proxy socks5://127.0.0.1:7890
+git config --global https.proxy socks5://127.0.0.1:7890
+
+git config --global --get http.proxy
+git config --global --get https.proxy
 
 初始化：
 project下 git init 生成 .git文件
