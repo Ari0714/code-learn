@@ -57,7 +57,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documen
 等待ready
 
 
-kubectl get pods -n kube-system
+kubectl get pods -n kube-system   （-n namespace）
 kubectl get pods --all-namespaces -o wide
 
 # 下载flannel插件的yml
