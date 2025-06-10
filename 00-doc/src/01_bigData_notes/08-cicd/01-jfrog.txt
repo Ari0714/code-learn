@@ -10,7 +10,7 @@ start（implement must in bin directory）:
 ./artifactoryctl start
 
 visit:
-http://hdp:8081/ui/login/
+http://hdp:8081/ui/login/  （admin，密码是password）
 
 referal:
 https://blog.csdn.net/weixin_43248862/article/details/120159709
