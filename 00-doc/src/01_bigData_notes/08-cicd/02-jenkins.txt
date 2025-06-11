@@ -31,6 +31,80 @@ service jenkins stop
 service jenkins start
 service jenkins restart
 
+------ 任务类型
+1. mavne （需要依赖包）
+2. pipeline（需要依赖包）
+4. freestyle
+
+
+------ 自动化构建
+1. 配置gitlab 代码地址
+2. 配置代码分支
+3. 配置主pom.xml 文件
+
+4. publish over ssh （nohup java -jar xxx.jar &）
+
+
+------ 构建方式
+1. 手动
+2. cron 定时
+3. pull SCM （定时监控代码变动，有则构建）
+
+
+
+------ docker
+--- 1. 外挂目录
+docker run -d -p 8080:8080 --name demo-out -v /opt/project/demo.jar:/app.jar openjdk:8 java -jar app.jar
+后面jenkins的jar推送到/opt/project/demo.jar目录即可
+publish push over ssh 配置：docker run demo-out
+
+--- 2. 制作镜像
+dockerfile：
+FROM openjdk:11
+EXPOSE 8080
+
+WORKDIR /root
+
+ADD jarfile/demo*.jar /root/app.jar
+ENTRYPOINT ["java","-jar","/root/app.jar"]
+
+打包镜像：
+docker build -t demo .
+
+publish push over ssh 配置：docker run demo
+
+
+
+------ pipeline
+1. pipeline
+2. agent
+3. stages
+4. stage
+5. step
+pipeline {
+    agent any
+
+    stages {
+        stage('拉取代码') {
+            steps {
+                echo '拉取代码完成'
+            }
+        }
+        stage('执行构建') {
+            steps {
+                echo '执行构建完成'
+            }
+        }
+    }
+    post {
+        always {
+            echo "完成"
+        }
+        failure {
+            echo "失败"
+        }
+    }
+}
 
 
 --------------------------------------------------------------优化-------------------------------------------------------------
