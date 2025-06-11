@@ -4,7 +4,7 @@
 
 
 ------ install gitlab
-EXTERNAL_URL="http://192.168.153.153" yum install -y gitlab-jh
+EXTERNAL_URL="http://192.168.153.122" yum install -y gitlab-jh
 
 
 gitlab-ctl start                  # 启动所有 gitlab 组件；
@@ -17,9 +17,20 @@ gitlab-ctl tail                   # 查看日志；
 
 
 visit：
-192.168.153.153
+192.168.153.153:80  ()
 
-------
+
+
+------ install jenkins
+
+visit：
+192.168.153.121:8080  (ari / 111111)
+
+
+service jenkins stop
+service jenkins start
+service jenkins restart
+
 
 
 --------------------------------------------------------------优化-------------------------------------------------------------
