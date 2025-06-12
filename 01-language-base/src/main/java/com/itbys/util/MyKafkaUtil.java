@@ -12,6 +12,11 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.UUID;
 
+/**
+ * Author Ari
+ * Date 2023/10/26
+ * Desc
+ */
 public class MyKafkaUtil {
 
     static String kafkaBroker = CommonConfig.kafkaTCvmBroker;
