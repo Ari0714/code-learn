@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/2/26
  * Desc file operate com.tcl.com.itbys.util
  */

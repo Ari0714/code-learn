@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/3/26
  * Desc generate random passwd
  */

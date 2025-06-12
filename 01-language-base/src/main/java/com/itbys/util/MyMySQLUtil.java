@@ -3,7 +3,7 @@ package com.itbys.util;
 import java.sql.*;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/9/4
  * Desc
  */
