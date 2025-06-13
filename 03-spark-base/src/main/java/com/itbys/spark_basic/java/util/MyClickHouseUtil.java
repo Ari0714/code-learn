@@ -8,7 +8,7 @@ import org.apache.spark.sql.SaveMode;
 import java.util.Properties;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2022/4/11
  * Desc
  */

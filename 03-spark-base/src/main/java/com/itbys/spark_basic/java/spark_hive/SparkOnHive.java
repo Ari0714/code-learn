@@ -11,7 +11,7 @@ import org.apache.spark.sql.SparkSession;
 import java.util.List;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2021/8/2
  * Desc spark读取hive数据
  */

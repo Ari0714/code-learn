@@ -13,7 +13,7 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2022/4/11
  * Desc
  */
