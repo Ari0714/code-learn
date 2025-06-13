@@ -1,0 +1,253 @@
+
+
+
+
+--------------------------------------------------------------笔记-------------------------------------------------------------
+
+
+将ES6模块化编译成浏览器识别的模块化
+
+
+--- 5概念
+1. entry
+
+2. output
+
+3. loader
+
+4. plugin
+
+5. mode
+ 1. development
+ 2. production
+
+
+--- init 项目
+npm init =》生成package.json, package-lock.json
+
+
+
+npm i webpack webpack-cli -g
+npm i webpack webpack-cli -D
+
+
+--- package 
+webpack ./src/index.js -o ./built/ --mode=development
+webpack ./src/index.js -o ./built/ --mode=production (多了压缩) 
+
+默认打包js，json。不能css/img等
+
+
+--- loader
+npm i less-loader less css-loader style-loader -D
+
+
+--- plugins
+npm i html-webpack-plugin@5.0.0 -D
+
+npm i file-loader url-loader -D
+npm i html-loader -D
+
+
+/ 排除 css/js/html 资源
+exclude: /\.(css|js|html|less)$/
+loader: 'file-loader',
+options: {
+name: '[hash:10].[ext]'
+}
+
+
+--- devserver
+npm i webpack-dev-server -D
+自动编译，自动刷新浏览器
+启动：npx webpack-dev-server
+localhost:3000
+
+
+--------------------------------------------------------------生产环境配置-------------------------------------------------------------
+
+
+
+- css提取单独文件：插件
+pm install mini-css-extract-plugin -D
+
+
+
+- css兼容性处理
+npm install postcss-loader postcss-preset-env -D
+
+
+-css 压缩 插件
+npm install --save-dev optimize-css-assets-webpack-plugin
+new OptimizeCssAssetsWebpackPlugin()
+
+
+-js语法检查
+npm install --save-dev eslint-loader eslint eslint-config-airbnb-base eslint-plugin-import
+
+test: /\.js$/,
+	exclude: /node_modules/,
+	loader: 'eslint-loader',
+	options: {
+	// 自动修复 eslint 的错误
+	fix: true
+}
+
+package.config配置规则
+"eslintConfig": {
+	"extends": "airbnb-base",
+	"env": {
+		"browser": true
+	}
+}
+
+
+-js兼容性处理
+npm install --save-dev babel-loader @babel/core @babel/preset-env @babel/polyfill core-js
+
+
+-js，html压缩
+js：mode指定production
+html：去空格，注释
+
+
+
+--- 生产配置文件
+
+
+
+--------------------------------------------------------------webpack优化配置-------------------------------------------------------------
+
+--- HMR（hot module replacement）
+hot: true
+1. 一个模块变化，只会重新打包这一个模块
+
+
+--- source-map
+源代码 -》 构建后代码隐射。如果构建后代码出错，方便追踪源代码
+devtool: 'eval-source-map'
+
+
+--- oneof
+loader只会匹配一个，一旦匹配好了下面不执行，如js文件
+
+
+--- 缓存
+//开启 babel 缓存
+//第二次构建时，会读取之前的缓存
+1. cacheDirectory: true
+
+2. chunkhash
+打包来在同一个chunk，hash一样
+
+
+--- tree shaking
+去除没有使用的代码
+1. js必须使用ES6，2.必须使用production
+package配置：sideEffects，无副作用
+
+
+--- code split
+主要作用于js代码
+entry单入口
+
+
+--- lazy loading && pre loading
+lazy：点击按钮等才触发函数、文件等
+pre：使用前提前加载文件
+
+
+
+--- pwa
+PWA: 渐进式网络开发应用程序(离线可访问)
+兼容性问题，普及慢
+npm install --save-dev workbox-webpack-plugin
+
+new WorkboxWebpackPlugin.GenerateSW({
+	/*
+	1. 帮助 serviceworker 快速启动
+	2. 删除旧的 serviceworker
+	生成一个 serviceworker 配置文件~
+	*/
+	clientsClaim: true,
+	skipWaiting: true
+})
+
+
+--- 多进程打包
+npm install --save-dev thread-loader
+一般给babel用：
+loader: 'thread-loader',
+options: {
+	workers: 2 // 进程 2 个
+}
+
+
+--- external
+mode: 'production',
+externals: {
+// 拒绝 jQuery 被打包进来
+jquery: 'jQuery'
+}
+
+
+--- dll
+对某些库进行单独打包（第三方库：jQuery，vue等）
+
+
+
+--------------------------------------------------------------配置详情-------------------------------------------------------------
+
+--- entry
+string：单r入口
+array：多入口，一个chunk，默认main.js。少数情况用
+object：多入口，多个chunk
+
+
+--- output
+publishpath：引入公共前缀
+chunkfilename：额外chunk命名（非入口chunk命名）
+
+library：整个库向外暴露的变量名
+libraryTarget：变量名添加到哪个上
+
+
+--- module
+include / exclude：包含目录
+enforce：pre/post：优先后执行
+
+
+
+--- resolve
+配置解析模块路径别名: 优点简写路径 缺点路径没有提示
+alias：导入别名
+extension：后缀名补充
+modules：告诉 webpack 解析模块是去找哪个目录
+
+
+--- devserver
+日志省略
+跨域
+
+
+--- optimization
+chunk分隔大小设置
+
+
+
+
+--------------------------------------------------------------webpack5-------------------------------------------------------------
+1，少写了东西
+2. tree shaking 优化
+
+
+重点：
+1. 持久缓存增强性能
+2. 更好的默认值和算法改善长期缓存
+3. 更好的树摇和代码生产改善捆绑包大小
+
+
+
+
+
+
