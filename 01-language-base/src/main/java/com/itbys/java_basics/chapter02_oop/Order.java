@@ -3,7 +3,7 @@ package com.itbys.java_basics.chapter02_oop;
 import java.util.Objects;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/3/14
  * Desc
  */
