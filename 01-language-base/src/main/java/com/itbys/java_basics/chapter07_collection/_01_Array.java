@@ -1,4 +1,4 @@
-package com.itbys.java_basics.chapter01;
+package com.itbys.java_basics.chapter07_collection;
 
 import java.io.FileNotFoundException;
 
@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
  * Date 2023/3/14
  * Desc
  */
-public class Array {
+public class _01_Array {
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -31,5 +31,6 @@ public class Array {
 
 
     }
+
 
 }

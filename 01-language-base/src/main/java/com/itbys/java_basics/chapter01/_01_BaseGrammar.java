@@ -5,7 +5,7 @@ package com.itbys.java_basics.chapter01;
  * Date 2023/3/14
  * Desc
  */
-public class BaseGrammar {
+public class _01_BaseGrammar {
 
     public static void main(String[] args) {
 
