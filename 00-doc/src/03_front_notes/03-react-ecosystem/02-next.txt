@@ -9,7 +9,6 @@ npm run dev
 
 
 
-
 --- core feature
 
 Next.js 之所以「火」，主要因为它是一个现代、全能、高性能的 React 应用框架，解决了开发 React 应用中最痛的几个问题，比如：
