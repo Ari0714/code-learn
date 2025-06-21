@@ -37,8 +37,11 @@ Hadoop fs 命令分类
 
 HDFS -》 HDFS
    -cp
+   hdfs dfs -copyFromLocal file2.txt /user/hadoop/mydir/
 	rm
     mv
+    get
+    hdfs dfs -copyToLocal file2.txt /user/hadoop/mydir/
     chown
     chgrp
     chmod
@@ -48,6 +51,8 @@ HDFS -》 HDFS
     cat
 	ls
 	tail
+	hdfs dfs -appendToFile <本地文件> <HDFS目标文件>
+
 
 HFDS-》本地
     get
