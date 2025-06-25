@@ -1,0 +1,11 @@
+col_details:
+- col_name: "id"
+  data_type: "int"
+  notnull: true
+- col_name: "name"
+  data_type: "varchar(10)"
+  notnull: true
+- col_name: "age"
+  data_type: "int"
+- col_name: "datee"
+  data_type: "date"
