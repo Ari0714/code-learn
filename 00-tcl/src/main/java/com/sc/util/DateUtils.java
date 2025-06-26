@@ -20,7 +20,6 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class DateUtils {
 
-
     public static final String DATE_PATTERN = "yyyy-MM-dd";
     public static final String DATE_PATTERN_NO_FMATE = "yyyyMMdd";
     public static final String DATE_PATTERN_NO_FMATE_TIME = "yyyyMMddHHmmss";
