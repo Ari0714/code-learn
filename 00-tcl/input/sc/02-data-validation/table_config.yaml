@@ -4,8 +4,15 @@ col_details:
   notnull: true
 - col_name: "name"
   data_type: "varchar(10)"
+- col_name: "name2"
+  data_type: "char(3)"
+  notnull: true
+- col_name: "hobby"
+  data_type: "string"
   notnull: true
 - col_name: "age"
   data_type: "int"
-- col_name: "datee"
+- col_name: "dt1"
   data_type: "date"
+- col_name: "dt2"
+  data_type: "timestamp"
