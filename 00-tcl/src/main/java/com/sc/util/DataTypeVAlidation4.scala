@@ -81,7 +81,7 @@ object DataTypeVAlidation4 {
 
       if (dtype.startsWith("varchar") && getLength(dtype).exists(value.length > _))
         problems ::= s"字段[${col.col_name}]超过最大长度"
-      if (dtype.startsWith("char") && getLength(dtype).exists(value.length == _))
+      if (dtype.startsWith("char") && getLength(dtype).exists(value.length != _))
         problems ::= s"字段[${col.col_name}]不符合长度"
 
       if (dtype.contains("int") && value.nonEmpty && !Try(value.toInt).isSuccess)
