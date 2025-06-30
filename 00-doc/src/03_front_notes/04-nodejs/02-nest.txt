@@ -1,0 +1,15 @@
+
+
+
+----------------------------------------------------------concept--------------------------------------------   
+
+
+npm i -g @nestjs/cli
+
+nest new nest-learn
+
+npm run start
+npm run start:dev
+
+
+http://localhost:3000/
