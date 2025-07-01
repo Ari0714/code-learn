@@ -1,0 +1,20 @@
+
+
+----------------------------------------------------------concept--------------------------------------------
+
+
+
+github action 集成的 cicd 环境
+
+文件位置：.github/workflows/react.yaml
+
+job -》 steps -》 actions（uses/run）
+
+
+
+
+
+
+
+
+

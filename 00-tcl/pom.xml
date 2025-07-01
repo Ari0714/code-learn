@@ -141,7 +141,6 @@
             <version>${scala.version}</version>
         </dependency>
 
-
         <!-- CSV parser -->
         <dependency>
             <groupId>com.github.tototoshi</groupId>
