@@ -6,6 +6,9 @@
 vercel 是一个专注于前端部署的平台。主要是react/nextjs项目部署，全球cnd，部署即上线
 vercel 项目托管在github上，无缝集成
 
+github action： 流水线工厂
+vercel：静态前端云主机
+
 
 静态网页：直接vervel
 nextjs/react项目：GitHub action 构建 + vervel部署
