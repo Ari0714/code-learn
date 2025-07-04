@@ -23,3 +23,15 @@ java/python：github action + docker/k8s
 
 
 
+----------- 部署方式
+1. 网页部署
+
+2. 命令行部署
+npm install -g vercel
+vervel login
+vercel
+配置项目团队/名等
+
+3. 集成到github action yaml文件中
+
+
