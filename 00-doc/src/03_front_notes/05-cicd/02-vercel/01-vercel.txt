@@ -1,8 +1,25 @@
 
 
-
 ----------------------------------------------------------concept--------------------------------------------   
 
+
+vercel 是一个专注于前端部署的平台。主要是react/nextjs项目部署，全球cnd，部署即上线
+vercel 项目托管在github上，无缝集成
+
+
+静态网页：直接vervel
+nextjs/react项目：GitHub action 构建 + vervel部署
+java/python：github action + docker/k8s
+
+
+
+两者常结合使用，如github的yaml文件：
+# GitHub Action 自动部署到 Vercel
+- uses: amondnet/vercel-action@v20
+  with:
+    vercel-token: ${{ secrets.VERCEL_TOKEN }}
+    vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+    vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
 
 
 
