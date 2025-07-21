@@ -1,5 +1,5 @@
 
---------------------------------------------------------------安装-------------------------------------------------------------
+--------------------------------------------------------------install-------------------------------------------------------------
 
 export PIG_HOME=/opt/pig-0.16.0
 export PATH=$PIG_HOME/bin:$PATH
@@ -9,30 +9,30 @@ export PATH=$PIG_HOME/bin:$PATH
 pig -x local
 pig -x mapreduce
 
---------------------------------------------------------------使用-------------------------------------------------------------
+--------------------------------------------------------------usage-------------------------------------------------------------
 
 命令
 ll /input
 
 
---------------------------------------------------------------案例-------------------------------------------------------------
+--------------------------------------------------------------example-------------------------------------------------------------
 
 ------1
-装载数据
+load data
 abalone_data = LOAD '/opt/data/abalone.data' using PigStorage(',') AS (id:chararray, sex:chararray, length:double, diameter:double, height:double, whole:double, shucked:double, viscera:double, shell:double, rings:int);
 
 
-查看数据
+show data
 DUMP abalone_data;
 
-抽取数据
+extract data
 B1 = FOREACH abalone_data GENERATE id, sex;
 
-分组
+sort
 C1 = GROUP B1 BY sex;
 
 
-汇总
+summary
 D1 = FOREACH C1 GENERATE group,COUNT(B1.id);
 DUMP D1;
 	(F,1307)

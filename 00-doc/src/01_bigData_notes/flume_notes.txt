@@ -1,27 +1,27 @@
 
-定义：分布式海量日志采集，聚集，传输系统（收集日志）
+definition：分布式海量日志采集，聚集，传输系统（收集日志）
 
-特点：
+trait：
 1.流式架构，做实时有优势
 2.可以和任意存储进程集成（kafka，hdfs）
 3.事务基于channel，source =》channel ， channel =》sink   数据全部提交到channel，才认为完成；数据全部sink，从channel移除
 
-架构：
+architecture：
 agent （source =》channel =》sink）
 enent：数据处理基本单元，以事件形式将数据从源头送达目的地
 原理：source =》 tranction  =》channel =》tannction =》sink  trunction 包含数组 ，提交失败会回滚
 
-输入端：spooling directory, exec, syslog, avro, netcat
+input side：spooling directory, exec, syslog, avro, netcat
 channel是缓冲区，memory channel 和 file channel  前者块，后者宕机数据不丢失
 输出端：HDFS，kafka
 
-内部原理：source =》channel处理器 =》拦截器 =》channel处理器 =》channel选择器 =》channel1，2，3 =》sink处理器 =》sink
+inner mechanism：source =》channel处理器 =》拦截器 =》channel处理器 =》channel选择器 =》channel1，2，3 =》sink处理器 =》sink
 
 export FLUME_HOME=/opt/apache-flume-1.7.0-bin
 export PATH=$PATH:$FLUME_HOME/bin
 
 
-启动：
+---start：
 nohup /opt/flume-1.9.0/bin/flume-ng agent --conf-file /opt/flume-1.9.0/conf/file-flume-kafka.conf --name a1 -Dflume.root.logger=INFO,LOGFILE >/dev/null 2>&1 &
 
 /opt/flume-1.9.0/bin/flume-ng agent --conf-file /opt/flume-1.9.0/conf/file-flume-hdfs.conf --name a1

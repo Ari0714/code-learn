@@ -1,8 +1,8 @@
 
-配置
+configure
 https://www.runoob.com/mongodb/mongodb-linux-install.html
 
-启停
+start/stop
 mongod --dbpath /var/lib/mongo --logpath /var/log/mongodb/mongod.log --fork --bind_ip_all
 pkill mongod
 
@@ -13,8 +13,8 @@ pkill mongod
 3.文档：文档数据库的最小单位，存储和操作的内容全是文档
 
 
---------------------------------------------------------------命令---------------------------------------------------------------
-数据库：
+--------------------------------------------------------------command---------------------------------------------------------------
+db：
 	查看数据库：show dbs
 	使用数据库：use xxx
 	查看当前使用：db
@@ -29,7 +29,7 @@ pkill mongod
 删除集合：db.demo01.drop()
 
 
-表：
+table：
 查看变：show tables
 插入文档：db.demo01.insert({"name":"coco","age":18})
 查看所有：db.demo01.find()
@@ -38,7 +38,7 @@ pkill mongod
 修改文档：db.student.update({"name":"lisi"},{$set:{"score.Math":95}},false)
 
 
-cmd命令：
+cmd command：
 导出数据：mongoexport -d test -c demo01 --out "C:\mongosql.json"
 		  mongoimport -d test -c data03 "C:\Users\Administrator\Desktop\1006mongo\aa.json"
 

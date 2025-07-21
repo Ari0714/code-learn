@@ -1,5 +1,5 @@
 
------install将包安装到maven仓库中
+-----install: install package yo rppository
 mvn install:install-file -Dfile=ipsparser-1.0.jar -DgroupId=com.inspur.ipsparser -DartifactId=ipsparser -Dversion=1.0 -Dpackaging=jar
 
 mvn install:install-file -Dfile=ImpalaJDBC41.jar -DgroupId=com.cloudera -DartifactId=ImpalaJDBC41 -Dversion=2.6.3 -Dpackaging=jar
@@ -11,7 +11,7 @@ mvn install:install-file -Dfile=ImpalaJDBC41.jar -DgroupId=com.cloudera -Dartifa
     </dependency>
 
 
-使用
+usage:
 <dependency>
    <groupId>cn.conac.rc.api.client</groupId>
    <artifactId>rc-gateway-api-client</artifactId>
@@ -19,7 +19,7 @@ mvn install:install-file -Dfile=ImpalaJDBC41.jar -DgroupId=com.cloudera -Dartifa
 </dependency>
 
 
------打包
+----- package
 mvn clean package  -DskipTests=true
 
 

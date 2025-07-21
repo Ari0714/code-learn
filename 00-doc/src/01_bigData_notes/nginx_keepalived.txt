@@ -1,7 +1,7 @@
 
---------------------------------------------------------------安装-------------------------------------------------------------
+--------------------------------------------------------------install-------------------------------------------------------------
 
--------------------配置vip-------------------
+-------------------configure vip-------------------
 
 搭建机器
 CDH4	10.91.2.104
@@ -15,7 +15,7 @@ ifup ifcfg-bond0-vip
 ifdown ifcfg-bond0-vip
 
 
--------------------部署nginx-------------------
+-------------------deploy nginx-------------------
 
 yum -y install pcre-devel zlib-devel popt-devel openssl-devel openssl gcc-c++
 
@@ -33,7 +33,7 @@ make && make install
 
 
 
---- 启动
+--- start
 cd /usr/local/nginx
 
 启动
@@ -45,7 +45,7 @@ sbin/nginx -s stop
 重启
 sbin/nginx -s reopen
 
--------------------部署keepalived-------------------
+-------------------deploy keepalived-------------------
 
 yum install -y gcc gcc-c++ make automake autoconf libtool pcre pcre-devel zlib zlib-devel openssl openssl-devel
 
@@ -114,7 +114,7 @@ vrrp_instance VI_1 {
 
 
 
---- keepalived backup脚本
+--- keepalived backup script
 
 vim /etc/keepalived/keepalived.conf
 

@@ -1,6 +1,6 @@
 
 
-------------------------------------------------使用--------------------------------------------
+------------------------------------------------usage--------------------------------------------
 
 批量kill调度元任务
 oozie jobs -jobtype coordinator -filter status=RUNNING | grep oozie-oozi-C | grep MINUTE | awk -F" " '{print $1}' | xargs oozie job -kill
@@ -14,14 +14,13 @@ oozie jobs | grep oozie-oozi-W | grep Check_ | awk -F" " '{print $1}' | xargs oo
 
 
 ------- db query，modify
-
 /*
 WF_JOBS：工作流实例 	WF_ACTIONS：任务实例
 COORD_JOBS：调度实例	COORD_ACTIONS：调度任务实例
 **/
 
 
--- 查询调度配置：重复调度
+-- 查询调度配置：duplicate invoke
 SELECT * from COORD_JOBS where app_name like '%2132514'
 
 SELECT app_name, COUNT(*) cnt from COORD_JOBS

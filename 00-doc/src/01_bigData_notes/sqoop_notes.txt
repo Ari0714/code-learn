@@ -10,7 +10,7 @@ sqoop help
 sqoop list-databases --connect jdbc:mysql://hdp01:3306/ --username root --password 111111
 sqoop list-tables --connect jdbc:mysql://hdp:3306/bigdatacase1111_db --username root --password 111111
 
---------------------------------------------------------------导入---------------------------------------------------------------
+--------------------------------------------------------------import---------------------------------------------------------------
 RDBMS = 》 hdfs
 mysql> create database company;
 mysql> create table company.staff(id int(4) primary key not null auto_increment, name varchar(255), sex varchar(255));
@@ -92,7 +92,7 @@ sqoop import \
 sqoop1.4.6只支持HBase1.0.1之前的版本的自动创建HBase表的功能（用的1.3.1）
 报错：NoClassDefFoundError: com/yammer/metrics/Metrics； metrics-core-2.2.0.jar放到sqoop/lib下
 
---------------------------------------------------------------导出---------------------------------------------------------------
+--------------------------------------------------------------export---------------------------------------------------------------
 hive/hdfs => RDBMS
 sqoop export \
 --connect jdbc:mysql://192.168.253.132:3306/company \
@@ -105,7 +105,7 @@ sqoop export \
 Mysql中如果表不存在，不会自动创建  staff_hive指定hive中stuff表的目录名
 
 
---------------------------------------------------------------脚本打包---------------------------------------------------------------
+--------------------------------------------------------------package script---------------------------------------------------------------
 export
 --connect
 jdbc:mysql://hadoop102:3306/company
