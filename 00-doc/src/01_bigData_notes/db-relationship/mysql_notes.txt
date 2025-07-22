@@ -38,7 +38,7 @@ mysql -h10.91.2.232  -u'tmc_cdh_rw' -p'D8lcvP7C&9Cm0vS'
 --- remote dump
 mysql -h10.91.2.235  -u'tmc_cdh_rw' -p'D8lcvP7C&9Cm0vS' drug < dump.sql
 
---------------------------------------------------------------安装（centos7）5.5-------------------------------------------------------------
+--------------------------------------------------------------install（centos7）5.5-------------------------------------------------------------
 
 RPM：通过rpm -qa |grep -i mysql或者是rpm -qa |grep -i mariadb  或者是rpm -qa | grep postfix
 rpm -e 包名刚才找到的包名即可
@@ -73,7 +73,7 @@ grant all privileges on *.* to root@'%' identified by '111111';
 
 
 
---------------------------------------------------------------安装（centos7）5.7-------------------------------------------------------------
+--------------------------------------------------------------install（centos7）5.7-------------------------------------------------------------
 RPM：通过rpm -qa |grep -i mysql或者是rpm -qa |grep -i mariadb  或者是rpm -qa | grep postfix
 rpm -qa | grep -i -E mysql\|mariadb | xargs -n1 sudo rpm -e --nodeps
 rpm -e 包名刚才找到的包名即可
