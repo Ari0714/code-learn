@@ -1,0 +1,38 @@
+
+#
+FROM your-spark-base
+
+COPY ptapi.jar /opt/protegrity/
+COPY policy.ptcfg /opt/protegrity/
+COPY license.dat /opt/protegrity/
+COPY libptapi.so /opt/protegrity/
+
+ENV PROTEGRITY_HOME=/opt/protegrity
+ENV LD_LIBRARY_PATH=$PROTEGRITY_HOME:$LD_LIBRARY_PATH
+ENV CLASSPATH=$PROTEGRITY_HOME/ptapi.jar:$CLASSPATH
+
+
+#
+FROM python:3.9-slim
+
+# 拷贝 SDK
+COPY ptapi.whl /opt/ptapi/
+COPY policy.ptcfg /opt/protegrity/
+COPY libptapi.so /usr/lib/
+
+# 安装
+RUN pip install /opt/ptapi/ptapi.whl
+
+# 设置环境变量
+ENV LD_LIBRARY_PATH=/usr/lib
+
+# 拷贝你的服务代码
+COPY app.py /app/app.py
+WORKDIR /app
+
+CMD ["python", "app.py"]
+
+
+CMD ["python", "-c", "from ptapi import ProtectorFactory; ProtectorFactory.get_instance().create('/opt/protegrity/policy.ptcfg')"] && \
+    python app.py
+
