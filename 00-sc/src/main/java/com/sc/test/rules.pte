@@ -1,0 +1,7 @@
+
+<protegrity-rule-engine>
+  <rule name="name_field" action="encrypt" algorithm="AES256" />
+  <rule name="id_field" action="tokenize" format="numeric" />
+</protegrity-rule-engine>
+
+
