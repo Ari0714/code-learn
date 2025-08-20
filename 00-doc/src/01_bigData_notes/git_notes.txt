@@ -1,7 +1,7 @@
 
 ------------------------------------------------account--------------------------------------------
 github：ari.chen.cn@gmail.com / cj8888999
-token: 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
+token: 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
 
 
 git：17612720185 / cj8888999.
