@@ -1,4 +1,20 @@
 
+
+# 安装 JDK 17
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# 设置 JAVA_HOME 指向 JDK 17
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# 验证 Java 版本
+RUN java -version && \
+    javac -version
+
+
 ------------------------------------------------概念--------------------------------------------
 
 
