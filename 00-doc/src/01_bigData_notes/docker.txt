@@ -1,4 +1,21 @@
 
+spark-submit \
+    --master k8s://https://<k8s-api-server>:6443 \
+    --deploy-mode cluster \
+    --name my-spark-app \
+    --class org.apache.spark.examples.SparkPi \
+    --conf spark.kubernetes.container.image=apache/spark:3.5.0-scala2.12-java17-python3-ubuntu \
+    # 配置PVC挂载 for Driver
+    --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.shareddata.mount.path=/mnt/shared-data \
+    --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.shareddata.options.claimName=shared-data-pvc \
+    # 配置PVC挂载 for Executor
+    --conf spark.kubernetes.executor.volumes.persistentVolumeClaim.shareddata.mount.path=/mnt/shared-data \
+    --conf spark.kubernetes.executor.volumes.persistentVolumeClaim.shareddata.options.claimName=shared-data-pvc \
+    # 覆盖启动命令以执行初始化脚本 (方法1)
+    --conf spark.kubernetes.driver.command="/bin/bash -c '/mnt/shared-data/init.sh && /opt/spark/bin/spark-class org.apache.spark.deploy.kubernetes.Driver'" \
+    --conf spark.kubernetes.executor.command="/bin/bash -c '/mnt/shared-data/init.sh && /opt/spark/bin/spark-class org.apache.spark.executor.CoarseGrainedExecutorBackend'" \
+    local:///path/to/your/spark-job.jar
+
 
 # 安装 JDK 17
 RUN apt-get update && \
