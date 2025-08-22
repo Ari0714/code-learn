@@ -1,4 +1,13 @@
 
+
+--conf spark.kubernetes.driver.initContainer.image=my-init-image \
+--conf spark.kubernetes.driver.initContainer.command='["sh","-c","/opt/aa.sh /mnt/data/bb.json"]'
+
+--conf spark.kubernetes.executor.initContainer.image=my-init-image \
+--conf spark.kubernetes.executor.initContainer.command='["sh","-c","/opt/aa.sh /mnt/data/bb.json"]'
+
+
+
 spark-submit \
     --master k8s://https://<k8s-api-server>:6443 \
     --deploy-mode cluster \
