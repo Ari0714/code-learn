@@ -5,11 +5,16 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.{DataFrame, Dataset, SaveMode, SparkSession}
 
+/**
+  * Author Ari
+  * Date 2023/7/15
+  * Desc
+  */
 object _01_wc_sql {
 
   def main(args: Array[String]): Unit = {
 
-    //1.创建
+    //1.create Sparksession
     val conf: SparkConf = new SparkConf().setAppName(getClass.getSimpleName).setMaster("local[*]")
     val spark: SparkSession = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     import spark.implicits._
@@ -50,7 +55,7 @@ object _01_wc_sql {
 
 
     /**
-      * 2.RDD df ds装换
+      * 2.RDD df ds transfer
       */
     //rdd => df ds
     val fr: DataFrame = userVisitActionRDD.toDF()
@@ -66,7 +71,7 @@ object _01_wc_sql {
 
 
     /**
-      * 3.sql操作
+      * 3.sql operation
       */
     val userVisitActionFrame: DataFrame = userVisitActionRDD.toDF()
     userVisitActionFrame.createOrReplaceTempView("test")
