@@ -1,0 +1,47 @@
+
+
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+
+import java.net.URL;
+import java.util.Date;
+
+public class PresignV1LocalCert {
+
+    public static void main(String[] args) {
+
+        String endpoint = "https://your-s3-endpoint.com"; // 自定义 S3 endpoint
+        String region = "ap-southeast-1";                 // 可随意
+        String bucket = "your-bucket";
+        String key = "your-object-key";
+
+        // ✅ 使用本地证书/默认凭证链（不写 accessKey/secretKey）
+        DefaultAWSCredentialsProviderChain credentialsProvider = new DefaultAWSCredentialsProviderChain();
+
+        // S3 客户端
+        ClientConfiguration clientConfig = new ClientConfiguration();
+        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                .withCredentials(credentialsProvider)
+                .withEndpointConfiguration(
+                        new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region)
+                )
+                .withPathStyleAccessEnabled(true) // 对自定义 S3 服务必要
+                .withClientConfiguration(clientConfig)
+                .build();
+
+        // 设置 presign URL 过期时间
+        Date expiration = new Date(System.currentTimeMillis() + 10 * 60 * 1000); // 10 分钟
+
+        GeneratePresignedUrlRequest presignRequest = new GeneratePresignedUrlRequest(bucket, key)
+                .withMethod(com.amazonaws.HttpMethod.GET)
+                .withExpiration(expiration);
+
+        URL presignedUrl = s3Client.generatePresignedUrl(presignRequest);
+        System.out.println("Presigned URL: " + presignedUrl.toString());
+    }
+}
+
+
