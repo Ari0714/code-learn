@@ -1,0 +1,77 @@
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.util.Date;
+
+public class PresignS3MTLS {
+
+    public static void main(String[] args) throws Exception {
+        // ---------------------------
+        // 读取环境变量
+        String endpoint = System.getenv("S3_ENDPOINT");
+        String region = System.getenv("S3_REGION");
+        String bucket = System.getenv("S3_BUCKET");
+        String key = System.getenv("S3_KEY");
+        String clientCertPath = System.getenv("CLIENT_CERT");
+        String clientCertPass = System.getenv("CLIENT_CERT_PASS");
+        String caCertPath = System.getenv("CA_CERT");
+
+        // ---------------------------
+        // 1️⃣ 加载客户端证书 (PKCS12)
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(new FileInputStream(clientCertPath), clientCertPass.toCharArray());
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, clientCertPass.toCharArray());
+
+        // ---------------------------
+        // 2️⃣ 加载 CA 根证书
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        trustStore.load(null);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        trustStore.setCertificateEntry("ca", cf.generateCertificate(new FileInputStream(caCertPath)));
+
+        // ---------------------------
+        // 3️⃣ 初始化 SSLContext
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kmf.getKeyManagers(), null, null);
+
+        // ---------------------------
+        // 4️⃣ 创建 Apache SSLConnectionSocketFactory
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                sslContext,
+                NoopHostnameVerifier.INSTANCE // 可换成严格校验
+        );
+
+        // ---------------------------
+        // 5️⃣ 配置 S3 客户端
+        ClientConfiguration clientConfig = new ClientConfiguration();
+        clientConfig.getApacheHttpClientConfig().setSslSocketFactory(sslsf);
+
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+                .withEndpointConfiguration(
+                        new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region))
+                .withPathStyleAccessEnabled(true)   // 自建 S3 通常需要 path-style
+                .withClientConfiguration(clientConfig)
+                .build();
+
+        // ---------------------------
+        // 6️⃣ 生成 Presigned URL
+        Date expiration = new Date(System.currentTimeMillis() + 10 * 60 * 1000); // 10分钟
+        GeneratePresignedUrlRequest presignRequest = new GeneratePresignedUrlRequest(bucket, key)
+                .withMethod(com.amazonaws.HttpMethod.GET)
+                .withExpiration(expiration);
+
+        URL presignedUrl = s3.generatePresignedUrl(presignRequest);
+        System.out.println("Presigned URL: " + presignedUrl.toString());
+    }
+}
