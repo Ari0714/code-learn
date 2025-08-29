@@ -1,0 +1,67 @@
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.http.AmazonHttpClient;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+
+import javax.net.ssl.*;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.security.KeyStore;
+import java.util.Date;
+
+public class PresignWithMTLS {
+
+    public static void main(String[] args) throws Exception {
+        String endpoint = "https://your-s3-endpoint.com";
+        String bucket = "your-bucket";
+        String key = "your-object-key";
+
+        // -------------------------------
+        // 1️⃣ 加载客户端证书
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        FileInputStream keyStoreFile = new FileInputStream("/path/to/client.p12");
+        keyStore.load(keyStoreFile, "password".toCharArray()); // 上一步导出时设置的密码
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(keyStore, "password".toCharArray());
+        KeyManager[] kms = kmf.getKeyManagers();
+
+        // -------------------------------
+        // 2️⃣ 加载 CA 根证书
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        trustStore.load(null);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        trustStore.setCertificateEntry("ca", cf.generateCertificate(new FileInputStream("/path/to/ca.crt")));
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(trustStore);
+        TrustManager[] tms = tmf.getTrustManagers();
+
+        // -------------------------------
+        // 3️⃣ 初始化 SSLContext
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kms, tms, null);
+
+        // -------------------------------
+        // 4️⃣ 配置 S3 客户端
+        ClientConfiguration clientConfig = new ClientConfiguration();
+        clientConfig.getApacheHttpClientConfig().setSslSocketFactory(sslContext.getSocketFactory());
+
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+                .withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, "us-east-1"))
+                .withPathStyleAccessEnabled(true)
+                .withClientConfiguration(clientConfig)
+                .build();
+
+        // -------------------------------
+        // 5️⃣ 生成 presigned URL
+        Date expiration = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
+        GeneratePresignedUrlRequest presignRequest = new GeneratePresignedUrlRequest(bucket, key)
+                .withMethod(com.amazonaws.HttpMethod.GET)
+                .withExpiration(expiration);
+
+        URL url = s3.generatePresignedUrl(presignRequest);
+        System.out.println("Presigned URL: " + url.toString());
+    }
+}
