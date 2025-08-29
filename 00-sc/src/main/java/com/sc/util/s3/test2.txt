@@ -65,3 +65,22 @@ public class PresignWithMTLS {
         System.out.println("Presigned URL: " + url.toString());
     }
 }
+
+
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+
+SSLContext sslContext = SSLContext.getInstance("TLS");
+sslContext.init(kms, tms, null);
+
+// 转成 Apache HttpClient 的 SSLSocketFactory
+SSLSocketFactory apacheSSLSocketFactory = new SSLSocketFactory(
+        sslContext,
+        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER // 或使用 STRICT_HOSTNAME_VERIFIER
+);
+
+// 将其设置到 ClientConfiguration
+ClientConfiguration clientConfig = new ClientConfiguration();
+clientConfig.getApacheHttpClientConfig().setSslSocketFactory(apacheSSLSocketFactory);
+
+
