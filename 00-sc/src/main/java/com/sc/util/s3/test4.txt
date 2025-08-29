@@ -115,3 +115,22 @@ public class S3PresignMTLS {
         System.out.println("Presigned URL: " + presignedUrl.toString());
     }
 }
+
+
+
+
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcpkix-jdk15on</artifactId>
+    <version>1.70</version>
+</dependency>
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-jdk15on</artifactId>
+    <version>1.70</version>
+</dependency>
+
+
+static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
