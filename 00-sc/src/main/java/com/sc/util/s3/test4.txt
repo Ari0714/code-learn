@@ -1,0 +1,117 @@
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.PKCS8EncryptedPrivateKeyInfo;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.net.URL;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Date;
+
+public class S3PresignMTLS {
+
+    public static void main(String[] args) throws Exception {
+        // --------------------------
+        // 环境变量
+        String endpoint = System.getenv("S3_ENDPOINT");
+        String region = System.getenv("S3_REGION");
+        String bucket = System.getenv("S3_BUCKET");
+        String key = System.getenv("S3_KEY");
+        String clientCrtPath = System.getenv("CLIENT_CRT");
+        String clientPemPath = System.getenv("CLIENT_PEM");
+        String caCertPath = System.getenv("CA_CERT");
+        String clientPemPass = System.getenv("CLIENT_PEM_PASS"); // 如果 PEM 明文可置空 ""
+
+        // --------------------------
+        // 1️⃣ 读取客户端证书
+        PEMParser pemParser = new PEMParser(new FileReader(clientCrtPath));
+        X509CertificateHolder certHolder = (X509CertificateHolder) pemParser.readObject();
+        pemParser.close();
+        X509Certificate clientCert = new JcaX509CertificateConverter().setProvider("BC").getCertificate(certHolder);
+
+        // --------------------------
+        // 2️⃣ 读取客户端私钥
+        PEMParser keyParser = new PEMParser(new FileReader(clientPemPath));
+        Object keyObject = keyParser.readObject();
+        keyParser.close();
+
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+        PrivateKey privateKey;
+
+        if (keyObject instanceof PEMKeyPair) {
+            privateKey = converter.getPrivateKey(((PEMKeyPair) keyObject).getPrivateKeyInfo());
+        } else if (keyObject instanceof PrivateKeyInfo) {
+            privateKey = converter.getPrivateKey((PrivateKeyInfo) keyObject);
+        } else if (keyObject instanceof PKCS8EncryptedPrivateKeyInfo) {
+            PKCS8EncryptedPrivateKeyInfo encInfo = (PKCS8EncryptedPrivateKeyInfo) keyObject;
+            privateKey = converter.getPrivateKey(encInfo.decryptPrivateKeyInfo(
+                    new JcePEMDecryptorProviderBuilder().build(clientPemPass.toCharArray())
+            ));
+        } else {
+            throw new RuntimeException("Unsupported private key format: " + keyObject.getClass());
+        }
+
+        // --------------------------
+        // 3️⃣ 构建 KeyStore
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(null, null);
+        keyStore.setKeyEntry("client", privateKey, "".toCharArray(), new X509Certificate[]{clientCert});
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, "".toCharArray());
+
+        // --------------------------
+        // 4️⃣ 加载 CA 证书
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        X509Certificate caCert = (X509Certificate) cf.generateCertificate(new FileInputStream(caCertPath));
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        trustStore.load(null);
+        trustStore.setCertificateEntry("ca", caCert);
+
+        // --------------------------
+        // 5️⃣ 初始化 SSLContext
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kmf.getKeyManagers(), null, null);
+
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                sslContext, NoopHostnameVerifier.INSTANCE);
+
+        ClientConfiguration clientConfig = new ClientConfiguration();
+        clientConfig.getApacheHttpClientConfig().setSslSocketFactory(sslsf);
+
+        // --------------------------
+        // 6️⃣ 构建 S3 客户端
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+                .withEndpointConfiguration(
+                        new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region))
+                .withPathStyleAccessEnabled(true)   // 自建 S3 通常需要 path-style
+                .withClientConfiguration(clientConfig)
+                .build();
+
+        // --------------------------
+        // 7️⃣ 生成 presign URL
+        Date expiration = new Date(System.currentTimeMillis() + 10 * 60 * 1000); // 10分钟有效
+        GeneratePresignedUrlRequest presignRequest = new GeneratePresignedUrlRequest(bucket, key)
+                .withMethod(com.amazonaws.HttpMethod.GET)
+                .withExpiration(expiration);
+
+        URL presignedUrl = s3.generatePresignedUrl(presignRequest);
+        System.out.println("Presigned URL: " + presignedUrl.toString());
+    }
+}
