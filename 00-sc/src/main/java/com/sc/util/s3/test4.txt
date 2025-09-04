@@ -134,3 +134,84 @@ public class S3PresignMTLS {
 static {
         Security.addProvider(new BouncyCastleProvider());
     }
+
+
+import javax.net.ssl.*;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.*;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
+
+public class MutualTLSClient {
+    public static void main(String[] args) throws Exception {
+
+        // ==========================
+        // 1. 加载 CA 证书
+        // ==========================
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        X509Certificate caCert;
+        try (InputStream caInput = new FileInputStream("ca.crt")) {
+            caCert = (X509Certificate) cf.generateCertificate(caInput);
+        }
+
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        trustStore.load(null); // 初始化空 keystore
+        trustStore.setCertificateEntry("ca", caCert);
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(trustStore);
+
+        // ==========================
+        // 2. 加载客户端证书和私钥
+        // ==========================
+        // 读取客户端证书
+        X509Certificate clientCert;
+        try (InputStream certInput = new FileInputStream("client.pem")) {
+            clientCert = (X509Certificate) cf.generateCertificate(certInput);
+        }
+
+        // 读取客户端私钥（PKCS#8 格式 PEM）
+        String keyPem = new String(Files.readAllBytes(Paths.get("client-key.pem")));
+        keyPem = keyPem.replace("-----BEGIN PRIVATE KEY-----", "")
+                       .replace("-----END PRIVATE KEY-----", "")
+                       .replaceAll("\\s", "");
+        byte[] keyBytes = Base64.getDecoder().decode(keyPem);
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+        PrivateKey privateKey = KeyFactory.getInstance("RSA").generatePrivate(keySpec);
+
+        // 创建 KeyStore 存客户端证书和私钥
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(null);
+        keyStore.setKeyEntry("client", privateKey, "password".toCharArray(), new java.security.cert.Certificate[]{clientCert});
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, "password".toCharArray());
+
+        // ==========================
+        // 3. 初始化 SSLContext
+        // ==========================
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+
+        // ==========================
+        // 4. 发起 HTTPS 请求
+        // ==========================
+        URL url = new URL("https://localhost:8443/hello");
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        // 打印响应
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            String line;
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+            }
+        }
+    }
+}
