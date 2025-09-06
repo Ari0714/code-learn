@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 
 /**
- * Author xx
+ * Author Ari
  * Date 2023/9/4
  * Desc ck data auto sync
  */
