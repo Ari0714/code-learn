@@ -1,6 +1,8 @@
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author chenjie
@@ -12,6 +14,12 @@ public class TestUnit {
     @Test
     public void test01() throws IOException {
 
+        List<String> list1 = new ArrayList<>();
+        list1.add("apple");
+        list1.add("banana");
+        list1.add("orange");
+
+        System.out.println(list1); // 输出: [apple, banana, orange]
 
         String cmdLine = "res=$(/opt/scala-2.11.12/bin/scala -cp data-development-job-1.0.jar:joda-time-2.8.1.jar  cn.getech.data.development.job.util.ParseDateTime '%s' \"$param\" ) || exit 10\n" +
                 "${yyyymmdd+1}=`echo $res |awk '{print $1}'`\n";
