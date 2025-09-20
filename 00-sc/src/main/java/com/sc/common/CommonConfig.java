@@ -1,12 +1,11 @@
 package com.sc.common;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/7/15
  * Desc
  */
 public class CommonConfig {
-
 
     /**
      * sr
