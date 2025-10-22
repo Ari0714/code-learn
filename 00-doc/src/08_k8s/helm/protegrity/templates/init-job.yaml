@@ -1,0 +1,36 @@
+{{- if .Values.initJob.enabled }}
+  apiVersion: batch/v1
+   kind: Job
+   metadata:
+   name: {{ include "data-processor.fullname" . }}-init
+  labels:
+    {{- include "data-processor.labels" . | nindent 4 }}
+        annotations:
+            "helm.sh/hook": post-install,post-upgrade
+              "helm.sh/hook-weight": "0"
+              "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+       spec:
+       template:
+       spec:
+       containers:
+       - name: init-container
+       image: "{{ .Values.cronjob.image.repository }}:{{ .Values.cronjob.image.tag }}"
+       imagePullPolicy: {{ .Values.cronjob.image.pullPolicy }}
+      command: ["/bin/sh", "/scripts/init-data.sh"]
+        volumeMounts:
+            - name: data-storage
+              mountPath: {{ .Values.persistence.mountPath }}
+            - name: scripts-volume
+              mountPath: /scripts
+        resources:
+        {{- toYaml .Values.cronjob.resources | nindent 12 }}
+            volumes:
+                - name: data-storage
+                  persistentVolumeClaim:
+                  claimName: {{ include "data-processor.fullname" . }}-pvc
+                - name: scripts-volume
+                  configMap:
+                  name: {{ include "data-processor.fullname" . }}-scripts
+                  defaultMode: 0755
+            restartPolicy: OnFailure
+          {{- end }}

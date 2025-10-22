@@ -1,0 +1,12 @@
+apiVersion: v2
+name: data-processor
+description: A Helm chart with CronJob writing data to PVC
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies: []
+
+maintainers:
+- name: devops-team
+  email: devops@company.com

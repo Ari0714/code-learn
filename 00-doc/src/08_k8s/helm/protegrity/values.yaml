@@ -1,0 +1,105 @@
+# PVC 配置
+persistence:
+  enabled: true
+  storageClass: ""  # 使用默认 StorageClass
+  accessMode: ReadWriteOnce
+  size: 5Gi
+  mountPath: /data
+
+# CronJob 配置
+cronjob:
+  enabled: true
+  name: data-writer
+  schedule: "*/5 * * * *"  # 每5分钟执行一次
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 60
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+
+  # 容器配置
+  image:
+    repository: busybox
+    tag: "1.36"
+    pullPolicy: IfNotPresent
+
+  # 数据写入脚本
+  script: |
+    #!/bin/sh
+    set -e
+
+    DATA_DIR="/data"
+    TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+
+    echo "=== 开始数据写入任务 ==="
+    echo "时间: $(date)"
+
+    # 创建时间戳文件
+    echo "任务执行时间: $(date)" > $DATA_DIR/timestamp_${TIMESTAMP}.txt
+    echo "文件创建成功: timestamp_${TIMESTAMP}.txt"
+
+    # 生成数据文件
+    cat > $DATA_DIR/data_${TIMESTAMP}.json << EOF
+    {
+      "timestamp": "$(date -Iseconds)",
+      "jobId": "${TIMESTAMP}",
+      "data": {
+        "randomValue": $RANDOM,
+        "hostname": "$(hostname)",
+        "filesCount": $(ls $DATA_DIR/*.txt 2>/dev/null | wc -l || echo 0)
+      }
+    }
+    EOF
+    echo "数据文件创建成功: data_${TIMESTAMP}.json"
+
+    # 创建统计信息
+    echo "=== 目录统计 ===" > $DATA_DIR/stats_${TIMESTAMP}.txt
+    echo "总文件数: $(find $DATA_DIR -type f | wc -l)" >> $DATA_DIR/stats_${TIMESTAMP}.txt
+    echo "目录大小: $(du -sh $DATA_DIR)" >> $DATA_DIR/stats_${TIMESTAMP}.txt
+    ls -la $DATA_DIR/ >> $DATA_DIR/stats_${TIMESTAMP}.txt
+
+    echo "=== 任务完成 ==="
+    echo "生成的文件:"
+    ls -la $DATA_DIR/*_${TIMESTAMP}.*
+
+  # 资源限制
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "100m"
+
+# 清理任务配置
+cleanupCronjob:
+  enabled: true
+  name: data-cleaner
+  schedule: "0 3 * * *"  # 每天凌晨3点执行
+  script: |
+    #!/bin/sh
+    set -e
+
+    DATA_DIR="/data"
+    RETENTION_DAYS=7
+
+    echo "=== 开始数据清理任务 ==="
+    echo "时间: $(date)"
+    echo "保留天数: $RETENTION_DAYS"
+
+    # 删除7天前的文件
+    find $DATA_DIR -name "*.txt" -mtime +$RETENTION_DAYS -delete
+    find $DATA_DIR -name "*.json" -mtime +$RETENTION_DAYS -delete
+
+    echo "清理完成"
+    echo "当前文件列表:"
+    ls -la $DATA_DIR/
+
+  # 初始化任务配置
+initJob:
+  enabled: true
+  script: |
+    #!/bin/sh
+    echo "初始化数据目录..."
+    mkdir -p /data
+    echo "数据目录初始化完成: $(date)" > /data/init.log
+    echo "初始化任务完成"
