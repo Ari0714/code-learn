@@ -30,6 +30,7 @@ public class SelfHiveFunction extends GenericUDF {
             throw new UDFArgumentTypeException(1, "i need primitive type arg");
         }
 
+        // 定义返回类型，javaIntObjectInspector / JavaStringObjectInspector
         return PrimitiveObjectInspectorFactory.javaIntObjectInspector;
     }
 

@@ -28,7 +28,23 @@ dbt seed: 导入数据模型，数据库可查
 dbt run -s fund_portfolio_stats：生成模型
 dbt docs generate和dbt docs serve： 在web界面看到模型图
 
-2.
+3. conf
+materialized= table / view / incremental / ephemeral
+incremental_strategy='merge' /  insert_overwrite
+merge（must with unique_key）
+insert_overwrite（must with partition_by）
+append
+
+{{
+    config(
+        materialized='incremental',
+        incremental_strategy='merge',
+        on_schema_change='fail',
+        file_format='iceberg'
+    )
+}}
+
+
 3.
 4.
 5.
