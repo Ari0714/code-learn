@@ -22,11 +22,11 @@ public class KafkaTest {
 
     public static void main(String[] args) throws InterruptedException {
 
-//        for (int i = 0; i < 100; i++) {
-//            testProducer("test",i+"");
-//        }
+        for (int i = 0; i < 100; i++) {
+            testProducer("airflow_metadata",i+"");
+        }
 
-        testComsumer();
+//        testComsumer();
 
     }
 

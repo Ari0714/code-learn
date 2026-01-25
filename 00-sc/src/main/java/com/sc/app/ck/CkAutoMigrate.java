@@ -16,7 +16,7 @@ public class CkAutoMigrate {
 
     public static void main(String[] args) throws SQLException, IOException {
 
-        //pre
+        //prek
 //        Connection sourConn = getCkConn(CommonConfig.CkGroupPreIp, CommonConfig.CkGroupPreUser, CommonConfig.CkGroupPrePassWd);
 //        Connection destConn = getCkConn(CommonConfig.CkIndustryPreIp, CommonConfig.CkIndustryPreUser, CommonConfig.CkIndustryPrePassWd);
 
