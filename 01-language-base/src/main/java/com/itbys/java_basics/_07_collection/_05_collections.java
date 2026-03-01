@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/2/26
  * Desc collections utils
  */

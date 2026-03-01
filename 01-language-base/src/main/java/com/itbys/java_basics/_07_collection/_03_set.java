@@ -9,9 +9,9 @@ import java.util.TreeSet;
 
 
 /**
- * Author chenjie
+ * Author Ari
  * Date 2024/2/26
- * Desc set
+ * Desc
  */
 public class _03_set {
 
@@ -94,7 +94,6 @@ public class _03_set {
         TreeSet<Person> integers02 = new TreeSet(integerComparator);
 
     }
-
 
 }
 
