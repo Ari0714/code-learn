@@ -72,7 +72,7 @@ class Person implements Comparable {
             }
         }
 
-        throw new RuntimeException("输入数据类型不对");
+        throw new RuntimeException("input data type is wrong");
     }
 
 
