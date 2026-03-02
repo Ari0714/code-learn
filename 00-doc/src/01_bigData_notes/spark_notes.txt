@@ -81,6 +81,7 @@ Structured Streaming更像流模式。
 
 本地： 不加 --master
 bin/spark-submit \
+--master local[*] \
 --class org.apache.spark.examples.SparkPi \
 --executor-memory 1G \
 --total-executor-cores 2 \
@@ -91,8 +92,8 @@ bin/spark-submit \
 
 standalone：
 bin/spark-submit \
---class org.apache.spark.examples.SparkPi \
 --master spark://hdp101:7077 \
+--class org.apache.spark.examples.SparkPi \
 --executor-memory 1G \
 --total-executor-cores 2 \
 ./examples/jars/spark-examples_2.11-2.4.8.jar \
@@ -101,9 +102,9 @@ bin/spark-submit \
 
 yarn:  1.路径是hdfs的
 bin/spark-submit \
---class org.apache.spark.examples.SparkPi \
---master yarn \
 --deploy-mode cluster  \
+--master yarn \
+--class org.apache.spark.examples.SparkPi \
 --executor-memory 2G \
 --num-executors 2 \
 ./examples/jars/spark-examples_2.11-2.4.8.jar \
