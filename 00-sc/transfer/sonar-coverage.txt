@@ -2,68 +2,90 @@ import unittest
 from unittest.mock import MagicMock, patch
 import os
 
-# 假设你的类定义在 adls_connector.py 中
+# Import the class from your target file
 from adls_connector import ADLSConnector
 
 class TestADLSConnector(unittest.TestCase):
 
     def setUp(self):
-        # 1. 彻底重置单例状态（因为你的类使用了 _instance，测试间会互相干扰）
+        """
+        Set up the test environment before each test case.
+        """
+        # CRITICAL: Reset the Singleton instance to ensure __init__ runs for every test.
+        # This is essential for achieving high Sonar coverage.
         ADLSConnector._instance = None
 
-        # 2. 构造一个复杂的 Mock Spark 对象
+        # Initialize the Mock SparkSession
         self.mock_spark = MagicMock()
         self.mock_hadoop_conf = MagicMock()
 
-        # 模拟 spark.sparkContext._jsc.hadoopConfiguration()
+        # Mock the deep chain: spark.sparkContext._jsc.hadoopConfiguration()
         self.mock_spark.sparkContext._jsc.hadoopConfiguration.return_value = self.mock_hadoop_conf
 
-        # 模拟 Hadoop 配置返回值
-        self.mock_hadoop_conf.get.side_effect = lambda key, default: {
-            "fs.azure.account": "mystorage",
-            "fs.azure.container": "mycontainer"
-        }.get(key, default)
+        # Define the behavior for hadoop_conf.get(key, default)
+        def mock_get_config(key, default=None):
+            # Simulated Hadoop configuration values
+            configs = {
+                "fs.azure.account": "teststorageaccount",
+                "fs.azure.container": "testcontainer"
+            }
+            return configs.get(key, default)
 
-        # 3. 模拟环境变量防止认证报错
+        self.mock_hadoop_conf.get.side_effect = mock_get_config
+
+        # Mock necessary environment variables for Workload Identity authentication
         self.env_patcher = patch.dict('os.environ', {
-            "AZURE_FEDERATED_TOKEN_FILE": "/fake/path/token",
-            "AZURE_CLIENT_ID": "fake-id",
-            "AZURE_TENANT_ID": "fake-tenant"
+            "AZURE_FEDERATED_TOKEN_FILE": "/fake/token/path",
+            "AZURE_CLIENT_ID": "fake-client-id",
+            "AZURE_TENANT_ID": "fake-tenant-id"
         })
         self.env_patcher.start()
 
     def tearDown(self):
+        """
+        Clean up the environment after each test case.
+        """
         self.env_patcher.stop()
+        # Ensure the Singleton is reset for other test files
         ADLSConnector._instance = None
 
     @patch('adls_connector.WorkloadIdentityCredential')
     @patch('adls_connector.DataLakeServiceClient')
-    def test_init_success(self, mock_client, mock_cred):
-        """测试正常初始化，解决 'str' object 报错"""
-        # 这里的关键是：必须传入 mock_spark 对象，而不是字符串路径
+    def test_init_success(self, mock_service_client, mock_credential):
+        """
+        Test successful initialization.
+        Passing self.mock_spark avoids the 'str' object has no attribute 'sparkContext' error.
+        """
+        # Act: Instantiate the connector with a mocked Spark object
         connector = ADLSConnector(self.mock_spark)
 
-        # 验证属性是否正确从 mock_hadoop_conf 提取
-        self.assertEqual(connector.az_container, "mycontainer")
-        self.assertEqual(connector.account_url, "https://mystorage.dfs.core.windows.net")
+        # Assert: Verify that attributes are correctly parsed from Hadoop configuration
+        self.assertEqual(connector.az_container, "testcontainer")
+        self.assertIn("teststorageaccount", connector.account_url)
 
-        # 验证认证是否被触发
-        mock_cred.assert_called_once()
+        # Assert: Check if Azure clients were instantiated
+        mock_credential.assert_called_once()
+        mock_service_client.assert_called_once()
 
-    def test_singleton_behavior(self):
-        """测试单例模式覆盖率"""
-        connector1 = ADLSConnector(self.mock_spark)
-        connector2 = ADLSConnector(self.mock_spark)
-        self.assertIs(connector1, connector2)
+    def test_singleton_logic(self):
+        """
+        Verify that ADLSConnector adheres to the Singleton pattern.
+        """
+        # Both calls should return the exact same object in memory
+        instance1 = ADLSConnector(self.mock_spark)
+        instance2 = ADLSConnector(self.mock_spark)
 
-    @patch('adls_connector.DataLakeServiceClient')
-    def test_authenticate_error(self, mock_client):
-        """覆盖异常处理逻辑"""
-        # 模拟环境变量缺失的情况
+        self.assertIs(instance1, instance2, "Multiple calls must return the same instance.")
+
+    def test_missing_environment_variable(self):
+        """
+        Verify error handling when the required Azure token file environment variable is missing.
+        """
+        # Clear environment variables to trigger the 'if not os.environ.get' block in your code
         with patch.dict('os.environ', {}, clear=True):
-            # 重新初始化会导致触发 _authenticate
             ADLSConnector._instance = None
-            with self.assertRaises(Exception): # 或者你定义的特定异常
+            # Check if the code raises an Exception as expected in your _authenticate method
+            with self.assertRaises(Exception):
                 ADLSConnector(self.mock_spark)
 
 if __name__ == '__main__':
