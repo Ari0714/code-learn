@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 import os
+from azure.core.exceptions import AzureError # Added for exception testing
 
 # Import the class from your target file
 from adls_connector import ADLSConnector
@@ -12,7 +13,6 @@ class TestADLSConnector(unittest.TestCase):
         Set up the test environment before each test case.
         """
         # CRITICAL: Reset the Singleton instance to ensure __init__ runs for every test.
-        # This is essential for achieving high Sonar coverage.
         ADLSConnector._instance = None
 
         # Initialize the Mock SparkSession
@@ -24,7 +24,6 @@ class TestADLSConnector(unittest.TestCase):
 
         # Define the behavior for hadoop_conf.get(key, default)
         def mock_get_config(key, default=None):
-            # Simulated Hadoop configuration values
             configs = {
                 "fs.azure.account": "teststorageaccount",
                 "fs.azure.container": "testcontainer"
@@ -33,7 +32,7 @@ class TestADLSConnector(unittest.TestCase):
 
         self.mock_hadoop_conf.get.side_effect = mock_get_config
 
-        # Mock necessary environment variables for Workload Identity authentication
+        # Mock environment variables for authentication
         self.env_patcher = patch.dict('os.environ', {
             "AZURE_FEDERATED_TOKEN_FILE": "/fake/token/path",
             "AZURE_CLIENT_ID": "fake-client-id",
@@ -46,7 +45,6 @@ class TestADLSConnector(unittest.TestCase):
         Clean up the environment after each test case.
         """
         self.env_patcher.stop()
-        # Ensure the Singleton is reset for other test files
         ADLSConnector._instance = None
 
     @patch('adls_connector.WorkloadIdentityCredential')
@@ -54,37 +52,83 @@ class TestADLSConnector(unittest.TestCase):
     def test_init_success(self, mock_service_client, mock_credential):
         """
         Test successful initialization.
-        Passing self.mock_spark avoids the 'str' object has no attribute 'sparkContext' error.
         """
-        # Act: Instantiate the connector with a mocked Spark object
         connector = ADLSConnector(self.mock_spark)
-
-        # Assert: Verify that attributes are correctly parsed from Hadoop configuration
         self.assertEqual(connector.az_container, "testcontainer")
         self.assertIn("teststorageaccount", connector.account_url)
-
-        # Assert: Check if Azure clients were instantiated
         mock_credential.assert_called_once()
         mock_service_client.assert_called_once()
 
+    # --- NEW TESTS TO COVER RED LINES IN load_script ---
+
+    @patch('adls_connector.WorkloadIdentityCredential')
+    @patch('adls_connector.DataLakeServiceClient')
+    def test_load_script_success(self, mock_service_client, mock_credential):
+        """
+        Covers the 'try' block and successful file reading (Middle Red Lines).
+        """
+        # Setup the mock chain for Azure SDK
+        mock_fs_client = MagicMock()
+        mock_file_client = MagicMock()
+        mock_download = MagicMock()
+
+        mock_service_client.return_value.get_file_system_client.return_value = mock_fs_client
+        mock_fs_client.get_file_client.return_value = mock_file_client
+        mock_file_client.download_file.return_value = mock_download
+
+        # Simulate binary file content
+        mock_download.readall.return_value = b"print('Success')"
+
+        connector = ADLSConnector(self.mock_spark)
+        valid_path = "abfss://container@account.dfs.core.windows.net/path/to/script.py"
+
+        # Act
+        content = connector.load_script(valid_path)
+
+        # Assert: Verify decoded content and correct key usage
+        self.assertEqual(content, "print('Success')")
+        mock_fs_client.get_file_client.assert_called_with("path/to/script.py")
+
+    def test_load_script_invalid_path(self):
+        """
+        Covers the 'raise ValueError' branch (First Red Block).
+        """
+        connector = ADLSConnector(self.mock_spark)
+
+        # Incomplete path to trigger 'if not container or not account_name or not key'
+        invalid_path = "abfss:///missing_info"
+
+        with self.assertRaises(ValueError) as cm:
+            connector.load_script(invalid_path)
+
+        self.assertIn("Invalid ADLS path", str(cm.exception))
+
+    @patch('adls_connector.DataLakeServiceClient')
+    def test_load_script_azure_error(self, mock_service_client):
+        """
+        Covers the 'except AzureError' branch (Last Red Block).
+        """
+        # Force the client to raise an AzureError
+        mock_service_client.return_value.get_file_system_client.side_effect = AzureError("Service Error")
+
+        connector = ADLSConnector(self.mock_spark)
+        test_path = "abfss://c@a.dfs.core.windows.net/file.txt"
+
+        with self.assertRaises(AzureError) as cm:
+            connector.load_script(test_path)
+
+        self.assertIn("Error when reading ADLS file", str(cm.exception))
+
+    # --- END OF NEW TESTS ---
+
     def test_singleton_logic(self):
-        """
-        Verify that ADLSConnector adheres to the Singleton pattern.
-        """
-        # Both calls should return the exact same object in memory
         instance1 = ADLSConnector(self.mock_spark)
         instance2 = ADLSConnector(self.mock_spark)
-
-        self.assertIs(instance1, instance2, "Multiple calls must return the same instance.")
+        self.assertIs(instance1, instance2)
 
     def test_missing_environment_variable(self):
-        """
-        Verify error handling when the required Azure token file environment variable is missing.
-        """
-        # Clear environment variables to trigger the 'if not os.environ.get' block in your code
         with patch.dict('os.environ', {}, clear=True):
             ADLSConnector._instance = None
-            # Check if the code raises an Exception as expected in your _authenticate method
             with self.assertRaises(Exception):
                 ADLSConnector(self.mock_spark)
 
