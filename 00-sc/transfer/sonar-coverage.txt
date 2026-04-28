@@ -1,75 +1,70 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from adls_connector import ADLSConnector  # 假设你的文件名是 adls_connector.py
+import os
+
+# 假设你的类定义在 adls_connector.py 中
+from adls_connector import ADLSConnector
 
 class TestADLSConnector(unittest.TestCase):
 
     def setUp(self):
-        # 准备一个标准的测试 URL
-        self.test_url = "abfss://mycontainer@mystorage.dfs.core.windows.net/test/a.txt"
+        # 1. 彻底重置单例状态（因为你的类使用了 _instance，测试间会互相干扰）
+        ADLSConnector._instance = None
 
-        # 模拟环境变量，防止 WorkloadIdentityCredential 报错
+        # 2. 构造一个复杂的 Mock Spark 对象
+        self.mock_spark = MagicMock()
+        self.mock_hadoop_conf = MagicMock()
+
+        # 模拟 spark.sparkContext._jsc.hadoopConfiguration()
+        self.mock_spark.sparkContext._jsc.hadoopConfiguration.return_value = self.mock_hadoop_conf
+
+        # 模拟 Hadoop 配置返回值
+        self.mock_hadoop_conf.get.side_effect = lambda key, default: {
+            "fs.azure.account": "mystorage",
+            "fs.azure.container": "mycontainer"
+        }.get(key, default)
+
+        # 3. 模拟环境变量防止认证报错
         self.env_patcher = patch.dict('os.environ', {
-            "AZURE_CLIENT_ID": "fake-client-id",
-            "AZURE_TENANT_ID": "fake-tenant-id",
-            "AZURE_FEDERATED_TOKEN_FILE": "/fake/path/token"
+            "AZURE_FEDERATED_TOKEN_FILE": "/fake/path/token",
+            "AZURE_CLIENT_ID": "fake-id",
+            "AZURE_TENANT_ID": "fake-tenant"
         })
         self.env_patcher.start()
 
     def tearDown(self):
         self.env_patcher.stop()
+        ADLSConnector._instance = None
 
-    def test_parse_abfss_valid(self):
-        """测试正常路径解析"""
-        connector = ADLSConnector(self.test_url)
-        self.assertEqual(connector.container, "mycontainer")
-        self.assertEqual(connector.account_name, "mystorage")
-        self.assertEqual(connector.file_path, "test/a.txt") # 验证 lstrip 执行成功
-
-    def test_parse_abfss_invalid_protocol(self):
-        """测试错误协议校验"""
-        with self.assertRaises(ValueError) as cm:
-            ADLSConnector("https://storage.com/file")
-        self.assertIn("Invalid protocol", str(cm.exception))
-
-    def test_parse_abfss_missing_at(self):
-        """测试缺失 @ 符号的校验"""
-        with self.assertRaises(ValueError) as cm:
-            ADLSConnector("abfss://mystorage.dfs.core.windows.net/test/a.txt")
-        self.assertIn("Missing '@'", str(cm.exception))
-
-    @patch('adls_connector.DataLakeServiceClient')
     @patch('adls_connector.WorkloadIdentityCredential')
-    def test_read_content_success(self, mock_cred, mock_service_client):
-        """测试读取内容成功场景"""
-        # 设置 Mock 层级结构: ServiceClient -> FileSystemClient -> FileClient -> Download
-        mock_fs_client = MagicMock()
-        mock_file_client = MagicMock()
-        mock_download = MagicMock()
+    @patch('adls_connector.DataLakeServiceClient')
+    def test_init_success(self, mock_client, mock_cred):
+        """测试正常初始化，解决 'str' object 报错"""
+        # 这里的关键是：必须传入 mock_spark 对象，而不是字符串路径
+        connector = ADLSConnector(self.mock_spark)
 
-        mock_service_client.return_value.get_file_system_client.return_value = mock_fs_client
-        mock_fs_client.get_file_client.return_value = mock_file_client
-        mock_file_client.download_file.return_value = mock_download
-        mock_download.readall.return_value = b"Hello Sonar" # 模拟二进制返回
+        # 验证属性是否正确从 mock_hadoop_conf 提取
+        self.assertEqual(connector.az_container, "mycontainer")
+        self.assertEqual(connector.account_url, "https://mystorage.dfs.core.windows.net")
 
-        connector = ADLSConnector(self.test_url)
-        content = connector.read_content()
+        # 验证认证是否被触发
+        mock_cred.assert_called_once()
 
-        self.assertEqual(content, "Hello Sonar")
-        # 验证解析后的相对路径是否正确传递给了 SDK
-        mock_fs_client.get_file_client.assert_called_with("test/a.txt")
+    def test_singleton_behavior(self):
+        """测试单例模式覆盖率"""
+        connector1 = ADLSConnector(self.mock_spark)
+        connector2 = ADLSConnector(self.mock_spark)
+        self.assertIs(connector1, connector2)
 
     @patch('adls_connector.DataLakeServiceClient')
-    def test_read_content_azure_error(self, mock_service_client):
-        """测试 Azure SDK 抛出异常时的处理"""
-        from azure.core.exceptions import AzureError
-
-        mock_service_client.return_value.get_file_system_client.side_effect = AzureError("Access Denied")
-
-        connector = ADLSConnector(self.test_url)
-        result = connector.read_content()
-
-        self.assertIn("Azure Storage Error", result)
+    def test_authenticate_error(self, mock_client):
+        """覆盖异常处理逻辑"""
+        # 模拟环境变量缺失的情况
+        with patch.dict('os.environ', {}, clear=True):
+            # 重新初始化会导致触发 _authenticate
+            ADLSConnector._instance = None
+            with self.assertRaises(Exception): # 或者你定义的特定异常
+                ADLSConnector(self.mock_spark)
 
 if __name__ == '__main__':
     unittest.main()
