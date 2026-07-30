@@ -41,7 +41,19 @@ project下 git init 生成 .git文件
 
 --git add src/aa.java
 
---git commit -m "update 01"
+--commit
+git commit -m "update 01"
+
+--push
+git push origin master
+
+--pull
+git pull  --pull this branch related origin branch && merge
+git pull origin master-xx  --pull origin branch && merge
+git fetch --only fetch git info，no merge
+
+--reset
+git reset origin/master --hard   --强制重置当前分支到远程分支
 
 --git log
 git log --pretty=oneline
@@ -64,12 +76,11 @@ git checkout --aa.java
 工作区和暂存区只存一份，本地库存多份
 
 
---branch operation：
-git branch dev
-git barnch -v
-git checkout dev
+--branch：
+git branch / git branch -v： show branch info && where branch iam in
+git branch dev： add branch info
+git checkout dev：switch branch
 
-git checkout master
 git merge dev
 
 merge conflict：

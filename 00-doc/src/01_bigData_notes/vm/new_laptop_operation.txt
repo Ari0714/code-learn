@@ -37,6 +37,7 @@ jar 无日志启动
 nohup java -jar gmall-logger-0.0.1-SNAPSHOT.jar --server.port=8081  >/dev/null 2>&1 &
 
 nohup /usr/local/python3.8.12/bin/python3 ../manage.py runserver 0.0.0.0:8080  >/dev/null 2>&1 &
+nohup python3 runner.py > log.txt 2>&1 &
 
 
 -----环境变量
