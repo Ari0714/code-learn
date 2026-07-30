@@ -1,20 +1,26 @@
 
-------------------------------------------------account--------------------------------------------
+------------------------------------------------account--------------------------------------------、
+-- github
 github：ari.chen.cn@gmail.com / cj8888999
 token: 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
 
+- linux auth && clone project
+git clone https://github.com/Ari0714/investment_analysis.git
+Ari0714 / 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
 
+
+
+-- git
 git：17612720185 / cj8888999.
 token：dd863b075a4d81805f60326a67356362
 
-------------------------------------------------git--------------------------------------------
+------------------------------------------------git config--------------------------------------------
 
-
-configure user & eamil
+--configure user & eamil
 git config --global user.name "ari.chen"
 git config --global user.email "ari.chen.cn@gmail.com"  （contribution base on email）
 
-- set proxy
+--set proxy
 git config --global http.proxy http://192.168.1.1:8888
 git config --global https.proxy https://192.168.1.1:8888
 
@@ -24,38 +30,41 @@ git config --global https.proxy socks5://127.0.0.1:7890
 git config --global --get http.proxy
 git config --global --get https.proxy
 
-initialize：
+
+
+------------------------------------------------git command--------------------------------------------
+
+--initialize：
 project下 git init 生成 .git文件
 
-git status
+--git status
 
-git add src/aa.java
+--git add src/aa.java
 
-git commit -m "update 01"
+--git commit -m "update 01"
 
-git log
+--git log
 git log --pretty=oneline
 
-
-revert：
+--revert：
 git reset --hand HEAD^
 git reset --hard HEAD~4
 
-cross：
+--cross：
 如：cc6f29c
 git reflog  历史版本号
 git reset --hard 版本号
 
-recover：
+--recover：
 git checkout --aa.java
 
-del：
+--del：
 先删，在add，commit
 
 工作区和暂存区只存一份，本地库存多份
 
 
-branch operation：
+--branch operation：
 git branch dev
 git barnch -v
 git checkout dev
@@ -72,10 +81,10 @@ merge conflict：
 1、长时间未使用提示unable to get local issuer certificate
 在 Git 中本地禁用 SSL 证书验证：git config --global http.sslVerify false
 
+
 ----------------------------------------------github--------------------------------------------
 
 https://github.com/CJ1187334030/myFirstTest.git
-
 
 开始同上
 guthub创建项目，注意是全空。
