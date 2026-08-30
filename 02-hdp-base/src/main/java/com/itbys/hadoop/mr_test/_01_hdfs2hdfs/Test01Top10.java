@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Author xx
  * Date 2022/7/19
- * Desc 柱状图：top10站点
+ * Desc Bar chart: top 10 stations
  */
 public class Test01Top10 {
 
@@ -35,7 +35,7 @@ public class Test01Top10 {
 
             String s = value.toString();
 
-            //不同站点发送到不同reduce key
+            // Different stations are sent to different reduce keys
             if (s.trim().length() > 0 && s.contains("station")) {
 
                 JSONObject jsonObject = JSON.parseObject(s);
@@ -52,12 +52,12 @@ public class Test01Top10 {
     public static class Reduce extends Reducer<Text, Text, Text, Text> {
 
         Text v = new Text();
-        HashMap<String, Integer> hashMap = new HashMap<>();  //对全局key起作用，map中k.set("1");
+        HashMap<String, Integer> hashMap = new HashMap<>();  // Acts on the global key; Mapper sets k.set("1");
 
         @Override
         protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-            //将数据写入map, 累加
+            // Write data into map, accumulate counts
             for (Text value : values) {
                 String station = value.toString();
 
@@ -67,7 +67,7 @@ public class Test01Top10 {
                     hashMap.put(station, 1);
             }
 
-            //排序
+            // Sort
             ArrayList<java.util.Map.Entry<String, Integer>> entries = new ArrayList<>(hashMap.entrySet());
             entries.sort(new Comparator<java.util.Map.Entry<String, Integer>>() {
                 @Override
@@ -76,10 +76,10 @@ public class Test01Top10 {
                 }
             });
 
-            //取出top10
+            // Take top 10
             List<java.util.Map.Entry<String, Integer>> subList = entries.subList(0, 10);
 
-            //写出
+            // Write out
             for (java.util.Map.Entry<String, Integer> entry : subList) {
                 v.set(entry.getKey() + "\t" + entry.getValue());
                 context.write(null, v);
@@ -92,7 +92,7 @@ public class Test01Top10 {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
         /**
-         * 本地运行
+         * Run locally
          */
         // 1 获取配置信息以及封装任务
         Configuration configuration = new Configuration();
@@ -123,7 +123,7 @@ public class Test01Top10 {
 
 
         /**
-         * 打包到集群跑配置
+         * Configuration for running on cluster (when packaged)
          */
 //        Configuration conf = new Configuration();
 //        conf.set("fs.defaultFS", "hdfs://hdp:8020");
